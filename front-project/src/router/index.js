@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import MovieListView from '../views/MovieListView.vue'
 import LoginView from '../views/LoginView.vue'
 import SignupView from '../views/SignupView.vue'
+import MovieDetailView from '../views/MovieDetailView.vue'
 
 // import View from '../views/View.vue'
 
@@ -31,6 +32,11 @@ const router = createRouter({
       path: '/signup',
       name: 'signup',
       component: SignupView
+    },
+    {
+      path: '/:movieId',
+      name: 'movieDetail',
+      component: MovieDetailView
     },
     //     {
     //   path: '/',
