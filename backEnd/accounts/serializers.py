@@ -5,10 +5,12 @@ from movies.models import Movie, Article
 User = get_user_model()
 
 
-class UserSerializer(serializers.ModelSerializer):
+
+class UserSerializer(serializers.ModelSerializer): ## 이번에 변경함
     class Meta:
         model = User
-        fields = ('pk', 'username', 'profile_pic')
+        fields = ('pk', 'username', 'email', 'age', 'profile_pic')
+
 
 
 class ArticleMovieSerializer(serializers.ModelSerializer):

@@ -9,9 +9,11 @@ class User(AbstractUser):
     followings = models.ManyToManyField(
         'self', symmetrical=False, related_name='followers')
     
-    username = models.EmailField(unique=True)
+    username = models.CharField(max_length=150, unique=True)  #변경
+    email = models.EmailField(unique=True)  # 추가
+    age = models.PositiveIntegerField(default=18)  # 추가
     profile_pic = ProcessedImageField(
-        blank=True,
+        blank=True, 
         upload_to='profile/images',
         processors=[ResizeToFill(300, 300)],
         format='JPEG',
