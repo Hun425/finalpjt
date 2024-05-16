@@ -1,28 +1,31 @@
 <!-- https://encrypted-tbn0.gstatic.com/images?q=tbn:AN…wwaP9UbKjHzbqMzXEHSPXNyIa6BudJBXpz0WMo&usqp=CAE&s -->
 
 <script setup>
+  import {useRoute} from 'vue-router'
+  import {ref} from 'vue'
+  import axios from 'axios'
+  const props = defineProps({
+    movie:Object,
+  })
+  // console.log(props)
+  console.log(props.movie)
 
+
+
+  // 영화 세부정보 가져오기 -> TMDB
+  const movieDetail = ref({})
+    
 </script>
 
 <template>
   <div class="movieCard">
-    <!-- movie 데이터 받을 경우 이와 같은 형태로 입력! -->
-    <!-- <div class="image-container">
+    <div class="image-container">
       <img class="poster" src='@/assets/common.jpg' alt="">
       <span class="rank">{{ movie.rank }}</span>
       <span class="change" v-if="movie.rankInten != 0">{{ movie.rankInten }} | UP</span>
       <div class="overlay">
         <div>
             <a :href="`https://m.search.naver.com/search.naver?query=영화+${movie.movieNm}+예매`"><button class="info-btn" type="submit">예매하기</button></a>
-        </div>
-      </div>
-    </div> -->
-        <div class="image-container">
-      <img class="poster" src='@/assets/common.jpg' alt="">
-      <span class="rank">랭킹</span>
-      <div class="overlay">
-        <div>
-            <a href=""><button class="info-btn" type="submit">상세보기</button></a>
         </div>
       </div>
     </div>

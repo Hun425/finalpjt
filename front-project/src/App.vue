@@ -32,21 +32,22 @@
  import {ref} from 'vue'
 
  const router = useRouter()
- const isDark = ref(true)
+ const isDark = ref(false)
 
 // 라우터별 이동함수
+// 배경색 수정 필요(isDark)!
  const goToMovies = function () {
-  isDark.value = false
+  // isDark.value = false
   router.push({name:'movies'})
  }
 
  const goToLogin = function () {
-  isDark.value = false
+  // isDark.value = false
   router.push({name:'login'})
  }
 
  const goToSignup = function () {
-  isDark.value = false
+  // isDark.value = false
   router.push({name:'signup'})
  }
 
@@ -66,7 +67,7 @@
     justify-content: space-between;
     width: 1440px;
     margin: 0px auto ;
-    color:white;
+    /* color:white; */
     font-size: 20px;
   }
   .logo {
