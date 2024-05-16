@@ -20,7 +20,7 @@
 <div align="center">
 
 | **채기훈** | **황민채** |
-| :------: |  :------: | :------: | :------: |
+| :------: |  :------: |
 | [<img src="https://avatars.githubusercontent.com/u/106502312?v=4" height=150 width=150> <br/> @yeon1615](https://github.com/yeon1615) | [<img src="https://avatars.githubusercontent.com/u/112460466?v=4" height=150 width=150> <br/> @Cheorizzang](https://github.com/Cheorizzang) |
 
 </div>
