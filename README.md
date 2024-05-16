@@ -21,7 +21,7 @@
 
 | **채기훈** | **황민채** |
 | :------: |  :------: |
-| [<img src="https://avatars.githubusercontent.com/Hun425?v=4" height=150 width=150> <br/> @Hun425](https://github.com/Hun425) | [<img src="https://avatars.githubusercontent.com/u/112460466?v=4" height=150 width=150> <br/> @Cheorizzang](https://github.com/Cheorizzang) |
+| [<img src="https://avatars.githubusercontent.com/Hun425?v=4" height=150 width=150> <br/> @Hun425](https://github.com/Hun425) | [<img src="https://avatars.githubusercontent.com/trick0846?v=4" height=150 width=150> <br/> @trick0846](https://github.com/trick0846) |
 
 </div>
 
