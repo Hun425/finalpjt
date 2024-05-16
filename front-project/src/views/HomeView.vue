@@ -1,5 +1,5 @@
 <script setup>
-  import MovieList from '@/components/movie/MovieList.vue';
+  import BoxOfficeList from '@/components/movie/BoxOfficeList.vue';
 
 
 </script>
@@ -7,7 +7,7 @@
 <template>
   <div class="totalBg">
     <h1>HomeVue</h1>
-      <MovieList />  
+      <BoxOfficeList />  
   </div>
 
 </template>
