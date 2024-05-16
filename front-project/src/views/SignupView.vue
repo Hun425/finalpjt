@@ -1,54 +1,78 @@
-<!-- 회원가입 페이지! 사용정보 : username, password, passwordCheck -->
-
 <template>
-    <div>
-        <h1>SignupView</h1>
-        <form @submit.prevent="signup">
-            <label for="username">username : </label>
-            <input type="text" v-model.trim="username" id="username">
-            <br>
-            <label for="password1">password : </label>
-            <input type="password" v-model.trim="password1" id="password">
-            <br>
-            <label for="password2">check your password : </label>
-            <input type="password" v-model.trim="password2" id="password2">
-            <br>
-            <input type="submit" value="가입하기">
-        </form>
+  <div>
+    <form @submit.prevent="register">
+      <div>
+        <label for="username">Username:</label>
+        <input type="text" v-model="username" required />
+        <div v-if="errors.username" class="error">{{ errors.username }}</div>
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" v-model="email" required />
+        <div v-if="errors.email" class="error">{{ errors.email }}</div>
+      </div>
+      <div>
+        <label for="age">Age:</label>
+        <input type="number" v-model="age" required />
+      </div>
+      <div>
+        <label for="password">Password:</label>
+        <input type="password" v-model="password" required />
+      </div>
+      <div>
+        <label for="password2">Confirm Password:</label>
+        <input type="password" v-model="password2" required />
+      </div>
+      <button type="submit">Sign Up</button>
+    </form>
+    <div v-if="errors.non_field_errors" class="error">
+      {{ errors.non_field_errors }}
     </div>
+  </div>
 </template>
 
-<script setup>
-    import {useRouter} from 'vue-router'
+<script>
+import axios from "axios";
 
-    import {ref} from 'vue'
-    
-    // v-model 생성
-    const username = ref(null)
-    const password1 = ref(null)
-    const password2 = ref(null)
-
-    // store의 signup 함수 불러오기
-    import {useAccountStore} from '@/stores/account'
-    
-    const accountStore = useAccountStore()
-
-    // 올바르지않은 형식으로 반환될시에 어떻게 처리될지 생각해보자!
-    const signup = function () {
-        console.log(1234)
-        const payload = {
-            username: username.value,
-            password1: password1.value,
-            password2: password2.value
+export default {
+  data() {
+    return {
+      username: "",
+      email: "",
+      age: null,
+      password: "",
+      password2: "",
+      errors: {},
+    };
+  },
+  methods: {
+    async register() {
+      this.errors = {};
+      try {
+        const response = await axios.post("/accounts/signup/", {
+          username: this.username,
+          email: this.email,
+          age: this.age,
+          password1: this.password,
+          password2: this.password2,
+        });
+        console.log("회원가입 성공:", response.data);
+      } catch (err) {
+        if (err.response && err.response.data) {
+          this.errors = err.response.data;
+        } else {
+          this.errors.non_field_errors = [
+            "An unexpected error occurred. Please try again.",
+          ];
         }
-        accountStore.signup(payload)
-    }
-
-
-
-
+      }
+    },
+  },
+};
 </script>
 
-<style scoped>
-
+<style>
+.error {
+  color: red;
+}
 </style>
