@@ -144,7 +144,7 @@
 
 | 로그인 |
 |----------|
-|![login](https://user-images.githubusercontent.com/112460466/210177956-c716414e-01c2-4c1e-b1f7-6562b9b7a857.gif)|
+|![login]()|
 
 <br>
 
@@ -154,7 +154,7 @@
 
 | 로그아웃 |
 |----------|
-|![logout](https://user-images.githubusercontent.com/112460466/210178009-11225733-7af5-4b8b-aa1c-fe264af01797.gif)|
+|![logout]()|
 
 <br>
 
@@ -244,7 +244,7 @@
 
 | 좋아요 & 댓글 |
 |----------|
-|![likeComment](https://user-images.githubusercontent.com/112460466/210382217-01d70181-91c3-43db-a1b8-409a612afb1c.gif)|
+|![likeComment]()|
 
 <br>
 
@@ -260,7 +260,7 @@
 
 | 상품 수정 & 삭제 |
 |----------|
-|![editDeleteProduct](https://user-images.githubusercontent.com/112460466/210386311-5fae87a7-745f-47c0-b8e3-fc41c65cb3cb.gif)|
+|![editDeleteProduct]()|
 
 <br>
 
@@ -272,7 +272,7 @@
 
 | 채팅 |
 |----------|
-|![chat](https://user-images.githubusercontent.com/112460466/210386478-ea4877c5-1728-4872-ab50-a8408ddf6dcd.gif)|
+|![chat]()|
 
 <br>
 
