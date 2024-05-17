@@ -1,30 +1,39 @@
 import {defineStore} from 'pinia'
 import {ref} from 'vue'
 import axios from 'axios'
-const JANGO_URL = 'http://127.0.0.1:8000'
 
 export const useAccountStore = defineStore('account', () => {
-    const signup = function (payload) {
+
+
+    // 발행될 토큰 저장할 token 선언
+    const token = ref(null)
+
+    // 로그인을 위한 함수 작성
+    const logIn = function (payload) {
         const username = payload.username
-        const password1 = payload.password1
-        const password2 = payload.password2
-        // const {username, password, passwordCheck} = payload
-        console.log(username, password1, password2)
+        const password = payload.password
         axios({
             method: 'post',
-            url: `${JANGO_URL}/accounts/signup/`,
+            url: '/accounts/login/',
             data: {
-                username, password, password2
+                username, password
             }
         })
-        .then(res => {
-            console.log('회원가입이 완료되었습니다.')
-        })
-        .catch(err => console.log(err))
+            .then(res => {
+                console.log('로그인이 완료되었습니다.')
+                console.log(res.data) // Token 발행 확인하기
+                token.value = res.data.key // pinia에서 확인하자!!
+            })
+            .catch(err => console.log(err))
     }
 
 
-
-
-    return {JANGO_URL, signup}
+    const isLogin = computed(() => {
+        if (token.value === null) {
+            return false
+        } else {
+            return ture
+        }
+    })
+    return { logIn, token, isLogin }
 }, {persist:true})
