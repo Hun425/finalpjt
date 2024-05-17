@@ -10,6 +10,7 @@
           <span class="nav" :class="{Dark:isDark}">마이페이지</span>
       </nav>
     </header>
+    <hr>
     <div class="content">
       <RouterView/>
     </div>
@@ -51,8 +52,8 @@
   }
 
   .Dark {
-    background-color: black;
-    color: white;
+    /* background-color: black;
+    color: white; */
   }
 
   .navbar {
