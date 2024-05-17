@@ -23,7 +23,7 @@ from .models import Movie, Article, Comment
 @api_view(['GET'])
 def movie_list(request):
     if request.method == 'GET':
-        movies = Movie.objects.all()
+        movies = Movie.objects.all().order_by('-release_date')
         paginator = Paginator(movies, 20)
 
         page = request.GET.get('page', 1)

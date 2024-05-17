@@ -8,7 +8,7 @@ User = get_user_model()
 class MovieListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = ('pk', 'title', 'vote_average', 'vote_count', 'poster_path')
+        fields = ('pk', 'title', 'vote_average', 'poster_path','release_date')
 
 
 class TopMovieListSerializer(serializers.ModelSerializer):

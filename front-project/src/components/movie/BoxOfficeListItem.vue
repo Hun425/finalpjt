@@ -1,26 +1,17 @@
 <!-- https://encrypted-tbn0.gstatic.com/images?q=tbn:AN…wwaP9UbKjHzbqMzXEHSPXNyIa6BudJBXpz0WMo&usqp=CAE&s -->
 
 <script setup>
-  import {useRoute} from 'vue-router'
-  import {ref} from 'vue'
-  import axios from 'axios'
   const props = defineProps({
     movie:Object,
   })
-  // console.log(props)
   console.log(props.movie)
-
-
-
-  // 영화 세부정보 가져오기 -> TMDB
-  const movieDetail = ref({})
     
 </script>
 
 <template>
   <div class="movieCard">
     <div class="image-container">
-      <img class="poster" src='@/assets/common.jpg' alt="">
+      <img class="poster" src='@/assets/common.jpg' alt="movie_poster">
       <span class="rank">{{ movie.rank }}</span>
       <span class="change" v-if="movie.rankInten != 0">{{ movie.rankInten }} | UP</span>
       <div class="overlay">
@@ -126,7 +117,3 @@
     color: #fff;
   }
 </style>
-
-
-
-
