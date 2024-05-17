@@ -17,6 +17,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']
+CSRF_COOKIE_SECURE = False  # 개발 환경에서만 사용
 
 # Application definition
 
@@ -39,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'imagekit'
+    'imagekit',
+    'drf_yasg',
 ]
 SITE_ID = 1
 
