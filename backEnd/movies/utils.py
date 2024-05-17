@@ -56,6 +56,8 @@ def fetch_movie_data(num_movies=10000):
                         id=movie_data['id'],
                         defaults={
                             'title': movie_data['title'],
+                            'adult': movie_data['adult'],
+                            'backdrop_path': movie_data.get('backdrop_path'),
                             'overview': movie_data['overview'],
                             'popularity': movie_data['popularity'],
                             'poster_path': movie_data.get('poster_path'),
@@ -82,3 +84,4 @@ def fetch_movie_data(num_movies=10000):
                     movie_count += 1
         else:
             print(f"Failed to fetch data: {response.status_code}")
+
