@@ -1,28 +1,29 @@
 <template>
-  <div>
-    <div>
-      <h3>메인페이지</h3>
-    </div>
+  <div class="movieDetailInfo">
     <div class="movieNav" @click="category">
-      <div :class="{pocus: isPocus===1, rest:!(isPocus===1) }">주요내용</div>|
-      <div :class="{pocus: isPocus===2, rest:!(isPocus===2) }">관람평</div>|
-      <div :class="{pocus: isPocus===3, rest:!(isPocus===3) }">예고편</div>|
+      <div :class="{navItem:true, focus: isFocus===1, rest:!(isFocus===1) }">주요내용</div>
+      <div :class="{navItem:true, focus: isFocus===2, rest:!(isFocus===2) }">관람평</div>
+      <div :class="{navItem:true, focus: isFocus===3, rest:!(isFocus===3)}">예고편</div>
     </div>
-      <MovieDetailInfo v-if="isPocus===1"/>
-      <MovieDetailReview v-if="isPocus===2"/>
-      <MovieDetailTrailer v-if="isPocus===3"/>
+      <MovieDetailInfo v-if="isFocus===1" :actors="movie.actors" :overview="movie.overview" />
+      <MovieDetailReview v-if="isFocus===2"/>
+      <MovieDetailTrailer v-if="isFocus===3"/>
   </div>
 </template>
 
 <script setup>
+
+  // 1) Component 구성 및 Focus
   import MovieDetailInfo from '@/components/movie/MovieDetailInfo.vue'
   import MovieDetailReview from '@/components/movie/MovieDetailReview.vue'
   import MovieDetailTrailer from '@/components/movie/MovieDetailTrailer.vue'
 
   import {ref} from 'vue'
+  import axios from 'axios'
+  import { useRoute } from 'vue-router'
   import { useAccountStore } from '@/stores/account';
   const store = useAccountStore()
-  const isPocus = ref(1)
+  const isFocus = ref(1)
   // 클릭시에 보이는 화면이 바뀌도록 설정하기
   const category = function (event) {
     const categories = {
@@ -30,25 +31,57 @@
     '관람평': 2,
     '예고편': 3
     };
-    isPocus.value = categories[event.target.innerText];
+    isFocus.value = categories[event.target.innerText];
   }
 
+
+  // 2)영화데이터 분배
+  const movie = ref({})
+  // 영화데이터 받기
+  const route = useRoute()
+  axios({
+    method:'get',
+    url:'/movies/'+`${route.params.moviepk}`,
+  })
+  .then(res => {
+    console.log(res.data)
+    movie.value = res.data
+    return 0
+  })
+  .catch(err => console.log(err))
 </script>
 
 <style scoped> 
+  .movieDetailInfo {
+    width: 1100px;
+    margin: 10px auto;
+  }
   .movieNav {
     display: flex;
-    width: 1100px;
-    margin: auto;
+    height: 40px;
   }
-  .pocus {
+  .navItem {
+    height: 40px;
+    padding: 7px 0 0 0;
+    border-color: #3b006e;
+    border-style: solid;
+    text-align: center;
+    
+  }
+  .focus {
+    font-weight: bold;
     width:400px;
-    background-color: blue;
+    border-width: 2px 2px 0px 2px;
   }
   .rest {
     width:350px;
-    background-color: blueviolet;
+    border-width: 0 0 2px 0;
   }
+
+
+</style>
+
+<style>
 
 
 </style>

@@ -4,7 +4,6 @@
   const props = defineProps({
     movie:Object,
   })
-  console.log(props.movie)
     
 </script>
 
