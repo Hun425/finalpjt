@@ -1,79 +1,79 @@
-
 <template>
-  <div  class="minheight" :class="[, {Dark:isDark}]">
-    <header >
-      <div>
-        <span @click="goToLogin" :class="{Dark:isDark}">LOGIN</span><span @click="goToSignup" :class="{Dark:isDark}">SIGNUP</span>
-      </div>
-      <div>
-      </div>
+  <div :class="{Dark:isDark}">
+    <header class="content">
+      <div><span :class="{Dark:isDark}" @click="goToLogin">Login</span>|<span :class="{Dark:isDark}" @click="goToSignup">Signup</span></div>
       <nav class="navbar">
-        <div>
-          <span @click="goToMovies" :class="{Dark:isDark}">영화</span>|
-          <span :class="{Dark:isDark}">이벤트</span>
-        </div>
-        <div class="logo">
-          <p class="logotext">Logo</p>
-        </div>
-        <div>
-          <span :class="{Dark:isDark}">커뮤니티</span>|
-          <span :class="{Dark:isDark}">마이페이지</span>
-        </div>
+          <span class="nav" :class="{Dark:isDark}" @click="goToMovie">영화</span>
+          <span class="nav">이벤트</span>
+        <div class="logotext">MOVIE CINEMA</div>
+          <span class="nav" :class="{Dark:isDark}">커뮤니티</span>|
+          <span class="nav" :class="{Dark:isDark}">마이페이지</span>
       </nav>
     </header>
-    <div>
-      <RouterView />
+    <div class="content">
+      <RouterView/>
     </div>
   </div>
 </template>
 
 <script setup>
- import {RouterLink, RouterView, useRouter} from 'vue-router'
- import {ref} from 'vue'
+  import {RouterLink, RouterView, useRouter} from 'vue-router'
+  import {ref} from 'vue'
 
- const router = useRouter()
- const isDark = ref(false)
+  const router = useRouter()
+  const isDark = ref(true)
 
-// 라우터별 이동함수
-// 배경색 수정 필요(isDark)!
- const goToMovies = function () {
-  // isDark.value = false
-  router.push({name:'movies'})
- }
 
- const goToLogin = function () {
-  // isDark.value = false
-  router.push({name:'login'})
- }
+  // 1) 페이지 렌더링 목록
+    // 영화 페이지
+  const goToMovie = function () {
+    isDark.value = false
+    router.push({name:'movies'})
+  }
+    // 로그인 페이지
+  const goToLogin = function () {
+    isDark.value = false
+    router.push({name:'login'})
+  }
+    // 회원가입 페이지
+  const goToSignup = function () {
+    isDark.value = false
+    router.push({name:'signup'})
+  }
 
- const goToSignup = function () {
-  // isDark.value = false
-  router.push({name:'signup'})
- }
 
 </script>
 
-
 <style scoped>
-  .minheight {
-    min-height: 1440px;
+  .content {
+    width: 1440px;
+    margin: 0 auto;
   }
+
   .Dark {
     background-color: black;
-    color:white;
+    color: white;
   }
+
   .navbar {
     display: flex;
     justify-content: space-between;
     width: 1440px;
     margin: 0px auto ;
-    /* color:white; */
     font-size: 20px;
+  }
+
+  .nav {
+    width: 100px;
+    text-align:center;
   }
   .logo {
     width:700px
   }
   .logotext {
+    width: 1100px;
     text-align: center;
+    font-weight: bold;
+    font-size: 30px;
   }
 </style>
