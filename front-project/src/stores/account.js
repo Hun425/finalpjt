@@ -29,7 +29,6 @@ export const useAccountStore = defineStore('account', () => {
             .catch(err => console.log(err))
     }
 
-
     const isLogin = computed(() => {
         if (token.value === null) {
             return false
