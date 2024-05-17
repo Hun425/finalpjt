@@ -23,6 +23,9 @@ class Movie(models.Model):
     genres = models.ManyToManyField(Genre, related_name='movies')
     actors = models.ManyToManyField(Actor, related_name='movies')
     title = models.CharField(max_length=300)
+    adult = models.BooleanField()
+    backdrop_path = models.TextField(null=True)
+
     overview = models.TextField()
     popularity = models.FloatField()
     poster_path = models.TextField(null=True)
