@@ -13,4 +13,6 @@ urlpatterns = [
     path('validate_username/', validate_username, name='validate_username'),
     path('validate_email/', validate_email, name='validate_email'),
 
+    path('api/v1/', include('dj_rest_auth.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
