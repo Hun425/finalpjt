@@ -1,48 +1,118 @@
-<!-- 회원가입 페이지! 사용정보 : username, password, passwordCheck -->
-
+<!-- src/RegisterForm.vue -->
 <template>
   <div>
-    <h1>SignupView</h1>
-    <form @submit.prevent="signup">
-      <label for="username">username : </label>
-      <input type="text" v-model.trim="username" id="username" />
-      <br />
-      <label for="password1">password : </label>
-      <input type="password" v-model.trim="password1" id="password" />
-      <br />
-      <label for="password2">check your password : </label>
-      <input type="password" v-model.trim="password2" id="password2" />
-      <br />
-      <input type="submit" value="가입하기" />
+    <h2>회원가입</h2>
+    <form @submit.prevent="submitForm">
+      <div>
+        <label for="username">Username:</label>
+        <input type="text" v-model="username" @blur="checkUsername" />
+        <span v-if="usernameError" class="error">{{ usernameError }}</span>
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" v-model="email" @blur="checkEmail" />
+        <span v-if="emailError" class="error">{{ emailError }}</span>
+      </div>
+      <div>
+        <label for="password1">Password:</label>
+        <input type="password" v-model="password1" />
+      </div>
+      <div>
+        <label for="password2">Confirm Password:</label>
+        <input type="password" v-model="password2" />
+      </div>
+      <button type="submit">가입하기</button>
     </form>
   </div>
 </template>
 
-<script setup>
-import { useRouter } from "vue-router";
+<script>
+import router from "@/router";
+import axios from "axios";
+import Swal from 'sweetalert2';
 
-import { ref } from "vue";
+export default {
+  data() {
+    return {
+      username: "",
+      email: "",
+      password1: "",
+      password2: "",
+      usernameError: "",
+      emailError: "",
+    };
+  },
+  methods: {
+    checkUsername() {
+      axios
+        .get("/validate_username/", { params: { username: this.username } })
+        .then((response) => {
+          if (response.data.is_taken) {
+            this.usernameError = "이 사용자 이름은 이미 사용 중입니다.";
+          } else {
+            this.usernameError = "";
+          }
+        });
+    },
+    checkEmail() {
+      axios
+        .get("/validate_email/", { params: { email: this.email } })
+        .then((response) => {
+          if (response.data.is_taken) {
+            this.emailError = "이 이메일은 이미 사용 중입니다.";
+          } else {
+            this.emailError = "";
+          }
+        });
+    },
+    submitForm() {
+      // 입력 필드 검증
+      if (this.username.trim() === '' || this.email.trim() === '') {
+        Swal.fire({
+          icon: 'error',
+          title: '누락된 필드',
+          text: '이메일과 유저네임을 모두 입력해주세요.',
+          confirmButtonText: '확인'
+        });
+        return; // 공백이면 함수 종료
+      }
 
-// v-model 생성
-const username = ref(null);
-const password1 = ref(null);
-const password2 = ref(null);
+      const formData = {
+        username: this.username,
+        email: this.email,
+        password1: this.password1,
+        password2: this.password2,
+      };
 
-// store의 signup 함수 불러오기
-import { useAccountStore } from "@/stores/account";
-
-const accountStore = useAccountStore();
-
-// 올바르지않은 형식으로 반환될시에 어떻게 처리될지 생각해보자!
-const signup = function () {
-  console.log(1234);
-  const payload = {
-    username: username.value,
-    password1: password1.value,
-    password2: password2.value,
-  };
-  accountStore.signup(payload);
+      axios
+        .post("/accounts/signup/", formData)
+        .then((response) => {
+          // 회원가입이 성공적으로 완료되었을 때 SweetAlert2 알림창 표시
+          Swal.fire({
+            icon: 'success',
+            title: '회원가입 성공',
+            text: '회원가입이 성공적으로 완료되었습니다.',
+            confirmButtonText: '확인'
+          }).then((result) => {
+            // 확인 버튼을 클릭하면 홈 페이지로 이동
+            if (result.isConfirmed) {
+              router.push('home');
+            }
+          });
+        })
+        .catch((error) => {
+          // 에러 처리
+          console.log(error);
+        });
+    },
+  },
 };
 </script>
 
-<style scoped></style>
+
+
+<style>
+.error {
+  color: red;
+}
+</style>
