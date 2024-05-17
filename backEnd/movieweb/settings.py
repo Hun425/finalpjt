@@ -17,8 +17,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']
-CSRF_COOKIE_SECURE = False  # 개발 환경에서만 사용
+# CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']
+# CSRF_COOKIE_SECURE = False  # 개발 환경에서만 사용
 
 # Application definition
 
