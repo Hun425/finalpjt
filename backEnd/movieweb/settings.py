@@ -48,6 +48,7 @@ REST_FRAMEWORK = {
     # Authentication
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
     # permission
     'DEFAULT_PERMISSION_CLASSES': [
@@ -64,6 +65,7 @@ AUTHENTICATION_BACKENDS = (
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
+CORS_ALLOW_CREDENTIALS = True
 MIDDLEWARE = [
   
     'django.middleware.security.SecurityMiddleware',
