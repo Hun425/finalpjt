@@ -44,7 +44,7 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'movieweb.middleware.custom_exception_handler',
+
     # Authentication
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
@@ -60,6 +60,7 @@ REST_FRAMEWORK = {
 
 
 MIDDLEWARE = [
+  
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     "corsheaders.middleware.CorsMiddleware",
