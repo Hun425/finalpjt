@@ -17,10 +17,6 @@ class TopMovieListSerializer(serializers.ModelSerializer):
         exclude = (
             'popularity',
             'tagline',
-            'words',
-            'budget',
-            'revenue',
-            'runtime',
         )
 
 
@@ -78,8 +74,6 @@ class MovieSerializer(serializers.ModelSerializer):
         exclude = (
             'popularity',
             'tagline',
-            'vote_count',
-            'words',
         )
 
 
