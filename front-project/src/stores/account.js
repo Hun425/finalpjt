@@ -1,9 +1,10 @@
 import {defineStore} from 'pinia'
-import {ref} from 'vue'
+import {ref, computed} from 'vue'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
 
 export const useAccountStore = defineStore('account', () => {
-
+    const router = useRouter()
 
     // 발행될 토큰 저장할 token 선언
     const token = ref(null)
@@ -23,6 +24,7 @@ export const useAccountStore = defineStore('account', () => {
                 console.log('로그인이 완료되었습니다.')
                 console.log(res.data) // Token 발행 확인하기
                 token.value = res.data.key // pinia에서 확인하자!!
+                router.push({name:'movies'})
             })
             .catch(err => console.log(err))
     }
@@ -32,7 +34,7 @@ export const useAccountStore = defineStore('account', () => {
         if (token.value === null) {
             return false
         } else {
-            return ture
+            return true
         }
     })
     return { logIn, token, isLogin }

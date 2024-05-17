@@ -2,11 +2,15 @@
     <div>
         <h1>LoginView</h1>
         <form @submit.prevent = "logIn">
-            <label for="username"></label>
-            <input type="text" v-model.trim="username" id="username" @blur="checkusername">
-            <span v-if="usernameError">존재하지않는 이름입니다.</span>
-            <label for="password"></label>
-            <input type="password" v-model.trim="password" id="password">
+            <div>
+                <label for="username">username:</label>
+                <input type="text" v-model.trim="username" id="username" @blur="checkusername">
+                <!-- <span v-if="usernameError">존재하지않는 이름입니다.</span> -->
+            </div>
+            <div>
+                <label for="password">password:</label>
+                <input type="password" v-model.trim="password" id="password">
+            </div>
 
             <input type="submit" value = LOGIN>
         </form>

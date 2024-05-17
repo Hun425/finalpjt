@@ -30,17 +30,17 @@ const router = createRouter({
       path: "/signup",
       name: "signup",
       component: SignupView,
-    },
+    }, 
     {
       path: "/:moviepk",
       name: "movieDetail",
       component: MovieDetailView,
     },
-        {
-      path: '/profile/:userpk',
-      name: '',
-      component: () => import('../views/AboutView.vue')
-    },
+    //     {
+    //   path: '/profile/:userpk',
+    //   name: '',
+    //   component: () => import('../views/AboutView.vue')
+    // },
     // {
     //   path: '/',
     //   name: '',
