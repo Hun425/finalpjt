@@ -56,6 +56,7 @@ class Article(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(10)]
     )
     title = models.CharField(max_length=100)
+
     content = models.TextField(null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

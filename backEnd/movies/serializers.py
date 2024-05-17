@@ -7,12 +7,14 @@ User = get_user_model()
 
 class MovieListSerializer(serializers.ModelSerializer):
     class Meta:
+
         model = Movie
         fields = ('pk', 'title', 'vote_average', 'poster_path','release_date')
 
 
 class TopMovieListSerializer(serializers.ModelSerializer):
     class Meta:
+
         model = Movie
         exclude = (
             'popularity',
@@ -24,6 +26,7 @@ class TopMovieListSerializer(serializers.ModelSerializer):
 class ArticleSerializer(serializers.ModelSerializer):
     class UserSerializer(serializers.ModelSerializer):
         class Meta:
+
             model = User
             fields = ('pk', 'username', 'profile_pic')
 
@@ -31,6 +34,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     class LikeUserSerializer(serializers.ModelSerializer):
         class Meta:
+            
             model = User
             fields = ('pk',)
 
