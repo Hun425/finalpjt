@@ -43,6 +43,26 @@ class ArticleSerializer(serializers.ModelSerializer):
         source='like_users.count', read_only=True
     )
 
+    class CommentSerializer(serializers.ModelSerializer):
+        class UserSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = User
+                fields = ('pk', 'username', 'profile_pic')
+        class Meta:
+            model = Comment
+            fields = (
+                'pk',
+                'user',
+                'article',
+                'content',
+                'created_at',
+                'updated_at',
+            )
+            read_only_fields = ('article',)
+    comments = CommentSerializer(many=True)
+
+
+
     class Meta:
         model = Article
         fields = '__all__'
@@ -68,10 +88,21 @@ class MovieSerializer(serializers.ModelSerializer):
             model = Actor
             fields = ('pk', 'name', 'profile_path')
 
+
+
+
+            
+
     genres = GenreSerializer(read_only=True, many=True)
     actors = ActorSerializer(read_only=True, many=True)
     like_movies = UserSerializer(read_only=True, many=True)
     articles = ArticleSerializer(many=True)
+
+
+
+    user = UserSerializer(read_only=True)
+
+
 
     class Meta:
         model = Movie
@@ -79,6 +110,7 @@ class MovieSerializer(serializers.ModelSerializer):
             'popularity',
             'tagline',
         )
+    
 
 
 # 날씨 기반 추천 장르 영화
