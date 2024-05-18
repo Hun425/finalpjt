@@ -4,8 +4,6 @@ import { createPinia } from "pinia";
 import App from "./App.vue";
 import router from "./router";
 
-// npm install pinia
-// npm install pinia-plugin-persistedstate
 
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 
@@ -24,4 +22,8 @@ app.config.globalProperties.$axios = axios;
 app.use(pinia);
 app.use(router);
 
+
 app.mount("#app");
+
+// npm install pinia
+// npm install pinia-plugin-persistedstate
