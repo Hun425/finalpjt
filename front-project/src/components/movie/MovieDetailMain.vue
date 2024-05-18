@@ -1,11 +1,11 @@
 <template>
   <div v-show="movie" class="background">
     <div class="contents">
-      <img v-if="movie.backdrop_path" class="backdrop" :src="'https://image.tmdb.org/t/p/w500/'+ movie.backdrop_path" alt="backdrop">
+      <img v-if="movie && movie.backdrop_path" class="backdrop" :src="'https://image.tmdb.org/t/p/w500/'+ movie.backdrop_path" alt="backdrop">
       <img v-else class="backdrop" src="@/assets/backdrop.webp" alt="backdrop">
-      <img class="poster" :src="'https://image.tmdb.org/t/p/w500/'+ movie.poster_path" alt="poster">
+      <img v-if="movie && movie.poster_path" class="poster" :src="'https://image.tmdb.org/t/p/w500/'+ movie.poster_path" alt="@/assets/backdrop.webp">
       <p class="title">{{ movie.title }}</p>
-      <p class="releaseDate">개봉일 : {{ movie.release_date }}</p>
+      <p class="releaseDate" >개봉일 : {{ movie.release_date }}</p>
     </div>
   </div>
 </template>
@@ -19,7 +19,6 @@
   })
   movie.value = props.movie
 
-  
 </script>
 
 <style scoped>
@@ -56,7 +55,7 @@
     position:absolute;
     top:100px;
     right:100px;
-    width:240px;
+    width:200px;
     height:312px;
     border-radius: 10px;
   }

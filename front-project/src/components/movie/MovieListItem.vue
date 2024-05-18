@@ -28,8 +28,6 @@
         return 0
       }
     }
-  
-    console.log(getImageSource())
 
 </script>
 <!-- 소수 한자리수 표현 => 평점 : {{movie.vote_average.toFixed(1)}}점 -->
