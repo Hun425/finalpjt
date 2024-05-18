@@ -4,14 +4,14 @@
       <img v-if="movie && movie.backdrop_path" class="backdrop" :src="'https://image.tmdb.org/t/p/w500/'+ movie.backdrop_path" alt="backdrop">
       <img v-else class="backdrop" src="@/assets/backdrop.webp" alt="backdrop">
       <img v-if="movie && movie.poster_path" class="poster" :src="'https://image.tmdb.org/t/p/w500/'+ movie.poster_path" alt="@/assets/backdrop.webp">
-      <p class="title">{{ movie.title }}</p>
-      <p class="releaseDate" >개봉일 : {{ movie.release_date }}</p>
+      <p v-if="movie && movie.title" class="title">{{ movie.title }}</p>
+      <p  class="releaseDate" >개봉일 : {{ movie.release_date }}</p>
     </div>
   </div>
 </template>
 
 <script setup>
-  const movie = ref(null)
+  const movie = ref({})
 
   import { ref } from 'vue'
   const props = defineProps({

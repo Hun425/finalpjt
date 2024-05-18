@@ -8,7 +8,7 @@
         <div :class="{navItem:true, focus: isFocus===3, rest:!(isFocus===3)}">예고편</div>
       </div>
       <MovieDetailInfo v-if="isFocus===1" :actors="movie.actors" :overview="movie.overview" />
-      <MovieDetailReview v-if="isFocus===2" :moviepk="movie.id"/>
+      <MovieDetailReviewList v-if="isFocus===2" :moviepk="movie.id"/>
       <MovieDetailTrailer v-if="isFocus===3" :title="movie.title" />
     </div>
   </div>
@@ -19,7 +19,7 @@
   // 1) Component 구성 및 Focus
   import MovieDetailMain from '@/components/movie/MovieDetailMain.vue'
   import MovieDetailInfo from '@/components/movie/MovieDetailInfo.vue'
-  import MovieDetailReview from '@/components/movie/MovieDetailReview.vue'
+  import MovieDetailReviewList from '@/components/movie/MovieDetailReviewList.vue'
   import MovieDetailTrailer from '@/components/movie/MovieDetailTrailer.vue'
 
   import {ref} from 'vue'
