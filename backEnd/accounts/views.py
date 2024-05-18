@@ -73,3 +73,14 @@ def update_profile(request, user_pk):
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['DELETE'])
+def delete_profile(request, user_pk):
+    user = get_object_or_404(User, pk=user_pk)
+    me = request.user
+    if me == user:
+        user.delete()
+        return Response({"message": "회원 탈퇴 완료"}, status=status.HTTP_204_NO_CONTENT)
+    else:
+        return Response({"error": "올바른 접근이 아닙니다"}, status=status.HTTP_403_FORBIDDEN)
