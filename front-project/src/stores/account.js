@@ -40,7 +40,7 @@ export const useAccountStore = defineStore('account', () => {
                 console.log(err)
                 Swal.fire({
                     icon: 'error',
-                    title: '입력 오류',
+                    title: 'ERROR',
                     text: '닉네임과 비밀번호를 확인해주세요.',
                     confirmButtonText: '확인'
                   });

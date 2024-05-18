@@ -65,7 +65,7 @@
       router.push({name:'profile',params:{}})
     }
   }
-  console.log(store)
+  // console.log(store)
 
 </script>
 
