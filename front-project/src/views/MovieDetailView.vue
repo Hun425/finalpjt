@@ -1,19 +1,23 @@
 <template>
-  <div class="movieDetailInfo">
-    <div class="movieNav" @click="category">
-      <div :class="{navItem:true, focus: isFocus===1, rest:!(isFocus===1) }">주요내용</div>
-      <div :class="{navItem:true, focus: isFocus===2, rest:!(isFocus===2) }">관람평</div>
-      <div :class="{navItem:true, focus: isFocus===3, rest:!(isFocus===3)}">예고편</div>
-    </div>
+  <div>
+    <MovieDetailMain :movie="movie"/>
+    <div class="movieDetailInfo" v-if="movie">
+      <div class="movieNav" @click="category">
+        <div :class="{navItem:true, focus: isFocus===1, rest:!(isFocus===1) }">주요내용</div>
+        <div :class="{navItem:true, focus: isFocus===2, rest:!(isFocus===2) }">관람평</div>
+        <div :class="{navItem:true, focus: isFocus===3, rest:!(isFocus===3)}">예고편</div>
+      </div>
       <MovieDetailInfo v-if="isFocus===1" :actors="movie.actors" :overview="movie.overview" />
       <MovieDetailReview v-if="isFocus===2"/>
-      <MovieDetailTrailer v-if="isFocus===3"/>
+      <MovieDetailTrailer v-if="isFocus===3" :title="movie.title" />
+    </div>
   </div>
 </template>
 
 <script setup>
 
   // 1) Component 구성 및 Focus
+  import MovieDetailMain from '@/components/movie/MovieDetailMain.vue'
   import MovieDetailInfo from '@/components/movie/MovieDetailInfo.vue'
   import MovieDetailReview from '@/components/movie/MovieDetailReview.vue'
   import MovieDetailTrailer from '@/components/movie/MovieDetailTrailer.vue'
@@ -36,7 +40,7 @@
 
 
   // 2)영화데이터 분배
-  const movie = ref({})
+  const movie = ref(null) // 초기에 null로 설정해놔야 변화할 때에 인식하고 수정해준다!!
   // 영화데이터 받기
   const route = useRoute()
   axios({
@@ -62,19 +66,19 @@
   }
   .navItem {
     height: 40px;
-    padding: 7px 0 0 0;
+    padding: 12px 0 0 0;
     border-color: #3b006e;
     border-style: solid;
+    font-weight: bold;
     text-align: center;
-    
   }
   .focus {
-    font-weight: bold;
-    width:400px;
+    
+    width:370px;
     border-width: 2px 2px 0px 2px;
   }
   .rest {
-    width:350px;
+    width:365px;
     border-width: 0 0 2px 0;
   }
 

@@ -6,21 +6,22 @@
 </template>
 
 <script setup>
-  defineProps({
+  const props = defineProps({
     actor:Object,
   })
+  // console.log(props)
 </script>
 
 <style scoped>
   .profile {
-    height:270px;
-    width: 181px;
+    height:180px;
+    width: 120px;
     border-radius: 10px 10px 0px 0px;
   }
 
   .actorNm {
-    font-size: 20px;
+    width:120px;
+    font-size: 16px;
     font-weight: bold;
-    margin: 10px 0 0 10px;
   }
 </style>

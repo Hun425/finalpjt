@@ -61,7 +61,7 @@
   })
   .then(res => {
     WeeklyMovieList.value = res.data.boxOfficeResult.weeklyBoxOfficeList
-    console.log(WeeklyMovieList.value)
+    // console.log(WeeklyMovieList.value)
 
     return 0
   })

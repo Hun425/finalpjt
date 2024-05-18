@@ -1,62 +1,103 @@
 <template>
-  <div class="containers">
-    <swiper
-      :slidesPerView="4"
-      :spaceBetween="57"
-      :freeMode="true"
-      :pagination="{
-        clickable: true,
-        el: '.swiper-pagination'  // Add this line to specify the pagination element
-      }"
-      :modules="modules"
-      class="mySwiper"
-    >
-      <swiper-slide class="card" v-for="actor in actors" :key="actor.name">
-        <ActorCard :actor="actor" />
-      </swiper-slide>
-      <div class="swiper-pagination"></div>  <!-- Ensure this div is included for pagination -->
-    </swiper>
-  </div>
+  <swiper
+    :slidesPerView="4"
+    :spaceBetween="30"
+    :centeredSlides="true"
+    :pagination="{
+      clickable: true,
+    }"
+    :modules="[Pagination]"
+    class="mySwiper"
+  > 
+    <swiper-slide><ActorCard /></swiper-slide>
+    <swiper-slide>Slide 1</swiper-slide>
+    <swiper-slide>Slide 2</swiper-slide><swiper-slide>Slide 3</swiper-slide>
+    <swiper-slide>Slide 4</swiper-slide><swiper-slide>Slide 5</swiper-slide>
+    <swiper-slide>Slide 6</swiper-slide><swiper-slide>Slide 7</swiper-slide>
+    <swiper-slide>Slide 8</swiper-slide><swiper-slide>Slide 9</swiper-slide>
+  </swiper>
+  <swiper
+    :slidesPerView="4"
+    :spaceBetween="30"
+    :centeredSlides="true"
+    :pagination="{
+      clickable: true,
+    }"
+    :modules="[Pagination]"
+    class="mySwiper"
+  >
+    <swiper-slide v-for="actor in actors" :key="actor.name">
+      {{ actor.name }}
+    </swiper-slide>
+    <swiper-slide>Slide 2</swiper-slide><swiper-slide>Slide 3</swiper-slide>
+    <swiper-slide>Slide 4</swiper-slide><swiper-slide>Slide 5</swiper-slide>
+    <swiper-slide>Slide 6</swiper-slide><swiper-slide>Slide 7</swiper-slide>
+    <swiper-slide>Slide 8</swiper-slide><swiper-slide>Slide 9</swiper-slide>
+  </swiper>
 </template>
 
+
+<!-- <script>
+  // Import Swiper Vue.js components
+  import { Swiper, SwiperSlide } from 'swiper/vue';
+  import ActorCard from '../actor/ActorCard.vue';
+  import {defineProps} from 'vue'
+  defineProps({
+    actors:Array,
+  })
+
+
+  // Import Swiper styles
+  import 'swiper/css';
+
+  import 'swiper/css/pagination';
+
+
+  // import required modules
+  import { Pagination } from 'swiper/modules';
+
+  export default {
+    components: {
+      Swiper,
+      SwiperSlide,
+    },
+    setup() {
+      return {
+        modules: [Pagination],
+      };
+    },
+  };
+</script> -->
 <script setup>
-import ActorCard from '@/components/actor/ActorCard.vue';
-import { ref } from 'vue';
-const props = defineProps({
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import ActorCard from '../actor/ActorCard.vue';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { Pagination } from 'swiper/modules';
+
+// Define props
+defineProps({
   actors: Array,
 });
 </script>
 
-<script>
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import 'swiper/css';
-import 'swiper/css/free-mode';
-import 'swiper/css/pagination';
-import { FreeMode, Pagination } from 'swiper/modules';
-
-export default {
-  components: {
-    Swiper,
-    SwiperSlide,
-  },
-  setup() {
-    return {
-      modules: [FreeMode, Pagination],
-    };
-  },
-};
-</script>
-
-
-<style>
-.card {
-  height: 350px;
-  border-radius: 10px;
+<style scoped>
+#app {
+  height: 100%;
 }
-
-.containers {
+html,
+body {
   position: relative;
   height: 100%;
+}
+
+body {
+  background: #eee;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #000;
+  margin: 0;
+  padding: 0;
 }
 
 .swiper {
@@ -64,14 +105,22 @@ export default {
   height: 100%;
 }
 
-/* Ensure the pagination bullets are styled properly */
-.swiper-pagination {
-  bottom: 10px;  /* Adjust the position as needed */
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.swiper-pagination-bullet {
-  background: #007aff;  /* Change color as needed */
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
+
 </style>
-
-
