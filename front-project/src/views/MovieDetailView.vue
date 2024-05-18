@@ -8,7 +8,7 @@
         <div :class="{navItem:true, focus: isFocus===3, rest:!(isFocus===3)}">예고편</div>
       </div>
       <MovieDetailInfo v-if="isFocus===1" :actors="movie.actors" :overview="movie.overview" />
-      <MovieDetailReview v-if="isFocus===2"/>
+      <MovieDetailReview v-if="isFocus===2" :moviepk="movie.id"/>
       <MovieDetailTrailer v-if="isFocus===3" :title="movie.title" />
     </div>
   </div>
@@ -45,7 +45,7 @@
   const route = useRoute()
   axios({
     method:'get',
-    url:'/movies/'+`${route.params.moviepk}`,
+    url:'/movies/'+`${route.params.moviepk}/`,
   })
   .then(res => {
     console.log(res.data)

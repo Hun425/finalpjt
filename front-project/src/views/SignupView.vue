@@ -102,6 +102,12 @@ export default {
         .catch((error) => {
           // 에러 처리
           console.log(error);
+          Swal.fire({
+          icon: 'error',
+          title: '오류 발생',
+          text: '비밀번호를 다시 설정해주세요.',
+          confirmButtonText: '확인'
+        });
         });
     },
   },
