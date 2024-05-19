@@ -64,5 +64,10 @@ export const useAccountStore = defineStore('account', () => {
         router.push({name:'home'})
     }
 
-    return { userData, logIn, token, isLogin, logOut }
+
+    const goToLogin = function () {
+        router.push({name:'login'})
+      }
+
+    return { userData, logIn, token, isLogin, logOut, goToLogin}
 }, {persist:true})

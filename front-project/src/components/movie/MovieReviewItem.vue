@@ -31,6 +31,7 @@
         </form>
       </div>
       <!-- 여기에 댓글 작성하기!! -->
+      <MovieReviewCommentList :comments="review.comments" :review="review" :moviepk="moviepk" />
       <hr>
       <div style="padding-left: 50px;">
       </div>
@@ -41,10 +42,12 @@
 </template>
 
 <script setup>
+  import MovieReviewCommentList from '@/components/movie/MovieReviewCommentList.vue'
   import { ref } from 'vue'
   import { useAccountStore } from '@/stores/account';
   import axios from 'axios'
   import Swal from 'sweetalert2';
+
   const review = ref(null)
   const props = defineProps({
     review:Object,

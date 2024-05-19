@@ -1,5 +1,3 @@
-
-
 <template>
   <div class="main">
     <p class="textcenter">MovieListVue</p>
