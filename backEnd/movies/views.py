@@ -3,11 +3,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-
+from django.db.models import Count, Avg
 from django.core.paginator import Paginator
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, get_list_or_404
-
+import random
 from .serializers import (
     MovieListSerializer,
     ArticleSerializer,
@@ -432,3 +432,77 @@ def like_article(request, movie_pk, article_pk):
         article.like_users.add(user)
         serializer = ArticleSerializer(article)
         return Response(serializer.data)
+
+
+
+
+
+from django.db.models import Count, Avg
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from .models import Movie, Genre
+from .serializers import MovieSerializer
+import random
+import datetime
+
+class RecommendedMoviesView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        current_year = datetime.date.today().year
+        birth_year = current_year - user.age
+        teenage_years_start = birth_year + 10
+        teenage_years_end = teenage_years_start + 9
+
+        # 10대에 나온 영화 중 사용자가 좋아요를 누른 영화 쿼리
+        liked_movies = Movie.objects.filter(
+            like_users=user,
+            release_date__year__gte=teenage_years_start,
+            release_date__year__lte=teenage_years_end
+        )
+
+        # 사용자 나이가 10살 이하인 경우 최근 1년 동안 개봉한 영화 추천
+        if user.age <= 10:
+            one_year_ago = datetime.date.today() - datetime.timedelta(days=365)
+            recent_movies = Movie.objects.filter(
+                release_date__gte=one_year_ago,
+                release_date__lte=datetime.date.today()
+            ).order_by('-release_date')
+
+            # 랜덤으로 10개 선택
+            recent_movies = random.sample(list(recent_movies), min(10, recent_movies.count()))
+            
+            serializer = MovieSerializer(recent_movies, many=True)
+            return Response(serializer.data)
+        if liked_movies.count() < 5:
+            return Response({"message": "좋아하는 영화를 5개 이상 선택해주세요."})
+        
+        # 사용자가 좋아요를 누른 영화 중 가장 많이 선택된 장르
+        favorite_genre = liked_movies.values('genres').annotate(
+            genre_count=Count('genres')
+        ).order_by('-genre_count').first()
+
+        if favorite_genre:
+            genre_id = favorite_genre['genres']
+            genre = Genre.objects.get(id=genre_id)
+            recommended_movies = Movie.objects.filter(
+                genres=genre,
+                vote_average__gte=8.0
+            ).distinct()
+            if user.age <= 19:
+                recommended_movies = recommended_movies.filter(adult=False)
+            
+            # 랜덤으로 20개 선택
+                recommended_movies = random.sample(list(recommended_movies), min(20, recommended_movies.count()))
+
+                serializer = MovieSerializer(recommended_movies, many=True)
+                return Response(serializer.data)
+            # 랜덤으로 20개 선택
+            recommended_movies = random.sample(list(recommended_movies), min(10, recommended_movies.count()))
+
+            serializer = MovieSerializer(recommended_movies, many=True)
+            return Response(serializer.data)
+        else:
+            return Response({"message": "좋아하는 영화를 5개 이상 선택해주세요."})
