@@ -61,7 +61,24 @@
   
   const store = useAccountStore()
 
+  // 리뷰 삭제
+  const deleteReview = function (moviepk, reviewpk) {
+    axios({
+      method:'delete',
+      url:`/movies/${moviepk}/reviews/${reviewpk}/`,
+      headers: {
+        Authorization: `Token ${store.token}`
+      },
+    })
+    .then(res => {
+      reviews.value = reviews.value.filter(review => review.id !== reviewpk)
+    })
+    .catch(err => console.log(err))
+  }
+
+
   
+
   const isUpdate = ref(false)
   const title = ref(null)
   const content = ref(null)
@@ -89,7 +106,7 @@
     }
     axios({
       method:'put',
-      url:`/movies/${props.moviepk}/articles/${reviewpk}/`,
+      url:`/movies/${props.moviepk}/reviews/${reviewpk}/`,
       data: {
         title:title.value,
         content:content.value,

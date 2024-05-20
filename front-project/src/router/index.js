@@ -60,7 +60,7 @@ const router = createRouter({
 // 페이지별로 접근을 제한하고 싶은 페이지 설정하기!!
 // router.beforeEach((to, from) => {
 //   const store = useAccountStore()
-//   if (to.name === 'ArticleView' && store.isLogin) {
+//   if (to.name === 'ReviewView' && store.isLogin) {
 //     window.alert('로그인이 필요합니다.')
 //     return {name: 'LoginView'}
 //   }
