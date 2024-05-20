@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Count, Avg
-from django.core.paginator import Paginator
+# from django.core.paginator import Paginator
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, get_list_or_404
 import random
@@ -20,17 +20,33 @@ from .models import Movie, Article, Comment
 
 
 # 모든 영화
+# @api_view(['GET'])
+# def movie_list(request):
+#     if request.method == 'GET':
+#         movies = Movie.objects.all().order_by('-release_date')
+#         paginator = Paginator(movies, 20)
+
+#         page = request.GET.get('page', 1)
+#         page_movies = paginator.get_page(page)
+
+#         serializer = MovieListSerializer(page_movies, many=True)
+#         return Response(serializer.data)
+# from django.core.paginator import Paginator  // 이 부분이 원래 있었던 코드
+from rest_framework.pagination import PageNumberPagination
+
+class MoviePagination(PageNumberPagination):
+    page_size = 20
+
+
+# 모든 영화
 @api_view(['GET'])
 def movie_list(request):
     if request.method == 'GET':
         movies = Movie.objects.all().order_by('-release_date')
-        paginator = Paginator(movies, 20)
-
-        page = request.GET.get('page', 1)
-        page_movies = paginator.get_page(page)
-
-        serializer = MovieListSerializer(page_movies, many=True)
-        return Response(serializer.data)
+        paginator = MoviePagination()
+        result_page = paginator.paginate_queryset(movies, request)
+        serializer = MovieListSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
 
 # 각 영화별 디테일 정보
@@ -41,256 +57,6 @@ def movie_detail(request, movie_pk):
     return Response(serializr.data)
 
 
-# 해당하는 장르 찾기
-@api_view(['GET'])
-def recommended(request, genre_pk):
-    if request.method == 'GET':
-        movies = get_list_or_404(Movie)
-        serializer = MovieGenreSerializer(movies, many=True)
-
-        comedyGenre = [
-            5,
-            13,
-            68,
-            71,
-            75,
-            90,
-            96,
-            99,
-            100,
-            107,
-            109,
-            114,
-            115,
-            137,
-            153,
-            164,
-            177,
-            194,
-            219,
-            239,
-            243,
-            245,
-            248,
-            252,
-            262,
-            284,
-            287,
-            290,
-            292,
-            306,
-            310,
-            321,
-            338,
-            342,
-            350,
-            378,
-            392,
-            401,
-            433,
-            439,
-            452,
-            455,
-            458,
-            464,
-            480,
-            492,
-            496,
-            508,
-            509,
-            512,
-        ]
-        actionGenre = [
-            667,
-            668,
-            670,
-            676,
-            679,
-            681,
-            682,
-            691,
-            698,
-            699,
-            700,
-            707,
-            708,
-            709,
-            710,
-            714,
-            744,
-            752,
-            754,
-            755,
-            787,
-            792,
-            834,
-            839,
-            841,
-            847,
-            849,
-            855,
-            860,
-            861,
-            865,
-            869,
-            871,
-            877,
-            916,
-            924,
-            929,
-            934,
-            941,
-            942,
-            943,
-            944,
-            949,
-            954,
-            955,
-            956,
-            961,
-            984,
-            992,
-            1051,
-        ]
-        thrillerGenre = [
-            155,
-            55,
-            59,
-            63,
-            77,
-            78,
-            82,
-            83,
-            93,
-            104,
-            111,
-            116,
-            117,
-            150,
-            161,
-            163,
-            169,
-            170,
-            179,
-            180,
-            182,
-            184,
-            186,
-            187,
-            189,
-            192,
-            213,
-            214,
-            218,
-            223,
-            231,
-            234,
-            241,
-            242,
-            251,
-            267,
-            274,
-            275,
-            277,
-            280,
-            281,
-            288,
-            296,
-            298,
-            299,
-            302,
-            303,
-            319,
-            320,
-            322,
-        ]
-        adventureGenre = [
-            18,
-            22,
-            58,
-            62,
-            74,
-            79,
-            85,
-            87,
-            89,
-            95,
-            97,
-            98,
-            105,
-            106,
-            118,
-            120,
-            121,
-            122,
-            134,
-            146,
-            152,
-            154,
-            157,
-            165,
-            168,
-            172,
-            173,
-            174,
-            175,
-            193,
-            196,
-            199,
-            200,
-            201,
-            217,
-            244,
-            246,
-            253,
-            254,
-            285,
-            329,
-            330,
-            331,
-            332,
-            395,
-            411,
-            421,
-            435,
-            468,
-        ]
-
-        # 공포
-        if genre_pk == 27:
-            serializer = genre_serach(serializer.data, thrillerGenre)
-        # 코미디
-        if genre_pk == 35:
-            serializer = genre_serach(serializer.data, comedyGenre)
-        # 모험
-        if genre_pk == 12:
-            serializer = genre_serach(serializer.data, adventureGenre)
-        # 액션
-        if genre_pk == 28:
-            serializer = genre_serach(serializer.data, actionGenre)
-        return Response(serializer)
-
-
-def genre_serach(lst, genre):
-    fetch_data = []
-
-    for data in lst:
-        if data['pk'] in genre:
-            tmp = {
-                'pk': 0,
-                'title': '',
-                'overview': '',
-                'poster_path': '',
-                'release_date': '',
-            }
-            tmp['pk'] = data['pk']
-            tmp['title'] = data['title']
-            tmp['overview'] = data['overview']
-            tmp['poster_path'] = data['poster_path']
-            tmp['release_date'] = data['release_date']
-            fetch_data.append(tmp)
-
-    return fetch_data
 
 
 # user가 저장한 한 목록
@@ -506,3 +272,76 @@ class RecommendedMoviesView(APIView):
             return Response(serializer.data)
         else:
             return Response({"message": "좋아하는 영화를 5개 이상 선택해주세요."})
+        
+
+import os
+import openai
+from dotenv import load_dotenv
+from django.http import JsonResponse
+from .models import Movie
+from .serializers import MovieListSerializer
+
+# .env 파일 로드
+load_dotenv()
+
+# 환경 변수에서 API 키 불러오기
+openai.api_key = os.getenv('OPENAI_API_KEY')
+
+if openai.api_key is None:
+    raise ValueError("No OPENAI_API_KEY found in environment variables.")
+
+def get_movies_from_db():
+    return Movie.objects.all()
+
+def levenshtein_distance(s1, s2):
+    if len(s1) < len(s2):
+        return levenshtein_distance(s2, s1)
+
+    if len(s2) == 0:
+        return len(s1)
+
+    previous_row = range(len(s2) + 1)
+    for i, c1 in enumerate(s1):
+        current_row = [i + 1]
+        for j, c2 in enumerate(s2):
+            insertions = previous_row[j + 1] + 1
+            deletions = current_row[j] + 1
+            substitutions = previous_row[j] + (c1 != c2)
+            current_row.append(min(insertions, deletions, substitutions))
+        previous_row = current_row
+    
+    return previous_row[-1]
+
+def find_similar_movies(movie_name, movies, top_n=10):
+    similar_movies = []
+    for movie in movies:
+        distance = levenshtein_distance(movie_name.lower(), movie.title.lower())
+        similarity = 1 / (1 + distance)
+        
+        # 시리즈물 우선 처리
+        if movie_name.lower() in movie.title.lower():
+            similarity += 1
+        
+        if similarity >= 1.0:
+            similar_movies.append((similarity, movie))
+    
+    similar_movies.sort(key=lambda x: x[0], reverse=True)
+    
+    return [(movie, similarity) for similarity, movie in similar_movies[:top_n]]
+
+def recommend_movies(request):
+    movie_name = request.GET.get('movie_name', '')
+
+    movies = get_movies_from_db()
+
+    if movie_name:
+        similar_movies = find_similar_movies(movie_name, movies)
+        serialized_movies = []
+        for movie, similarity in similar_movies:
+            serialized_movie = MovieListSerializer(movie).data
+            serialized_movie['similarity'] = similarity
+            serialized_movies.append(serialized_movie)
+        return JsonResponse({'similar_movies': serialized_movies})
+
+    return JsonResponse({'similar_movies': []})
+

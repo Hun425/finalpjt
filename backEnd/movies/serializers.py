@@ -56,6 +56,7 @@ class ArticleSerializer(serializers.ModelSerializer):
             fields = (
                 'pk',
                 'user',
+                
                 'article',
                 'content',
                 'created_at',

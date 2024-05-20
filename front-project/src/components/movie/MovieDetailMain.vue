@@ -5,7 +5,7 @@
       <img v-else class="backdrop" src="@/assets/backdrop.webp" alt="backdrop">
       <img v-if="movie && movie.poster_path" class="poster" :src="'https://image.tmdb.org/t/p/w500/'+ movie.poster_path" alt="@/assets/backdrop.webp">
       <p v-if="movie && movie.title" class="title">{{ movie.title }}</p>
-      <p  class="releaseDate" >개봉일 : {{ movie.release_date }}</p>
+      <p  class="releaseDate" >개봉일 : {{ movie.release_date }} $ {{ movie.id }}</p>
     </div>
   </div>
 </template>

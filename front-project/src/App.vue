@@ -2,7 +2,7 @@
   <div :class="{Dark:isDark}">
     <header class="content">
       <div class="userbar" v-if="!store.isLogin">
-        <span :class="{Dark:isDark}" @click="goToLogin">Login</span>|
+        <span :class="{Dark:isDark}" @click="store.goToLogin">Login</span>|
         <span :class="{Dark:isDark}" @click="goToSignup">Signup</span>
       </div>
       <div v-else>
@@ -45,11 +45,7 @@
     router.push({name:'movies'})
   }
 
-  // 로그인 페이지
-  const goToLogin = function () {
-    isDark.value = false
-    router.push({name:'login'})
-  }
+  // 로그인 페이지 => accounts.js에서 사용
 
   // 회원가입 페이지
   const goToSignup = function () {

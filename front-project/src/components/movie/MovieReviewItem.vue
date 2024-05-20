@@ -3,6 +3,7 @@
     <div id="reviewList"  class="review">
       <!-- 수정버튼 누르기 전 -->
       <div v-if="!isUpdate">
+        <p>review.id = {{ review.id }}</p>
         <h4 >{{ review.title }}</h4>
         <hr>
         <p>{{ review.content }}</p>
@@ -12,7 +13,7 @@
       </div>
       <!-- 수정버튼 누른 후 -->
       <div v-else>
-        <form @submit.prevent = "updateReview(moviepk,review.id,index)">
+        <form @submit.prevent = "updateReview(moviepk,review.id)">
           <div>
             <label for="title">Title : </label>
             <input type="text" v-model.trim="title" id="title">
@@ -30,10 +31,12 @@
           <input type="submit">
         </form>
       </div>
-      <!-- 여기에 댓글 작성하기!! -->
+
+      <!-- 댓글 목록 -->
+      <!--                      1) 전체 댓글                2) 리뷰               3) 영화 id-->
+      <MovieReviewCommentList :comments="review.comments" :reviewpk="review.id" :moviepk="moviepk" />
       <hr>
-      <div style="padding-left: 50px;">
-      </div>
+      <!-- <div style="color:blue">{{ review }}</div> -->
     </div>
   </div>
 
@@ -41,16 +44,19 @@
 </template>
 
 <script setup>
+  import MovieReviewCommentList from '@/components/movie/MovieReviewCommentList.vue'
   import { ref } from 'vue'
   import { useAccountStore } from '@/stores/account';
   import axios from 'axios'
   import Swal from 'sweetalert2';
+
   const review = ref(null)
   const props = defineProps({
     review:Object,
     moviepk:Number,
     index:Number,
   })
+
   review.value = props.review
   
   const store = useAccountStore()
@@ -70,19 +76,25 @@
     .catch(err => console.log(err))
   }
 
+
+  
+
   const isUpdate = ref(false)
   const title = ref(null)
   const content = ref(null)
   const rate = ref(null)
+
   // 리뷰 수정
+  // 1) 수정 form 활성화
   const useUpdate = function () {
-    isUpdate.value = true
+    isUpdate.value = true // 수정하기위한 form 열기
     title.value = props.review.title
     content.value = props.review.content
     rate.value = props.review.rate
   }
 
-  const updateReview = function (moviepk, reviewpk,index) {
+  // 2) 수정요청보내기 -> 수정 데이터로 변경
+  const updateReview = function (moviepk, reviewpk) {
     if (title.value === '' || content.value === '') {
       Swal.fire({
         icon: 'error',
@@ -105,11 +117,9 @@
       },
     })
     .then(res => {
-      isUpdate.value = false
-      console.log(review.value,123)
-      review.value.title = title.value
-      review.value.content = content.value
-      review.value.rate = rate.value
+      isUpdate.value = false // 수정form 닫기
+      review.value = res.data // review 데이터 수정하기
+
     })
     .catch(err => {
       console.log(err)
@@ -122,6 +132,23 @@
       return 0;
     })
   }
+
+  // 리뷰 삭제
+  // moviepk는 삭제요청시 url에 필요!!
+  const deleteReview = function (moviepk, reviewpk) {
+    axios({
+      method:'delete',
+      url:`/movies/${moviepk}/articles/${reviewpk}/`,
+      headers: {
+        Authorization: `Token ${store.token}`
+      },
+    })
+    .then(res => {
+      reviews.value = reviews.value.filter(review => review.id !== reviewpk)
+    })
+    .catch(err => console.log(err))
+  }
+
 </script>
 
 <style scoped>
