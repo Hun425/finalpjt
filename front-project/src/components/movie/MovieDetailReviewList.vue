@@ -67,7 +67,7 @@
   const getReviews = function () {
     axios({
       method:'get',
-      url:`/movies/${props.moviepk}/articles/`,
+      url:`/movies/${props.moviepk}/reviews/`,
     })
     .then(res => {
       reviews.value = res.data
@@ -92,7 +92,7 @@
 
     axios({
       method:'post',
-      url:`/movies/${props.moviepk}/articles/`,
+      url:`/movies/${props.moviepk}/reviews/`,
       data: {
         title:title.value,
         content:content.value,

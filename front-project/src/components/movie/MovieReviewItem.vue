@@ -59,7 +59,7 @@
   const deleteReview = function (moviepk, reviewpk) {
     axios({
       method:'delete',
-      url:`/movies/${moviepk}/articles/${reviewpk}/`,
+      url:`/movies/${moviepk}/reviews/${reviewpk}/`,
       headers: {
         Authorization: `Token ${store.token}`
       },
@@ -94,7 +94,7 @@
     }
     axios({
       method:'put',
-      url:`/movies/${props.moviepk}/articles/${reviewpk}/`,
+      url:`/movies/${props.moviepk}/reviews/${reviewpk}/`,
       data: {
         title:title.value,
         content:content.value,
