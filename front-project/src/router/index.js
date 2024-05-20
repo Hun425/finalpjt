@@ -5,7 +5,7 @@ import LoginView from "../views/LoginView.vue";
 import SignupView from "../views/SignupView.vue";
 import MovieDetailView from "../views/MovieDetailView.vue";
 import ProfileView from "@/views/ProfileView.vue";
-
+import MovieRecommendation from '../views/AutoRecommend.vue';
 // import View from '../views/View.vue'
 import {  useAccountStore  } from '@/stores/account'
 
@@ -41,6 +41,11 @@ const router = createRouter({
       path: '/profile/:userpk',
       name: 'profile',
       component: ProfileView
+    },
+    { // 영화 검색 기능 페이지 
+      path: '/gpt/recommend',
+      name: 'MovieRecommendation',
+      component: MovieRecommendation,
     },
     // {
     //   path: '/',
