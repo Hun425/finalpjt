@@ -1,23 +1,26 @@
 <template>
-  <div class="main">
-    <p class="textcenter">MovieListVue</p>
-    <div class="boxofficetitle">
-      <p class="textcenter">일별 박스오피스</p>
-      <!-- <div class="line"></div> -->
-    </div >
-    <div class="container">
-      <BoxOfficeListItem v-for="movie in dailyMovieList" :key="movie.rank" :movie="movie"/>
-    </div>
-    <div class="boxofficetitle">
-      <p class="textcenter">주간 박스오피스</p>
-      <!-- <div class="line"></div> -->
-    </div>
-    <div v-if="WeeklyMovieList" class="container">
-      <BoxOfficeListItem v-for="movie in WeeklyMovieList" :key='movie.rank' :movie="movie"/>
+  <div>
+    <div class="boxoffice">
+      <div class="contents">
+        <div class="titleTag">
+          <p class="contentNm">일별 박스오피스</p>
+        </div>
+        <div class="container">
+          <BoxOfficeListItem v-for="movie in dailyMovieList" :key="movie.rank" :movie="movie"/>
+        </div>
+      </div>
+      <div calss="contents">
+        <div class="titleTag">
+          <p class="contentNm">주간 박스오피스</p>
+        </div>
+        <div class="container">
+          <BoxOfficeListItem v-for="movie in WeeklyMovieList" :key='movie.rank' :movie="movie"/>
+        </div>
+      </div>
     </div>
   </div>
-
 </template>
+
 <script setup>
   import {ref} from 'vue'
   import BoxOfficeListItem from './BoxOfficeListItem.vue';
@@ -67,38 +70,32 @@
 </script>
 
 <style scoped>
-  * {
-    margin: 10px 0; /* 상하 | 좌우 */
-  }
-  .main {
-    display: flex;
-    flex-direction: column;
-
-    width:1100px;
+  .boxoffice {
+    width:1440px;
+    height: 100vh;
     margin:0px auto;
+    padding-top:50px;
+    text-align: center;
+    color:white;
   }
+  .contents {
+    margin-bottom:80px;
+  }
+
   .container {
-    display: flex;
-    justify-content: space-between;
-    width: 1100px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
   }
-  .boxofficetitle{
-    display: flex;
-    /* flex-direction: column; */
-    justify-content: center;
-    position: relative;
+
+  .titleTag {
+    margin: 30px 0 70px 0;
   }
-  .textcenter {
+  .contentNm {
     font-weight:bold;
+    font-size: 24px;
+    border-bottom: 1px solid white;
   }
-  .line{
-    border: 1px solid rgb(36, 31, 31);
-    height:1px;
-    width: 110px;
-    top:140px;
-    left:497px;
-    
-  }
+
   
 </style>
 
