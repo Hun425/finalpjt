@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Count, Avg
-from django.core.paginator import Paginator
+# from django.core.paginator import Paginator
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, get_list_or_404
 import random
@@ -20,17 +20,33 @@ from .models import Movie, Article, Comment
 
 
 # 모든 영화
+# @api_view(['GET'])
+# def movie_list(request):
+#     if request.method == 'GET':
+#         movies = Movie.objects.all().order_by('-release_date')
+#         paginator = Paginator(movies, 20)
+
+#         page = request.GET.get('page', 1)
+#         page_movies = paginator.get_page(page)
+
+#         serializer = MovieListSerializer(page_movies, many=True)
+#         return Response(serializer.data)
+# from django.core.paginator import Paginator  // 이 부분이 원래 있었던 코드
+from rest_framework.pagination import PageNumberPagination
+
+class MoviePagination(PageNumberPagination):
+    page_size = 20
+
+
+# 모든 영화
 @api_view(['GET'])
 def movie_list(request):
     if request.method == 'GET':
         movies = Movie.objects.all().order_by('-release_date')
-        paginator = Paginator(movies, 20)
-
-        page = request.GET.get('page', 1)
-        page_movies = paginator.get_page(page)
-
-        serializer = MovieListSerializer(page_movies, many=True)
-        return Response(serializer.data)
+        paginator = MoviePagination()
+        result_page = paginator.paginate_queryset(movies, request)
+        serializer = MovieListSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
 
 # 각 영화별 디테일 정보
