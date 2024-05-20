@@ -84,13 +84,14 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
 
-
+# 이미지 변경 필드
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'profile_pic')
 
 
+# 
 class LikeProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review

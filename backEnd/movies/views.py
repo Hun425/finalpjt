@@ -47,6 +47,7 @@ class MoviePagination(PageNumberPagination):
 @api_view(['GET'])
 def movie_list(request):
     if request.method == 'GET':
+        
         movies = Movie.objects.all().order_by('-release_date')
         paginator = MoviePagination()
         result_page = paginator.paginate_queryset(movies, request)
@@ -64,9 +65,9 @@ def movie_detail(request, movie_pk):
 
 
 
-# user가 좋아요 누른 영화 목록 조회
+# 로그인한 유저면 영화에 좋아요 요청 가능
 @api_view(['POST'])
-def add_list(request, movie_pk):
+def like_movie(request, movie_pk):
     user = request.user
     movie = get_object_or_404(Movie, pk=movie_pk)
     if movie.like_users.filter(pk=user.pk).exists():
@@ -81,7 +82,7 @@ def add_list(request, movie_pk):
 
 # 영화 리뷰 생성
 @api_view(['GET', 'POST'])
-def review_list_or_create(request, movie_pk):
+def review_list_create(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
 
     def review_list():

@@ -12,7 +12,7 @@ class MovieListSerializer(serializers.ModelSerializer):
     class Meta:
 
         model = Movie
-        fields = ('pk', 'title', 'vote_average', 'poster_path','release_date')
+        fields = ('pk', 'title', 'vote_average', 'poster_path','release_date','certification')
 
 
 class TopMovieListSerializer(serializers.ModelSerializer):
@@ -25,7 +25,7 @@ class TopMovieListSerializer(serializers.ModelSerializer):
         )
 
 
-# 평점
+# 리뷰 생성 조회
 class ReviewSerializer(serializers.ModelSerializer):
     class UserSerializer(serializers.ModelSerializer):
         class Meta:
@@ -117,7 +117,7 @@ class MovieSerializer(serializers.ModelSerializer):
 
 
 
-
+# 유저페이지 리뷰 데이터 전용
 class UserReviewSerializer(serializers.ModelSerializer):
     class UserSerializer(serializers.ModelSerializer):
         class Meta:
@@ -152,6 +152,7 @@ class UserReviewSerializer(serializers.ModelSerializer):
         )
 
 
+# 댓글 리뷰 전용
 class CommentSerializer(serializers.ModelSerializer):
     class UserSerializer(serializers.ModelSerializer):
         class Meta:
