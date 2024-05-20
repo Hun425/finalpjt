@@ -6,12 +6,14 @@ from django.contrib.auth import get_user_model
 from .serializers import (ReviewMovieSerializer,
                           ProfileSerializer, ProfileUpdateSerializer)
 from movies.models import Movie
+from django.contrib.auth.decorators import login_required
 
 User = get_user_model()
 
 
 # 유저 상세정보 조회 로직
 @api_view(['GET'])
+@login_required()
 def profile(request, user_pk):
     user = get_object_or_404(User, pk=user_pk)
 

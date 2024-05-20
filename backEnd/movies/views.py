@@ -19,7 +19,8 @@ from .serializers import (
     CommentSerializer,
 )
 from .models import Movie, Review, Comment,Genre
-
+from django.utils import timezone
+from datetime import timedelta
 
 # DB에 있는 모든 영화 리스트 조회
 
@@ -42,13 +43,67 @@ class MoviePagination(PageNumberPagination):
     page_size = 20
 
 
-# 모든 영화
+# # 모든 영화
+
+# @api_view(['GET'])
+# def movie_list(request):
+#     if request.method == 'GET':
+        
+#         movies = Movie.objects.all().order_by('-release_date')
+#         paginator = MoviePagination()
+#         result_page = paginator.paginate_queryset(movies, request)
+#         serializer = MovieListSerializer(result_page, many=True)
+#         return paginator.get_paginated_response(serializer.data)
+
+
+
+
+
+class MoviePagination(PageNumberPagination):
+    page_size = 10  # 페이지당 항목 수
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+def get_age_rating(age):
+    if age < 12:
+        return ["ALL"]
+    elif age < 15:
+        return ['12',"ALL"]
+    elif age < 18:
+        return ['12', '15','ALL']
+    else:
+        return []  # 나이가 18세 이상인 경우 모든 영화 등급을 볼 수 있도록 빈 리스트 반환
 
 @api_view(['GET'])
 def movie_list(request):
     if request.method == 'GET':
-        
-        movies = Movie.objects.all().order_by('-release_date')
+        user = request.user
+        age_ratings = get_age_rating(user.age) if user.is_authenticated else []
+
+        # 현재 상영 중인 영화 필터링 여부 확인
+        showing_now = request.POST.get('showing_now','0')=='1'
+
+        # 현재 날짜와 한 달 전 날짜 계산
+        today = timezone.now().date()
+        one_month_ago = today - timedelta(days=45)
+
+        # 영화 쿼리셋 생성
+        if showing_now:
+            movies = Movie.objects.filter(release_date__range=[one_month_ago, today])
+        else:
+            movies = Movie.objects.all()
+
+
+        movies = movies.exclude(genres__name='다큐멘터리')
+
+        # 나이에 따른 관람등급 필터링
+        if age_ratings:
+            movies = movies.filter(certification__in=age_ratings)
+
+        # 기본 정렬 기준 적용: 평점 순
+        movies = movies.order_by('-vote_average')
+
+        # 페이지네이션 처리
         paginator = MoviePagination()
         result_page = paginator.paginate_queryset(movies, request)
         serializer = MovieListSerializer(result_page, many=True)

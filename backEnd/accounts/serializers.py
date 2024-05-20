@@ -73,10 +73,10 @@ class ProfileSerializer(serializers.ModelSerializer):
     following_count = serializers.IntegerField(
         source='followings.count', read_only=True
     )
-    Reviews = ReviewSerializer(many=True)
+    reviews = ReviewSerializer(many=True)
     like_movies = MovieSerializer(many=True)
-    Reviews_count = serializers.IntegerField(
-        source='Reviews.count', read_only=True
+    reviews_count = serializers.IntegerField(
+        source='reviews.count', read_only=True
     )
     like_count = serializers.IntegerField(default=0)
 
