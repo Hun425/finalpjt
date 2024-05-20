@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="reviews">
+    <div v-if="!reviews == []">  <!-- null 이 아니면 다 값이 있다고 판단!! -->
       <MovieReviewItem v-for="(review,index) in reviews"  :review="review" :moviepk="moviepk" :index="index"/>
     </div>
     <div v-else>
@@ -57,7 +57,7 @@
   const rate = ref(null)
 
   // 리뷰목록확인하기
-  const reviews = ref(null)
+  const reviews = ref([])
   const getReviews = function () {
     axios({
       method:'get',
