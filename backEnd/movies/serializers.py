@@ -51,13 +51,12 @@ class ArticleSerializer(serializers.ModelSerializer):
             class Meta:
                 model = User
                 fields = ('pk', 'username', 'profile_pic')
-        user = UserSerializer(read_only=True)
-        
         class Meta:
             model = Comment
             fields = (
                 'pk',
                 'user',
+                
                 'article',
                 'content',
                 'created_at',

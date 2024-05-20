@@ -15,5 +15,6 @@ urlpatterns = [
          views.get_create_comment),
     path('<int:movie_pk>/articles/<int:article_pk>/comments/<int:comment_pk>/',
          views.delete_comment),
-    path('<int:movie_pk>/articles/<int:article_pk>/comments/like/', views.like_article)
+    path('<int:movie_pk>/articles/<int:article_pk>/comments/like/', views.like_article),
+    path('api/recommend/',views.recommend_movies)
 ]
