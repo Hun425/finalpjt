@@ -11,7 +11,7 @@
   "dependencies": {
     "@splidejs/splide": "^4.1.4",
     "@splidejs/vue-splide": "^0.6.12",
-    "axios": "^1.6.8",
+    "axios": "^1.7.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
     "sweetalert2": "^11.11.0",

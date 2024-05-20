@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Count, Avg
-from django.core.paginator import Paginator
+# from django.core.paginator import Paginator
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, get_list_or_404
 import random
@@ -21,18 +21,38 @@ from .serializers import (
 from .models import Movie, Review, Comment,Genre
 
 
+<<<<<<< HEAD
 # DB에 있는 모든 영화 리스트 조회
+=======
+# 모든 영화
+# @api_view(['GET'])
+# def movie_list(request):
+#     if request.method == 'GET':
+#         movies = Movie.objects.all().order_by('-release_date')
+#         paginator = Paginator(movies, 20)
+
+#         page = request.GET.get('page', 1)
+#         page_movies = paginator.get_page(page)
+
+#         serializer = MovieListSerializer(page_movies, many=True)
+#         return Response(serializer.data)
+# from django.core.paginator import Paginator  // 이 부분이 원래 있었던 코드
+from rest_framework.pagination import PageNumberPagination
+
+class MoviePagination(PageNumberPagination):
+    page_size = 20
+
+
+# 모든 영화
+>>>>>>> 88f7216bbc972d100fd16592f351a12bcd655ba3
 @api_view(['GET'])
 def movie_list(request):
     if request.method == 'GET':
         movies = Movie.objects.all().order_by('-release_date')
-        paginator = Paginator(movies, 20)
-
-        page = request.GET.get('page', 1)
-        page_movies = paginator.get_page(page)
-
-        serializer = MovieListSerializer(page_movies, many=True)
-        return Response(serializer.data)
+        paginator = MoviePagination()
+        result_page = paginator.paginate_queryset(movies, request)
+        serializer = MovieListSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
 
 # 영화별 상세 정보 조회
@@ -45,7 +65,11 @@ def movie_detail(request, movie_pk):
 
 
 
+<<<<<<< HEAD
 # user가 좋아요 누른 영화 목록 조회
+=======
+# user가 저장한 한 목록
+>>>>>>> 88f7216bbc972d100fd16592f351a12bcd655ba3
 @api_view(['POST'])
 def add_list(request, movie_pk):
     user = request.user
@@ -253,4 +277,81 @@ class RecommendedMoviesView(APIView):
             serializer = MovieSerializer(recommended_movies, many=True)
             return Response(serializer.data)
         else:
+<<<<<<< HEAD
             return Response({"message": "좋아하는 영화를 5개 이상 선택해주세요."},status=status.HTTP_403_FORBIDDEN)
+=======
+            return Response({"message": "좋아하는 영화를 5개 이상 선택해주세요."})
+        
+
+import os
+import openai
+from dotenv import load_dotenv
+from django.http import JsonResponse
+from .models import Movie
+from .serializers import MovieListSerializer
+
+# .env 파일 로드
+load_dotenv()
+
+# 환경 변수에서 API 키 불러오기
+openai.api_key = os.getenv('OPENAI_API_KEY')
+
+if openai.api_key is None:
+    raise ValueError("No OPENAI_API_KEY found in environment variables.")
+
+def get_movies_from_db():
+    return Movie.objects.all()
+
+def levenshtein_distance(s1, s2):
+    if len(s1) < len(s2):
+        return levenshtein_distance(s2, s1)
+
+    if len(s2) == 0:
+        return len(s1)
+
+    previous_row = range(len(s2) + 1)
+    for i, c1 in enumerate(s1):
+        current_row = [i + 1]
+        for j, c2 in enumerate(s2):
+            insertions = previous_row[j + 1] + 1
+            deletions = current_row[j] + 1
+            substitutions = previous_row[j] + (c1 != c2)
+            current_row.append(min(insertions, deletions, substitutions))
+        previous_row = current_row
+    
+    return previous_row[-1]
+
+def find_similar_movies(movie_name, movies, top_n=10):
+    similar_movies = []
+    for movie in movies:
+        distance = levenshtein_distance(movie_name.lower(), movie.title.lower())
+        similarity = 1 / (1 + distance)
+        
+        # 시리즈물 우선 처리
+        if movie_name.lower() in movie.title.lower():
+            similarity += 1
+        
+        if similarity >= 1.0:
+            similar_movies.append((similarity, movie))
+    
+    similar_movies.sort(key=lambda x: x[0], reverse=True)
+    
+    return [(movie, similarity) for similarity, movie in similar_movies[:top_n]]
+
+def recommend_movies(request):
+    movie_name = request.GET.get('movie_name', '')
+
+    movies = get_movies_from_db()
+
+    if movie_name:
+        similar_movies = find_similar_movies(movie_name, movies)
+        serialized_movies = []
+        for movie, similarity in similar_movies:
+            serialized_movie = MovieListSerializer(movie).data
+            serialized_movie['similarity'] = similarity
+            serialized_movies.append(serialized_movie)
+        return JsonResponse({'similar_movies': serialized_movies})
+
+    return JsonResponse({'similar_movies': []})
+
+>>>>>>> 88f7216bbc972d100fd16592f351a12bcd655ba3

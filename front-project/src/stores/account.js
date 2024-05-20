@@ -56,13 +56,31 @@ export const useAccountStore = defineStore('account', () => {
     })
 
     const logOut = function () {
-        token.value = null
-        userData.value = {
-            pk:null,
-            username:''
-        }
-        router.push({name:'home'})
+        axios({
+            method:'post',
+            url:'/accounts/logout/',
+            headers: {
+                Authorization: `Token ${token.value}`
+              },
+        })
+        .then(res => {
+            token.value = null
+            userData.value = {
+                pk:null,
+                username:''
+            }
+            router.push({name:'home'})
+        })
+        .catch(err => {
+            console.log(err)
+        })
+
     }
 
-    return { userData, logIn, token, isLogin, logOut }
+
+    const goToLogin = function () {
+        router.push({name:'login'})
+      }
+
+    return { userData, logIn, token, isLogin, logOut, goToLogin}
 }, {persist:true})
