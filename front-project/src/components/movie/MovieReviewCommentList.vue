@@ -2,11 +2,10 @@
   <div>
     <!-- 목록 보여주기 -->
     <div v-show="props.comments">
-      <div v-for="comment in comments">
-        <!-- <p>{{ comment }}</p> -->
-        <hr>
-        <!-- <p>{{ review }}</p> -->
-        <button v-if="comment.user.username === store.userData.username" @click="deleteComment(moviepk,review.id,comment.pk)">delete</button>
+      <div v-for="comment in comments" style="padding-left: 20px; color:red">
+        <p>{{ comment.content }}</p>
+        {{ comment }}
+        <button v-if="comment.user.username === store.userData.username" @click="deleteComment(moviepk,reviewpk,comment.pk)">delete</button>
       </div>
     </div>
     <!-- 없을때 보여주기 -->
@@ -14,12 +13,12 @@
       <p>댓글이 없습니다. 댓글을 남겨주세요!</p>
     </div>
     <div>
-      <form v-if="store.isLogin" @submit.prevent="createComment(moviepk,review.id)" >
-        <label for="comment">댓글:</label>
-        <input  v-model.trim="comment" id="comment"></input>
+      <form v-if="store.isLogin" @submit.prevent="createComment(moviepk,reviewpk)" >
+        <label for="content">댓글:</label>
+        <input  v-model.trim="content" id="content">
         <!-- 로그인시에만 작성 가능하도록하기 -->
         <br>
-        <input type="submit">
+        <input type="submit" value="작성하기">
       </form>
       <button v-else @click="store.goToLogin">로그인해주세요</button>
     </div>
@@ -35,7 +34,7 @@
   const props = defineProps({
     comments:Array,
     moviepk:Number,
-    review:Object,
+    reviewpk:Number,
   })
   comments.value = props.comments
   console.log(props.comments,'asdfa;')
@@ -43,46 +42,53 @@
 
   // 댓글 작성하기
   // /movies/<int:movie_pk>/article/<int:article_pk>/comments/
-  const comment = ref(null)
+  const content = ref(null)
   const createComment = function (moviepk, reviewpk) {
-    if (comment.value === '') {
+    if (content.value === '') {
       Swal.fire({
         icon: 'error',
         title: 'ERROR',
-        text: '닉네임과 비밀번호를 확인해주세요.',
+        text: '내용을 입력해주세요.',
         confirmButtonText: '확인'
       })
       return 0
     }
     axios({
       method:'post',
-      url:`/movies/${moviepk}/article/${reviewpk}/comments/`,
+      url:`/movies/${moviepk}/articles/${reviewpk}/comments/`,
       data:{
-        comment:comment.value
+        content:content.value
       },
       headers: {
         Authorization: `Token ${store.token}`
       },
-    })
+    }) 
     .then(res => {
       console.log('completed')
-      review.value = res.data
-        // 
+      comments.value = res.data // 성공시에는 comments데이터를 수정하기!!
+      content.value = ''
       })
     .catch(err => {
-      console.log(err)
       console.log('error!!')
     })
     }
   
 
-
   // 댓글 삭제하기
-  const deleteComment = function () {
+  const deleteComment = function (moviepk, reviewpk,commentpk) {
     axios({
       method:'delete',
-      url:``,
-      confirmButtonText
+      url:`/movies/${moviepk}/articles/${reviewpk}/comments/${commentpk}/`,
+      headers: {
+        Authorization: `Token ${store.token}`
+      },
+    })
+    .then(res => {
+      comments.value = res.data
+
+    })
+    .catch(err => {
+      console.log(err)
     })
   }
 </script>
