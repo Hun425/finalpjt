@@ -7,7 +7,7 @@ from django.urls import path, re_path
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-
+from .views import CustomRegisterView
 schema_view = get_schema_view(
    openapi.Info(
       title="Your Project API",
@@ -29,7 +29,7 @@ urlpatterns = [
     path('profile/', include('accounts.urls')),
     path('accounts/', include('dj_rest_auth.urls')),
     path('accounts/user/', include('dj_rest_auth.urls')),
-    path('accounts/signup/', include('dj_rest_auth.registration.urls')),
+    path('accounts/signup/', CustomRegisterView.as_view()),
     path('validate_username/', validate_username, name='validate_username'),
     path('validate_email/', validate_email, name='validate_email'),
 

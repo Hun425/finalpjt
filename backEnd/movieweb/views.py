@@ -17,3 +17,17 @@ def validate_email(request):
         'is_taken': User.objects.filter(email=email).exists()
     }
     return JsonResponse(data)
+
+# 유저 커스텀
+
+from dj_rest_auth.registration.views import RegisterView
+from .serializers import CustomRegisterSerializer
+
+class CustomRegisterView(RegisterView):
+    serializer_class = CustomRegisterSerializer
+
+
+
+
+
+
