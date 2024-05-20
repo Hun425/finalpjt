@@ -81,17 +81,20 @@ def movie_list(request):
         age_ratings = get_age_rating(user.age) if user.is_authenticated else []
 
         # 현재 상영 중인 영화 필터링 여부 확인
-        showing_now = request.query_params.get('showing_now', 'false').lower() == 'true'
+        showing_now = request.POST.get('showing_now','0')=='1'
 
         # 현재 날짜와 한 달 전 날짜 계산
         today = timezone.now().date()
-        one_month_ago = today - timedelta(days=30)
+        one_month_ago = today - timedelta(days=45)
 
         # 영화 쿼리셋 생성
         if showing_now:
             movies = Movie.objects.filter(release_date__range=[one_month_ago, today])
         else:
             movies = Movie.objects.all()
+
+
+        movies = movies.exclude(genres__name='다큐멘터리')
 
         # 나이에 따른 관람등급 필터링
         if age_ratings:

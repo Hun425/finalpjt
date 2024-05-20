@@ -61,21 +61,6 @@
   
   const store = useAccountStore()
 
-  // 리뷰 삭제
-  const deleteReview = function (moviepk, reviewpk) {
-    axios({
-      method:'delete',
-      url:`/movies/${moviepk}/reviews/${reviewpk}/`,
-      headers: {
-        Authorization: `Token ${store.token}`
-      },
-    })
-    .then(res => {
-      reviews.value = reviews.value.filter(review => review.id !== reviewpk)
-    })
-    .catch(err => console.log(err))
-  }
-
 
   
 
