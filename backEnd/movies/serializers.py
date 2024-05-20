@@ -56,12 +56,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             fields = (
                 'pk',
                 'user',
-<<<<<<< HEAD
                 'review',
-=======
-                
-                'article',
->>>>>>> 88f7216bbc972d100fd16592f351a12bcd655ba3
                 'content',
                 'created_at',
                 'updated_at',
