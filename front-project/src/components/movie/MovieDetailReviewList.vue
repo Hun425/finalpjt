@@ -21,7 +21,8 @@
             <label for="content">Content : </label>
             <div>
               <textarea v-if="store.isLogin" class="create-area" v-model.trim="content" id="content"></textarea>
-              <textarea v-else @click="goToLogin" class="create-area" value="로그인 후 이용해주세요"></textarea>
+              <!-- 로그인시에만 사용 -->
+              <textarea v-else @click="store.goToLogin" class="create-area" value="로그인 후 이용해주세요"></textarea>
             </div>
           </div>
           <div>
@@ -54,13 +55,6 @@
   const title = ref(null)
   const content = ref(null)
   const rate = ref(null)
-
-
-
-  // 로그인시에만 리뷰작성 가능하도록!
-  const goToLogin = function () {
-    router.push({name:'login'})
-  }
 
   // 리뷰목록확인하기
   const reviews = ref(null)
