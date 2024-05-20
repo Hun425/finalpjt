@@ -37,7 +37,7 @@
     reviewpk:Number,
   })
   comments.value = props.comments
-  console.log(props.comments,'asdfa;')
+  // console.log(props.comments,'asdfa;')
   const store = useAccountStore()
 
   // 댓글 작성하기
@@ -55,7 +55,7 @@
     }
     axios({
       method:'post',
-      url:`/movies/${moviepk}/articles/${reviewpk}/comments/`,
+      url:`/movies/${moviepk}/reviews/${reviewpk}/comments/`,
       data:{
         content:content.value
       },
@@ -78,7 +78,7 @@
   const deleteComment = function (moviepk, reviewpk,commentpk) {
     axios({
       method:'delete',
-      url:`/movies/${moviepk}/articles/${reviewpk}/comments/${commentpk}/`,
+      url:`/movies/${moviepk}/reviews/${reviewpk}/comments/${commentpk}/`,
       headers: {
         Authorization: `Token ${store.token}`
       },

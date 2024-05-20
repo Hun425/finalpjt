@@ -31,7 +31,6 @@ export const useAccountStore = defineStore('account', () => {
                 console.log(res.data) // Token 발행 확인하기
                 token.value = res.data.key // pinia에서 확인하자!!
                 userData.value = {
-                    pk:res.data.pk,
                     username:username,
                 }
                 router.push({name:'home'})
@@ -66,7 +65,6 @@ export const useAccountStore = defineStore('account', () => {
         .then(res => {
             token.value = null
             userData.value = {
-                pk:null,
                 username:''
             }
             router.push({name:'home'})
