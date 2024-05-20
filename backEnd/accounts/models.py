@@ -11,7 +11,7 @@ class User(AbstractUser):
     
     username = models.CharField(max_length=150, unique=True)  #변경
     email = models.EmailField(unique=True)  # 추가
-    age = models.PositiveIntegerField(null=False, blank=False)   # 추가
+    age = models.IntegerField(null=False, blank=False,default=-1)   # 추가
     profile_pic = ProcessedImageField(
         blank=True, 
         upload_to='profile/images',

@@ -89,3 +89,6 @@ def delete_profile(request, user_pk):
         return Response({"message": "회원 탈퇴 완료"}, status=status.HTTP_204_NO_CONTENT)
     else:
         return Response({"error": "올바른 접근이 아닙니다"}, status=status.HTTP_403_FORBIDDEN)
+    
+
+
