@@ -26,7 +26,7 @@ class TopMovieListSerializer(serializers.ModelSerializer):
 
 
 # 평점
-class ArticleSerializer(serializers.ModelSerializer):
+class ReviewSerializer(serializers.ModelSerializer):
     class UserSerializer(serializers.ModelSerializer):
         class Meta:
 
@@ -56,19 +56,23 @@ class ArticleSerializer(serializers.ModelSerializer):
             fields = (
                 'pk',
                 'user',
+<<<<<<< HEAD
+                'review',
+=======
                 
                 'article',
+>>>>>>> 88f7216bbc972d100fd16592f351a12bcd655ba3
                 'content',
                 'created_at',
                 'updated_at',
             )
-            read_only_fields = ('article',)
+            read_only_fields = ('review',)
     comments = CommentSerializer(many=True)
 
 
 
     class Meta:
-        model = Article
+        model = Review
         fields = '__all__'
         read_only_fields = ('movie',)
 
@@ -100,7 +104,7 @@ class MovieSerializer(serializers.ModelSerializer):
     genres = GenreSerializer(read_only=True, many=True)
     actors = ActorSerializer(read_only=True, many=True)
     like_movies = UserSerializer(read_only=True, many=True)
-    articles = ArticleSerializer(many=True)
+    reviews = ReviewSerializer(many=True)
 
 
 
@@ -117,14 +121,9 @@ class MovieSerializer(serializers.ModelSerializer):
     
 
 
-# 날씨 기반 추천 장르 영화
-class MovieGenreSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Movie
-        fields = ('pk', 'title', 'overview', 'poster_path', 'release_date')
 
 
-class UserArticleSerializer(serializers.ModelSerializer):
+class UserReviewSerializer(serializers.ModelSerializer):
     class UserSerializer(serializers.ModelSerializer):
         class Meta:
             model = User
@@ -143,7 +142,7 @@ class UserArticleSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = Article
+        model = Review
         fields = (
             'pk',
             'user',
@@ -166,21 +165,21 @@ class CommentSerializer(serializers.ModelSerializer):
 
     user = UserSerializer(read_only=True)
 
-    class ArticleSerializer(serializers.ModelSerializer):
+    class ReviewSerializer(serializers.ModelSerializer):
         class Meta:
-            model = Article
+            model = Review
             fields = ('pk',)
 
-    article = ArticleSerializer(read_only=True)
+    review = ReviewSerializer(read_only=True)
 
     class Meta:
         model = Comment
         fields = (
             'pk',
             'user',
-            'article',
+            'review',
             'content',
             'created_at',
             'updated_at',
         )
-        read_only_fields = ('article',)
+        read_only_fields = ('review',)

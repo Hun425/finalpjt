@@ -32,6 +32,13 @@ def fetch_movie_details(movie_id):
         return response.json()
     return None
 
+def fetch_movie_release_dates(movie_id):
+    url = f"{TMDB_API_URL}/movie/{movie_id}/release_dates?api_key={TMDB_API_KEY}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    return None
+
 def fetch_movie_data(num_movies=10000):
     movies_per_page = 20  # TMDB API의 한 페이지당 기본 결과 수
     total_pages = (num_movies - 1) // movies_per_page + 1  # 필요한 페이지 수 계산
@@ -51,6 +58,16 @@ def fetch_movie_data(num_movies=10000):
                     continue
                 
                 detailed_info = fetch_movie_details(movie_data['id'])
+                release_dates_info = fetch_movie_release_dates(movie_data['id'])
+                certification = None
+                
+                if release_dates_info:
+                    for result in release_dates_info['results']:
+                        if result['iso_3166_1'] == 'KR':  # 한국 관람 등급
+                            for release_date in result['release_dates']:
+                                certification = release_date.get('certification')
+                                break
+                
                 if detailed_info:
                     movie, created = Movie.objects.get_or_create(
                         id=movie_data['id'],
@@ -64,6 +81,9 @@ def fetch_movie_data(num_movies=10000):
                             'tagline': detailed_info.get('tagline', ''),
                             'vote_average': movie_data.get('vote_average', 0),
                             'vote_count': movie_data.get('vote_count', 0),
+                            'backdrop_path': movie_data.get('backdrop_path'),
+                            'adult': movie_data.get('adult'),  # 성인 영화 여부를 저장
+                            'certification': certification  # 관람 등급 저장
                         }
                     )
                     for genre_data in detailed_info['genres']:

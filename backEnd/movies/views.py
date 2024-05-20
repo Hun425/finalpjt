@@ -8,17 +8,22 @@ from django.db.models import Count, Avg
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, get_list_or_404
 import random
+from rest_framework.views import APIView
+from .serializers import MovieSerializer
+import datetime
 from .serializers import (
     MovieListSerializer,
-    ArticleSerializer,
+    ReviewSerializer,
     MovieSerializer,
-    MovieGenreSerializer,
-    UserArticleSerializer,
+    UserReviewSerializer,
     CommentSerializer,
 )
-from .models import Movie, Article, Comment
+from .models import Movie, Review, Comment,Genre
 
 
+<<<<<<< HEAD
+# DB에 있는 모든 영화 리스트 조회
+=======
 # 모든 영화
 # @api_view(['GET'])
 # def movie_list(request):
@@ -39,6 +44,7 @@ class MoviePagination(PageNumberPagination):
 
 
 # 모든 영화
+>>>>>>> 88f7216bbc972d100fd16592f351a12bcd655ba3
 @api_view(['GET'])
 def movie_list(request):
     if request.method == 'GET':
@@ -49,7 +55,7 @@ def movie_list(request):
         return paginator.get_paginated_response(serializer.data)
 
 
-# 각 영화별 디테일 정보
+# 영화별 상세 정보 조회
 @api_view(['GET'])
 def movie_detail(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
@@ -59,7 +65,11 @@ def movie_detail(request, movie_pk):
 
 
 
+<<<<<<< HEAD
+# user가 좋아요 누른 영화 목록 조회
+=======
 # user가 저장한 한 목록
+>>>>>>> 88f7216bbc972d100fd16592f351a12bcd655ba3
 @api_view(['POST'])
 def add_list(request, movie_pk):
     user = request.user
@@ -74,66 +84,66 @@ def add_list(request, movie_pk):
         return Response(serializer.data)
 
 
-# 영화 평론 생성
+# 영화 리뷰 생성
 @api_view(['GET', 'POST'])
-def article_list_or_create(request, movie_pk):
+def review_list_or_create(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
 
-    def article_list():
-        articles = (
-            Article.objects.filter(movie_id=movie_pk)
+    def review_list():
+        reviews = (
+            Review.objects.filter(movie_id=movie_pk)
             .annotate(likes_count=Count('like_users'))
             .order_by('-likes_count')
         )
-        serializer = ArticleSerializer(articles, many=True)
+        serializer = ReviewSerializer(reviews, many=True)
         return Response(serializer.data)
 
-    def create_article():
-        serializer = ArticleSerializer(data=request.data)
+    def create_review():
+        serializer = ReviewSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user, movie=movie)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     if request.method == 'POST':
-        return create_article()
+        return create_review()
     elif request.method == 'GET':
-        return article_list()
+        return review_list()
 
-
+# HTTP method에 따른 리뷰 조회, 리뷰 생성, 리뷰 수정, 리뷰 삭제 기능
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
-def articles_get_or_update_or_delete(request, movie_pk, article_pk):
+def reviews_get_update_delete(request, movie_pk, review_pk):
     user = request.user
     movie = get_object_or_404(Movie, pk=movie_pk)
-    article = get_object_or_404(Article, pk=article_pk)
+    review = get_object_or_404(Review, pk=review_pk)
 
     def update_rating():
-        if request.user == article.user:
-            serializer = ArticleSerializer(instance=article, data=request.data)
+        if request.user == review.user:
+            serializer = ReviewSerializer(instance=review, data=request.data)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
-                articles = movie.articles.all()
-                serializer = ArticleSerializer(articles, many=True)
+                reviews = movie.reviews.all()
+                serializer = ReviewSerializer(reviews, many=True)
                 return Response(serializer.data)
 
     def delete_rating():
-        if request.user == article.user:
-            article.delete()
-            articles = movie.articles.all()
-            serializer = ArticleSerializer(articles, many=True)
+        if request.user == review.user:
+            review.delete()
+            reviews = movie.reviews.all()
+            serializer = ReviewSerializer(reviews, many=True)
             return Response(serializer.data)
 
-    def get_article():
-        serializer = UserArticleSerializer(article)
+    def get_review():
+        serializer = UserReviewSerializer(review)
         return Response(serializer.data)
 
-    def like_article():
-        if article.like_users.filter(pk=user.pk).exists():
-            article.like_users.remove(user)
-            serializer = ArticleSerializer(article)
+    def like_review():
+        if review.like_users.filter(pk=user.pk).exists():
+            review.like_users.remove(user)
+            serializer = ReviewSerializer(review)
             return Response(serializer.data)
         else:
-            article.like_users.add(user)
-            serializer = ArticleSerializer(article)
+            review.like_users.add(user)
+            serializer = ReviewSerializer(review)
             return Response(serializer.data)
 
     if request.method == 'PUT':
@@ -141,39 +151,41 @@ def articles_get_or_update_or_delete(request, movie_pk, article_pk):
     elif request.method == 'DELETE':
         return delete_rating()
     elif request.method == 'GET':
-        return get_article()
+        return get_review()
     elif request.method == 'POST':
-        return like_article()
+        return like_review()
 
 
+# 댓글 생성 및 조회
 @api_view(['GET', 'POST'])
-def get_create_comment(request, movie_pk, article_pk):
+def get_create_comment(request, movie_pk,review_pk):
     user = request.user
     movie = get_object_or_404(Movie, pk=movie_pk)
-    article = get_object_or_404(Article, pk=article_pk)
+    review = get_object_or_404(Review, pk=review_pk)
 
     if request.method == 'GET':
-        comments = article.comments.all()
+        comments = review.comments.all()
         serializer = CommentSerializer(comments, many=True)
         return Response(serializer.data)
 
     elif request.method == 'POST':
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(article=article, user=user)
-            comments = article.comments.all()
+            serializer.save(review=review, user=user)
+            comments = review.comments.all()
             serializer = CommentSerializer(comments, many=True)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+# 댓글 삭제
 @api_view(['DELETE'])
-def delete_comment(request, movie_pk, article_pk, comment_pk):
+def delete_comment(request, movie_pk, review_pk, comment_pk):
     comment = get_object_or_404(Comment, pk=comment_pk)
 
     if request.user == comment.user:
         comment.delete()
-        article = get_object_or_404(Article, pk=article_pk)
-        comments = article.comments.all()
+        review = get_object_or_404(Review, pk=review_pk)
+        comments = review.comments.all()
         serializer = CommentSerializer(comments, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -183,35 +195,29 @@ def delete_comment(request, movie_pk, article_pk, comment_pk):
         )
 
 
+# 인증된 사용자만 리뷰에 좋아요를 누를 수 있음
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def like_article(request, movie_pk, article_pk):
+def like_review(request, movie_pk, review_pk):
     user = request.user
     movie = get_object_or_404(Movie, pk=movie_pk)
-    article = get_object_or_404(Article, pk=article_pk)
+    review = get_object_or_404(Review, pk=review_pk)
 
-    if article.like_users.filter(pk=user.pk).exists():
-        article.like_users.remove(user)
-        serializer = ArticleSerializer(article)
+    if review.like_users.filter(pk=user.pk).exists():
+        review.like_users.remove(user)
+        serializer = ReviewSerializer(review)
         return Response(serializer.data)
     else:
-        article.like_users.add(user)
-        serializer = ArticleSerializer(article)
+        review.like_users.add(user)
+        serializer = ReviewSerializer(review)
         return Response(serializer.data)
 
 
 
 
 
-from django.db.models import Count, Avg
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from .models import Movie, Genre
-from .serializers import MovieSerializer
-import random
-import datetime
-
+# 영화 레거시 로직 추천 방법
+# 
 class RecommendedMoviesView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -243,7 +249,7 @@ class RecommendedMoviesView(APIView):
             serializer = MovieSerializer(recent_movies, many=True)
             return Response(serializer.data)
         if liked_movies.count() < 5:
-            return Response({"message": "좋아하는 영화를 5개 이상 선택해주세요."})
+            return Response({"message": "좋아하는 영화를 5개 이상 선택해주세요."},status=status.HTTP_403_FORBIDDEN)
         
         # 사용자가 좋아요를 누른 영화 중 가장 많이 선택된 장르
         favorite_genre = liked_movies.values('genres').annotate(
@@ -271,6 +277,9 @@ class RecommendedMoviesView(APIView):
             serializer = MovieSerializer(recommended_movies, many=True)
             return Response(serializer.data)
         else:
+<<<<<<< HEAD
+            return Response({"message": "좋아하는 영화를 5개 이상 선택해주세요."},status=status.HTTP_403_FORBIDDEN)
+=======
             return Response({"message": "좋아하는 영화를 5개 이상 선택해주세요."})
         
 
@@ -345,3 +354,4 @@ def recommend_movies(request):
 
     return JsonResponse({'similar_movies': []})
 
+>>>>>>> 88f7216bbc972d100fd16592f351a12bcd655ba3
