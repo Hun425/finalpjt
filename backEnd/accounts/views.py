@@ -34,28 +34,29 @@ def like_num_of_review(request, user_pk):
     return Response(like_count)
 
 
-# 
+# 프로필 페이지에 보여줄 무비 데이터
 @api_view(['GET'])
 def review_movie(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
     serializer = ReviewMovieSerializer(movie)
     return Response(serializer.data)
 
+# 팔로우 기능 아직 사용안함
+# @api_view(['POST'])
+# def follow(request, user_pk):
+#     profile_user = get_object_or_404(get_user_model(), pk=user_pk)
+#     me = request.user
+#     if me != profile_user:
+#         if me.followings.filter(pk=profile_user.pk).exists():
+#             me.followings.remove(profile_user)
+#         else:
+#             me.followings.add(profile_user)
 
-@api_view(['POST'])
-def follow(request, user_pk):
-    profile_user = get_object_or_404(get_user_model(), pk=user_pk)
-    me = request.user
-    if me != profile_user:
-        if me.followings.filter(pk=profile_user.pk).exists():
-            me.followings.remove(profile_user)
-        else:
-            me.followings.add(profile_user)
-
-    serializer = ProfileSerializer(profile_user)
-    return Response(serializer.data)
+#     serializer = ProfileSerializer(profile_user)
+#     return Response(serializer.data)
 
 
+# 사용자 정보(이미지) 수정
 @api_view(['POST', 'PUT'])
 def update_profile(request, user_pk):
     profile_user = get_object_or_404(get_user_model(), pk=user_pk)
