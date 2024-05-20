@@ -1,43 +1,66 @@
 <template>
-    <div class="movieList">
-        <!-- 데이터 받은 후에 v-for로 전달하기 -->
-            <MovieListItem v-for="movie in movieList" :key="movie.title" :movie="movie"/>
-    </div>
-  </template>
-  
-  <script setup>
-    import {ref} from 'vue'
-    import axios from 'axios'
-    import MovieListItem from './MovieListItem.vue';
-    
-    const JangoURL = 'http://127.0.0.1:8000'
-  
-    // 영화 목록 가져오기
-    const movieList = ref([])
-  
-    axios({
-      method:'get',
-      url:JangoURL + '/movies/',
-      // params:{
-      // }
-    })
+  <div class="movieList">
+    <MovieListItem v-for="movie in movieList" :key="movie.title" :movie="movie" />
+  </div>
+  <div class="pagination">
+    <button @click="changePage(currentPage - 5)" :disabled="currentPage <= 5"> < </button>
+    <button v-for="page in pagesToShow" :key="page" @click="changePage(page)" :disabled="page === currentPage">{{ page }}</button>
+    <button @click="changePage(currentPage + 5)" :disabled="currentPage > totalPages - 5"> > </button>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+import axios from 'axios'
+import MovieListItem from './MovieListItem.vue'
+
+const movieList = ref([])
+const currentPage = ref(1)
+const totalPages = ref(1)
+
+const fetchMovies = (page = 1) => {
+  axios.get('/movies/', { params: { page } })
     .then(res => {
-      console.log(res.data)
-      movieList.value = res.data
-      return 0
+      movieList.value = res.data.results
+      totalPages.value = Math.ceil(res.data.count / 20)
+      currentPage.value = page
     })
     .catch(err => console.log(err))
-  
-  
-  
-  </script>
-  
-  <style>
-    .movieList {
-      width:1100px;
-      margin:0 auto;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-  
-    }
-  </style>
+}
+
+const pagesToShow = computed(() => {
+  const startPage = Math.floor((currentPage.value - 1) / 5) * 5 + 1
+  return Array.from({ length: 5 }, (v, k) => k + startPage).filter(page => page <= totalPages.value)
+})
+
+const changePage = (page) => {
+  if (page > 0 && page <= totalPages.value) {
+    fetchMovies(page)
+    window.scrollTo({ top: 0 })  // 이 부분에서 부드럽게 이동하고싶다면 hehavior:'smooth'
+  }
+}
+
+// 초기 데이터 로드
+fetchMovies()
+</script>
+
+<style>
+.movieList {
+  width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  all:unset;
+  margin: 0 5px;
+  padding: 10px;
+}
+</style>
