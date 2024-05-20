@@ -62,7 +62,7 @@ class ReviewSerializer(serializers.ModelSerializer):
                 'updated_at',
             )
             read_only_fields = ('review',)
-    comments = CommentSerializer(many=True)
+    comments = CommentSerializer(many=True,read_only=True) # 필수 포함 아니니깐 read_only=True
 
 
 
