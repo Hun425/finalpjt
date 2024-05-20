@@ -1,19 +1,19 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from movies.models import Movie, Article
+from movies.models import Movie, Review
 
 User = get_user_model()
 
 
 
-class UserSerializer(serializers.ModelSerializer): ## 이번에 변경함
+class UserSerializer(serializers.ModelSerializer): ## a
     class Meta:
         model = User
         fields = ('pk', 'username', 'email', 'age', 'profile_pic')
 
 
 
-class ArticleMovieSerializer(serializers.ModelSerializer):
+class ReviewMovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
         fields = (
@@ -35,7 +35,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             model = User
             fields = ('id', 'username', 'profile_pic')
 
-    class ArticleSerializer(serializers.ModelSerializer):
+    class ReviewSerializer(serializers.ModelSerializer):
         class LikeUserSerializer(serializers.ModelSerializer):
             class Meta:
                 model = User
@@ -49,7 +49,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         user = UserSerializer(read_only=True)
 
         class Meta:
-            model = Article
+            model = Review
             fields = '__all__'
             read_only_fields = ('movie',)
 
@@ -73,10 +73,10 @@ class ProfileSerializer(serializers.ModelSerializer):
     following_count = serializers.IntegerField(
         source='followings.count', read_only=True
     )
-    articles = ArticleSerializer(many=True)
+    Reviews = ReviewSerializer(many=True)
     like_movies = MovieSerializer(many=True)
-    articles_count = serializers.IntegerField(
-        source='articles.count', read_only=True
+    Reviews_count = serializers.IntegerField(
+        source='Reviews.count', read_only=True
     )
     like_count = serializers.IntegerField(default=0)
 
@@ -93,5 +93,5 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
 
 class LikeProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Article
+        model = Review
         fields = ('id', 'user', 'like_users')

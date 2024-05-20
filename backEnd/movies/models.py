@@ -23,9 +23,9 @@ class Movie(models.Model):
     genres = models.ManyToManyField(Genre, related_name='movies')
     actors = models.ManyToManyField(Actor, related_name='movies')
     title = models.CharField(max_length=300)
-    adult = models.BooleanField()
+    adult = models.BooleanField(default=False)
     backdrop_path = models.TextField(null=True)
-
+    certification = models.CharField(max_length=10, null=True, blank=True)  # 관람 등급 필드 추가
     overview = models.TextField()
     popularity = models.FloatField()
     poster_path = models.TextField(null=True)
@@ -43,14 +43,14 @@ class Movie(models.Model):
         return self.title
 
 
-class Article(models.Model):
+class Review(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='articles',
+        related_name='reviews',
     )
     movie = models.ForeignKey(
-        Movie, on_delete=models.CASCADE, related_name='articles'
+        Movie, on_delete=models.CASCADE, related_name='reviews'
     )
     rate = models.FloatField(
         validators=[MinValueValidator(0), MaxValueValidator(10)]
@@ -61,7 +61,7 @@ class Article(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     like_users = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, related_name='like_articles'
+        settings.AUTH_USER_MODEL, related_name='like_reviews'
     )
 
     def __str__(self):
@@ -74,8 +74,8 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name='comments',
     )
-    article = models.ForeignKey(
-        Article, on_delete=models.CASCADE, related_name='comments'
+    review = models.ForeignKey(
+        Review, on_delete=models.CASCADE, related_name='comments'
     )
     content = models.CharField(max_length=300)
     created_at = models.DateTimeField(auto_now_add=True)
