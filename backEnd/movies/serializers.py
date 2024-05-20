@@ -39,7 +39,7 @@ class ReviewSerializer(serializers.ModelSerializer):
         class Meta:
             
             model = User
-            fields = ('pk',)
+            fields = ('pk','username')
 
     like_users = LikeUserSerializer(read_only=True, many=True)
     like_user_count = serializers.IntegerField(
@@ -51,6 +51,8 @@ class ReviewSerializer(serializers.ModelSerializer):
             class Meta:
                 model = User
                 fields = ('pk', 'username', 'profile_pic')
+
+        user = UserSerializer(read_only=True)
         class Meta:
             model = Comment
             fields = (
@@ -62,7 +64,9 @@ class ReviewSerializer(serializers.ModelSerializer):
                 'updated_at',
             )
             read_only_fields = ('review',)
+
     comments = CommentSerializer(many=True,read_only=True) # 필수 포함 아니니깐 read_only=True
+
 
 
 
