@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div v-if="reviews">
-      <MovieReviewItem v-for="(review,index) in reviews"  :review="review" :moviepk="moviepk" :index="index"/>
+    <div v-if="reviews">  <!-- null 이 아니면 다 값이 있다고 판단!! -->
+        <MovieReviewItem v-for="(review,index) in reviews"  :review="review" :moviepk="moviepk" :index="index" @deleteReview = "deleteReview"/>
     </div>
     <div v-else>
       <p>아직 리뷰가 없습니다. 리뷰를 작성해주세요!</p>
@@ -65,14 +65,14 @@
     })
     .then(res => {
       reviews.value = res.data
-      console.log(reviews.value)
+      console.log('리뷰데이터',reviews.value)
       return 0
     })
     .catch(err => console.log(err))
   }
   getReviews() 
 
-  // 리뷰 생성
+  // 리뷰 생성 (확인완료)
   const createReview = function () {
     if (title.value === '' | content.value === '') {
       Swal.fire({
@@ -97,6 +97,7 @@
       },
     })
     .then(res => {
+      // console.log(res.data)
       reviews.value.push(res.data)
       title.value = ''
       content.value = ''
@@ -106,6 +107,23 @@
       console.log(err)
     })
   }
+
+  // 리뷰 삭제
+  // moviepk는 삭제요청시 url에 필요!!
+  const deleteReview = function (reviewpk) {
+    axios({
+      method:'delete',
+      url:`/movies/${props.moviepk}/reviews/${reviewpk}/`,
+      headers: {
+        Authorization: `Token ${store.token}`
+      },
+    })
+    .then(res => {
+      reviews.value = reviews.value.filter(review => review.id !== reviewpk)
+    })
+    .catch(err => console.log(err))
+  }
+
 
 </script>
   

@@ -1,18 +1,26 @@
 <template>
   <div>
-    <div id="reviewList"  class="review">
+    <div id="reviewList"  class="review" >
       <!-- 수정버튼 누르기 전 -->
-      <div v-if="!isUpdate">
-        <p>review.id = {{ review.id }}</p>
-        <h4 >{{ review.title }}</h4>
+      <div v-if="!isUpdate" style="border: 1px solid blue; padding:5px;">
+        <p>리뷰 ID :  {{ review.id }}</p>
+        <h4 > 제목 : {{ review.title }}</h4>
         <hr>
-        <p>{{ review.content }}</p>
-        <p>{{ review.like_user_count }}</p>
-          <button v-if="store.userData.username == review.user.username" @click="deleteReview(moviepk,review.id)">삭제</button>
-          <button v-if="store.userData.username == review.user.username" @click="useUpdate">수정</button>
+        <div style="display:flex;">
+          <div>
+            <p>내용 : {{ review.content }}</p>
+            <p>좋아요 수 : {{ review.like_user_count }}</p>
+            <div style="color:red">{{ review.like_users }}</div>
+            <button @click="likeBtn"><strong>좋아요 버튼</strong></button>
+          </div>
+          <div style="padding-left:50px;">
+            <button v-if="store.userData.username == review.user.username" @click="deleteReview">삭제</button>
+            <button v-if="store.userData.username == review.user.username" @click="useUpdate">수정</button>
+          </div>
+        </div>
       </div>
       <!-- 수정버튼 누른 후 -->
-      <div v-else>
+      <div v-else style="border: 1px solid blue; padding:5px;">
         <form @submit.prevent = "updateReview(moviepk,review.id)">
           <div>
             <label for="title">Title : </label>
@@ -49,8 +57,14 @@
   import { useAccountStore } from '@/stores/account';
   import axios from 'axios'
   import Swal from 'sweetalert2';
-
+  
+  const store = useAccountStore()
   const review = ref(null)
+  const isLike = ref(null)
+  const isUpdate = ref(false)
+  const title = ref(null)
+  const content = ref(null)
+  const rate = ref(null)
   const props = defineProps({
     review:Object,
     moviepk:Number,
@@ -59,15 +73,7 @@
 
   review.value = props.review
   
-  const store = useAccountStore()
 
-
-  
-
-  const isUpdate = ref(false)
-  const title = ref(null)
-  const content = ref(null)
-  const rate = ref(null)
 
   // 리뷰 수정
   // 1) 수정 form 활성화
@@ -118,21 +124,54 @@
     })
   }
 
-  // 리뷰 삭제
-  // moviepk는 삭제요청시 url에 필요!!
-  const deleteReview = function (moviepk, reviewpk) {
+ 
+  // 3) 리뷰삭제 emit.ver
+  const emit = defineEmits(["deleteReview"])
+
+  function deleteReview () {
+    emit("deleteReview",props.review.id)
+  }
+
+  // 4) 좋아요 수행
+
+  // 내가 좋아요 눌렀는지 확인하기!!
+  isLike.value = props.review.like_users.some(user => user.username === store.userData.username)
+  console.log('isLike',isLike.value)
+
+  const likeBtn = function () {
     axios({
-      method:'delete',
-      url:`/movies/${moviepk}/articles/${reviewpk}/`,
-      headers: {
-        Authorization: `Token ${store.token}`
+      method:'post',
+      url:`/movies/${props.moviepk}/reviews/${review.value.id}/comments/like/`,
+      headers:{
+        Authorization:`Token ${store.token}`
       },
     })
     .then(res => {
-      reviews.value = reviews.value.filter(review => review.id !== reviewpk)
+      review.value = res.data
+      console.log('좋아요성공')
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      console.log('error 발생', err)
+    })
   }
+  
+
+
+  // 리뷰 삭제
+  // moviepk는 삭제요청시 url에 필요!!
+  // const deleteReview = function (moviepk, reviewpk) {
+  //   axios({
+  //     method:'delete',
+  //     url:`/movies/${moviepk}/reviews/${reviewpk}/`,
+  //     headers: {
+  //       Authorization: `Token ${store.token}`
+  //     },
+  //   })
+  //   .then(res => {
+  //     review.value = null
+  //   })
+  //   .catch(err => console.log(err))
+  // }
 
 </script>
 
