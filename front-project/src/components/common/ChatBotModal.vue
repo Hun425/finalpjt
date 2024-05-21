@@ -151,7 +151,7 @@ watch(() => userStore.isLoggedIn, (newVal) => {
 .chatbot-modal {
   position: fixed;
   bottom: 80px;
-  left: 20px;
+  right: 20px; /* 오른쪽 하단에 위치 */
   width: 300px;
   height: 400px;
   background-color: white;
@@ -160,13 +160,14 @@ watch(() => userStore.isLoggedIn, (newVal) => {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  z-index: 1000; /* 다른 요소보다 앞에 오도록 설정 */
 }
 
 .chatbot-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #007bff;
+  background-color: #4F6D7A;
   color: white;
   padding: 10px;
 }
@@ -193,13 +194,13 @@ watch(() => userStore.isLoggedIn, (newVal) => {
 }
 
 .message.user {
-  background-color: #007bff;
+  background-color: #4F6D7A;
   color: white;
   align-self: flex-end;
 }
 
 .message.bot {
-  background-color: #f1f1f1;
+  background-color: #E8DAB2;
   color: black;
   align-self: flex-start;
 }
@@ -222,8 +223,8 @@ textarea {
 }
 
 button {
-  background-color: #007bff;
-  color: white;
+  background-color: #C0D6DF;
+  color: black;
   border: none;
   padding: 10px;
   border-radius: 5px;
