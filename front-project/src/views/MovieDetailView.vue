@@ -8,7 +8,7 @@
         <div :class="{navItem:true, focus: isFocus===3, rest:!(isFocus===3)}">예고편</div>
       </div>
       <MovieDetailInfo v-show="isFocus===1" :actors="movie.actors" :overview="movie.overview" />
-      <MovieDetailReviewList v-show="isFocus===2" :moviepk="movie.id"/>
+      <MovieDetailReviewList v-show="isFocus===2" :moviepk="movie.id" :mvtitle="movie.title"/>
       <MovieDetailTrailer v-show="isFocus===3" :title="movie.title" />
     </div>
   </div>
@@ -49,6 +49,7 @@
   .then(res => {
     console.log(res.data)
     movie.value = res.data
+    console.log(movie.value)
     return 0
   })
   .catch(err => console.log(err))

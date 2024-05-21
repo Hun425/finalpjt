@@ -11,13 +11,14 @@
   const goToDetail = function (movie_pk) {
     router.push({name:'movieDetail', params:{moviepk: movie_pk}})
   }
+  console.log(props.movie)
 
   // 개봉일에 따른 표시변화
   const getImageSource = function() {
       const currentDate = new Date(); // 현재 날짜와 시간
       const releaseDate = new Date(props.movie.release_date); // movie의 release_date
       const nextMonthDate = new Date(); // 현재 날짜를 복사하여 사용
-      nextMonthDate.setMonth(nextMonthDate.getMonth() - 1); // 현재 날짜에 한 달을 더함
+      nextMonthDate.setMonth(nextMonthDate.getMonth() - 3); // 현재 날짜에 한 달을 더함
 
       // 현재 날짜와 release_date 비교
       if (releaseDate > currentDate) {
@@ -39,8 +40,10 @@
     </div>
     <div class="movieInfo">
       <div class="title">{{ movie.title.length > maxLength ? movie.title.slice(0, maxLength) + '...' : movie.title }}</div>
-      <span v-if="getImageSource() == 'A'" class="day soon">D</span>
-      <span v-if="getImageSource() == 'B'" class="day hot">Hot</span>
+      <span v-if="getImageSource() == 'A'" class="day soon">New</span>
+      <span v-else-if="getImageSource() == 'B'" class="day hot">Hot</span>
+      <span v-else class="day old">R</span>
+
     </div>
     <div>개봉일 : {{ movie.release_date }}</div>
   </div>
@@ -99,6 +102,11 @@
   .hot {
     padding-top: 3px;
     background-color: rgb(255, 68, 0);
+    font-size: 11px;
+  }
+  .old {
+    padding-top: 3px;
+    background-color: rgb(40, 40, 40);
     font-size: 11px;
   }
 

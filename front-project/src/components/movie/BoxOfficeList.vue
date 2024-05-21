@@ -4,6 +4,7 @@
       <div class="contents">
         <div class="titleTag">
           <p class="contentNm">일별 박스오피스</p>
+          <p class="line"></p>
         </div>
         <div class="container">
           <BoxOfficeListItem v-for="movie in dailyMovieList" :key="movie.rank" :movie="movie"/>
@@ -12,6 +13,7 @@
       <div calss="contents">
         <div class="titleTag">
           <p class="contentNm">주간 박스오피스</p>
+          <p class="line"></p>
         </div>
         <div class="container">
           <BoxOfficeListItem v-for="movie in WeeklyMovieList" :key='movie.rank' :movie="movie"/>
@@ -26,7 +28,13 @@
   import BoxOfficeListItem from './BoxOfficeListItem.vue';
   import axios from 'axios'
   
-  /* 진흥원 API KEY 2ff10453a726bf1ff793c4f8179b2afd */
+  // daily는 하루전 / weekDate는 이틀 전
+  const dailyDate = new Date(Date.now() - 86400000).toISOString().slice(0, 10).replace(/-/g, ''); // 하루 전 날짜
+  const weekDate = new Date(Date.now() - 86400000 * 2).toISOString().slice(0, 10).replace(/-/g, ''); // 이틀 전 날짜
+
+
+
+  // 이전 코드
 
   // 1) 일별 박스오피스 API
   /* "http://www.kobis.or.kr//kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json" */
@@ -35,14 +43,15 @@
     method:'get',
     url:'http://www.kobis.or.kr//kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json',
     params:{
-      key:'2ff10453a726bf1ff793c4f8179b2afd',
-      targetDt:'20240512',
+      key:import.meta.env.VITE_BOXOFFICE_API_KEY,
+      targetDt:dailyDate,
       itemPerPage:5,
       multiMovieYn:'N'
     }
   })
   .then(res => {
     dailyMovieList.value = res.data.boxOfficeResult.dailyBoxOfficeList
+    console.log(dailyMovieList.value)
     return 0
   })
   .catch(err => console.log(err))
@@ -54,15 +63,15 @@
     method:'get',
     url:'http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchWeeklyBoxOfficeList.json',
     params:{
-      key:'2ff10453a726bf1ff793c4f8179b2afd',
-      targetDt:'20240512',
+      key:import.meta.env.VITE_BOXOFFICE_API_KEY,
+      targetDt:weekDate,
       itemPerPage:5,
       weekGb:0,
     }
   })
   .then(res => {
     WeeklyMovieList.value = res.data.boxOfficeResult.weeklyBoxOfficeList
-    // console.log(WeeklyMovieList.value)
+    console.log(WeeklyMovieList.value)
 
     return 0
   })
@@ -90,11 +99,21 @@
   .titleTag {
     margin: 30px 0 70px 0;
   }
+  .titleTag p {
+    margin: 0 auto;
+  }
   .contentNm {
+    width: 250px;
     font-weight:bold;
     font-size: 24px;
-    border-bottom: 1px solid white;
+    padding-bottom: 20px;
   }
+  .line {
+    width: 120px;
+    border-bottom: 1px solid white;
+
+  }
+
 
   
 </style>

@@ -15,6 +15,7 @@
 <style scoped>
 .list-container {
   width:1440px;
+  margin:0 auto;
 }
   .mainText {
     margin: 30px 0;
