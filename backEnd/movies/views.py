@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, get_list_or_404
 import random
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
-from .serializers import MovieSerializer
+from .serializers import MovieSerializer,ReviewListSerializer
 import datetime
 from .serializers import (
     MovieListSerializer,
@@ -433,3 +433,9 @@ def user_based_recommend(user_id):
     recommended_movies = similar_users_ratings.mean().sort_values(ascending=False).index
     
     return Movie.objects.filter(id__in=recommended_movies[:10])
+
+@api_view(['GET'])
+def all_review(request):
+    reviews = Review.objects.all()
+    serializers = ReviewListSerializer(reviews,many=True)
+    return Response(serializers.data)

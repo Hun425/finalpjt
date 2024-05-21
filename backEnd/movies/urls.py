@@ -15,4 +15,5 @@ urlpatterns = [
     path('<int:movie_pk>/reviews/<int:review_pk>/comments/like/', views.like_review),
     path('gpt/recommend/',views.gpt_movies),
     path('gpt/userbase/',views.user_based_recommend),
+    path('reviews/',views.all_review),
 ]

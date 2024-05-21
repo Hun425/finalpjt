@@ -191,3 +191,25 @@ class CommentSerializer(serializers.ModelSerializer):
             'updated_at',
         )
         read_only_fields = ('review',)
+
+
+
+class ReviewListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = "__all__"
+    class UserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = ('pk', 'username', 'profile_pic')
+    
+    backdrop_path = serializers.CharField(source='movie.backdrop_path')
+
+    username = serializers.CharField(source='user.username', read_only=True)
+    like_user_count = serializers.SerializerMethodField()
+    comments_count = serializers.SerializerMethodField()
+    def get_like_user_count(self,obj):
+        return obj.like_users.count()
+    
+    def get_comments_count(self, obj):
+        return obj.comments.count()
