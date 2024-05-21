@@ -407,3 +407,29 @@ def gpt_movies(request):
     return JsonResponse({'similar_movies': []})
 
 
+
+## 유사한 유저를 기반으로 
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+import pandas as pd
+from .models import UserRatings
+def user_based_recommend(user_id):
+    # 사용자-아이템 행렬 생성
+    user_movie_ratings = pd.pivot_table(UserRatings.objects.all().values('user_id', 'movie_id', 'rating'), 
+                                        values='rating', 
+                                        index='user_id', 
+                                        columns='movie_id')
+    user_movie_ratings = user_movie_ratings.fillna(0)
+    
+    # 코사인 유사도 계산
+    user_similarity = cosine_similarity(user_movie_ratings)
+    user_similarity_df = pd.DataFrame(user_similarity, index=user_movie_ratings.index, columns=user_movie_ratings.index)
+    
+    # 현재 사용자와 비슷한 사용자들 찾기
+    similar_users = user_similarity_df[user_id].sort_values(ascending=False).index[1:6]
+    
+    # 비슷한 사용자들이 좋아하는 영화 추천
+    similar_users_ratings = user_movie_ratings.loc[similar_users]
+    recommended_movies = similar_users_ratings.mean().sort_values(ascending=False).index
+    
+    return Movie.objects.filter(id__in=recommended_movies[:10])
