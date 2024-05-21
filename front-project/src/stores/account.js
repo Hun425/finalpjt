@@ -99,6 +99,6 @@ export const useAccountStore = defineStore('account', () => {
         router.push({name:'login'})
       }
     
-    
-    return { userData, logIn, token, isLogin, logOut, goToLogin}
+    const isDark = ref(true)
+    return { userData, logIn, token, isLogin, logOut, goToLogin, isDark}
 }, {persist:true})
