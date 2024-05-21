@@ -17,7 +17,7 @@
         <div class="logotext" @click="goToHome">MOVIE CINEMA</div>
         <div class="nav">
           <div >커뮤니티</div>
-          <div >마이페이지</div>
+          <div @click="goToMypage">마이페이지</div>
         </div>
       </div>
     </header>
@@ -25,12 +25,13 @@
 </template>
 
 <script setup>
-  import {RouterLink, RouterView, useRouter} from 'vue-router'
+  import { RouterLink, RouterView, useRouter, useRoute} from 'vue-router'
   import { useAccountStore } from '@/stores/account';
   import {ref} from 'vue'
 
   const store = useAccountStore()
   const router = useRouter()
+  const route = useRoute()
   const isDark = ref(true)
 
   // PageList
@@ -47,7 +48,7 @@
     router.push({name:'signup'})
   }
 
-  // 3)로그아웃 => accounts Store에서 처리
+  // 3) 로그아웃 => accounts Store에서 처리
   const goTologOut = function () {
     isDark.value = false
     store.logOut()
@@ -69,12 +70,15 @@
 
   // 6) 커뮤니티 페이지
 
-  // 7)마이페이지 (수정필요!)
-  // const goToMyPage = function () {
-  //   if (store.isLogin ) {
-  //     router.push({name:'profile',params:{}})
-  //   }
-  // }
+  // 7) 마이페이지 (수정필요!)
+  const goToMypage = function () {
+    if (store.isLogin ) {
+      console.log(route.params)
+      // router.push({name:'profile',params:{route.}})
+    } else {
+      router.push({name:'login'})
+    }
+  }
 
 </script>
 

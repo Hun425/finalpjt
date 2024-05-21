@@ -1,6 +1,7 @@
 <template>
   <div>
     <div id="reviewList"  class="review" >
+      {{ review }}
       <!-- 수정버튼 누르기 전 -->
       <div v-if="!isUpdate" style="border: 1px solid blue; padding:5px;">
         <p>리뷰 ID :  {{ review.id }}</p>
@@ -109,7 +110,7 @@
     })
     .then(res => {
       isUpdate.value = false // 수정form 닫기
-      review.value = res.data // review 데이터 수정하기
+      review.value = res.data[0] // review 데이터 수정하기
 
     })
     .catch(err => {

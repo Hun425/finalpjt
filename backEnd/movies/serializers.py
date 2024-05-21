@@ -83,7 +83,6 @@ class MovieSerializer(serializers.ModelSerializer):
             model = User
             fields = ('pk', 'username', 'profile_pic')
 
-    user = UserSerializer(read_only=True)
 
     class GenreSerializer(serializers.ModelSerializer):
         class Meta:
@@ -96,7 +95,16 @@ class MovieSerializer(serializers.ModelSerializer):
             fields = ('pk', 'name', 'profile_path')
 
 
+    class LikeUserSerializer(serializers.ModelSerializer):
+        class Meta:
+            
+            model = User
+            fields = ('pk','username')
 
+    like_users = LikeUserSerializer(read_only=True, many=True)
+    like_user_count = serializers.IntegerField(
+        source='like_users.count', read_only=True
+    )
 
             
 
