@@ -1,6 +1,6 @@
 # 📖 영화 추천 웹 서비스 개발 README
 
-![readme_mockup2]()
+![image](https://github.com/Hun425/finalpjt/assets/147483675/8cc2c778-ac7d-495a-979c-8218b18d20cd)
 
 
 
