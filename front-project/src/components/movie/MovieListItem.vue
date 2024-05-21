@@ -35,9 +35,7 @@
   <div v-if="movie" class="movieCard">
     <div class="image-container">
       <img @click="goToDetail(movie.pk)" class="poster" :src="'https://image.tmdb.org/t/p/w500/'+ movie.poster_path" :alt="`${movie.title}`">
-      
-      
-      
+            
     </div>
     <div class="movieInfo">
       <div class="title">{{ movie.title.length > maxLength ? movie.title.slice(0, maxLength) + '...' : movie.title }}</div>

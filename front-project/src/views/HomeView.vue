@@ -5,16 +5,11 @@
 
 <template>
   <div>
-    <Navbar class="dark" />
     <BoxOfficeList class="boxoffice-bg"/>
   </div>
 </template>
 
 <style scoped>
-  .dark {
-    background-color: black;
-    color: white;
-  }
   .boxoffice-bg {
     background-color: black;
   }

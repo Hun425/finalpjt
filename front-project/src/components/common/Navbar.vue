@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div :class="{dark:isDark}">
     <header>
       <div class="userbar" v-if="!store.isLogin">
-        <span @click="store.goToLogin">Login</span>|
+        <span @click="goToLogin">Login</span>|
         <span @click="goToSignup">Signup</span>
       </div>
       <div v-else>
@@ -31,27 +31,39 @@
 
   const store = useAccountStore()
   const router = useRouter()
+  const isDark = ref(true)
 
   // PageList
 
   // 1) 로그인 페이지 => accounts.js에서 사용
+  const goToLogin = function () {
+    isDark.value = false
+    store.goToLogin()
+  }
 
   // 2) 회원가입 페이지
   const goToSignup = function () {
+    isDark.value = false
     router.push({name:'signup'})
   }
 
   // 3)로그아웃 => accounts Store에서 처리
+  const goTologOut = function () {
+    isDark.value = false
+    store.logOut()
+  }
 
   /// ----------------------------------- ///
 
   // 4) home 페이지 (Logo)
   const goToHome = function () {
+    isDark.value = true
     router.push({name:'home'})
   }
 
   // 5) 영화 페이지
   const goToMovie = function () {
+    isDark.value = false
     router.push({name:'movies'})
   }
 
@@ -67,6 +79,10 @@
 </script>
 
 <style scoped>
+  .dark {
+    background-color: black;
+    color:white;
+  }
   header {
     width: 1440px;
     height:100px;

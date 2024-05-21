@@ -6,20 +6,22 @@
       <h2>유사한 영화</h2>
       <ul>
         <li v-for="movie in similarMovies" :key="movie.pk" >
-            <div >
-
-                <a :href="'/movies/' + movie.pk">{{ movie.title }}</a> - 유사도: {{ movie.similarity.toFixed(2) }}<br>
-                평점: {{ movie.vote_average }}<br>
-                <img :src="'https://image.tmdb.org/t/p/w500/'+ movie.poster_path" alt="포스터" style="width: 100px;"><br>
-                출시 날짜: {{ movie.release_date }}
-            </div >
-
+          <div>
+            <a :href="'/movies/' + movie.pk">{{ movie.title }}</a> - 유사도: {{ movie.similarity.toFixed(2) }}<br>
+            평점: {{ movie.vote_average }}<br>
+            <img :src="'https://image.tmdb.org/t/p/w500/'+ movie.poster_path" alt="포스터" style="width: 100px;"><br>
+            출시 날짜: {{ movie.release_date }}
+          </div >
         </li>
       </ul>
     </div>
   </template>
   
-  <script>
+<script setup>
+</script>
+
+
+<script>
   import axios from 'axios';
   
   export default {

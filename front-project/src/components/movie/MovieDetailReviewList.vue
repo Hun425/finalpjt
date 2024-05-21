@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div v-if="reviews">  <!-- null 이 아니면 다 값이 있다고 판단!! -->
+    <div v-if="reviews && reviews.length">
+      <!-- null 이 아니면 다 값이 있다고 판단!! / 이부분 처리 필요!! / 받아오는 데이터가 비어있으면 []로 받아와서 인식 X-->
         <MovieReviewItem v-for="(review,index) in reviews"  :review="review" :moviepk="moviepk" :index="index" @deleteReview = "deleteReview"/>
     </div>
     <div v-else>
@@ -64,6 +65,7 @@
       url:`/movies/${props.moviepk}/reviews/`,
     })
     .then(res => {
+      console.log(res.data)
       reviews.value = res.data
       console.log('리뷰데이터',reviews.value)
       return 0
