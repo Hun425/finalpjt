@@ -64,7 +64,7 @@
 
 ```
 ├─backEnd
-│├─accounts
+│─accounts
    │  ├─migrations
    │  
    ├─movies
