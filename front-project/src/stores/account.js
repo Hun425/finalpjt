@@ -83,6 +83,9 @@ export const useAccountStore = defineStore('account', () => {
             userData.value = {
                 username:''
             }
+            localStorage.removeItem('chatbot-messages') // 로그아웃 시 로컬 스토리지 초기화
+            messages.value = [] // 메시지 기록 초기화
+            location.reload() // 페이지 새로고침하여 상태 초기화
             router.push({name:'home'})
         })
         .catch(err => {
