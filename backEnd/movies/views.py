@@ -9,6 +9,7 @@ from django.db.models import Count
 from django.shortcuts import get_object_or_404, get_list_or_404
 import random
 from rest_framework.views import APIView
+from rest_framework.pagination import PageNumberPagination
 from .serializers import MovieSerializer
 import datetime
 from .serializers import (
@@ -37,7 +38,9 @@ from datetime import timedelta
 #         serializer = MovieListSerializer(page_movies, many=True)
 #         return Response(serializer.data)
 # from django.core.paginator import Paginator  // 이 부분이 원래 있었던 코드
-from rest_framework.pagination import PageNumberPagination
+
+
+
 
 # # 모든 영화
 
@@ -57,6 +60,7 @@ from rest_framework.pagination import PageNumberPagination
 
 class MoviePagination(PageNumberPagination):
     page_size = 20  # 페이지당 항목 수
+
 
 def get_age_rating(age):
     if age < 12:
@@ -401,3 +405,5 @@ def gpt_movies(request):
         return JsonResponse({'similar_movies': serialized_movies})
 
     return JsonResponse({'similar_movies': []})
+
+
