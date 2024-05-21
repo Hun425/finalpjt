@@ -27,30 +27,29 @@
 <script setup>
   import { RouterLink, RouterView, useRouter, useRoute} from 'vue-router'
   import { useAccountStore } from '@/stores/account';
-  import {ref} from 'vue'
+  import { ref, computed} from 'vue'
 
   const store = useAccountStore()
   const router = useRouter()
   const route = useRoute()
-  const isDark = ref(true)
-
+  const isDark = computed(() => store.isDark);
   // PageList
 
   // 1) 로그인 페이지 => accounts.js에서 사용
   const goToLogin = function () {
-    isDark.value = false
+    store.isDark = false
     store.goToLogin()
   }
 
   // 2) 회원가입 페이지
   const goToSignup = function () {
-    isDark.value = false
+    store.isDark = false
     router.push({name:'signup'})
   }
 
   // 3) 로그아웃 => accounts Store에서 처리
   const goTologOut = function () {
-    isDark.value = false
+    store.isDark = false
     store.logOut()
   }
 
@@ -58,13 +57,13 @@
 
   // 4) home 페이지 (Logo)
   const goToHome = function () {
-    isDark.value = true
+    store.isDark = true
     router.push({name:'home'})
   }
 
   // 5) 영화 페이지
   const goToMovie = function () {
-    isDark.value = false
+    store.isDark = false
     router.push({name:'movies'})
   }
 
@@ -73,8 +72,8 @@
   // 7) 마이페이지 (수정필요!)
   const goToMypage = function () {
     if (store.isLogin ) {
-      console.log(route.params)
-      // router.push({name:'profile',params:{route.}})
+      store.isDark
+      router.push({name:'profile',params:{userpk:store.userData.pk}})
     } else {
       router.push({name:'login'})
     }
