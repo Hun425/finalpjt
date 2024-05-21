@@ -18,4 +18,5 @@ class User(AbstractUser):
         processors=[ResizeToFill(300, 300)],
         format='JPEG',
         options={'quality': 90},
+        default="images/profile.jpg"
     )
