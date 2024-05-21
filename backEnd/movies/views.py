@@ -39,10 +39,6 @@ from datetime import timedelta
 # from django.core.paginator import Paginator  // 이 부분이 원래 있었던 코드
 from rest_framework.pagination import PageNumberPagination
 
-class MoviePagination(PageNumberPagination):
-    page_size = 20
-
-
 # # 모든 영화
 
 # @api_view(['GET'])
@@ -60,9 +56,7 @@ class MoviePagination(PageNumberPagination):
 
 
 class MoviePagination(PageNumberPagination):
-    page_size = 10  # 페이지당 항목 수
-    page_size_query_param = 'page_size'
-    max_page_size = 100
+    page_size = 20  # 페이지당 항목 수
 
 def get_age_rating(age):
     if age < 12:

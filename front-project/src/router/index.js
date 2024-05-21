@@ -33,7 +33,7 @@ const router = createRouter({
       component: SignupView,
     }, 
     {
-      path: "/:moviepk",
+      path: "/movies/:moviepk",
       name: "movieDetail",
       component: MovieDetailView,
     },

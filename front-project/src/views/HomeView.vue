@@ -1,16 +1,16 @@
 <script setup>
   import BoxOfficeList from '@/components/movie/BoxOfficeList.vue';
-
+  import Navbar from '@/components/common/Navbar.vue'
 </script>
 
 <template>
-  <div class="totalBg">
-      <BoxOfficeList />  
+  <div>
+    <BoxOfficeList class="boxoffice-bg"/>
   </div>
 </template>
 
 <style scoped>
-  .totalBg {
+  .boxoffice-bg {
     background-color: black;
   }
 </style>

@@ -26,8 +26,7 @@
 <!-- 개봉일자까지 고려해서 D-N까지 표현해도 좋을 듯! -->
 <style scoped>
   .movieCard {
-    display: flex;
-    flex-direction: row;
+    margin:0 auto;
     width: 200px;
     height: 260px;
     border-radius: 10px;

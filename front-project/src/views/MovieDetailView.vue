@@ -7,15 +7,14 @@
         <div :class="{navItem:true, focus: isFocus===2, rest:!(isFocus===2) }">관람평</div>
         <div :class="{navItem:true, focus: isFocus===3, rest:!(isFocus===3)}">예고편</div>
       </div>
-      <MovieDetailInfo v-if="isFocus===1" :actors="movie.actors" :overview="movie.overview" />
-      <MovieDetailReviewList v-if="isFocus===2" :moviepk="movie.id"/>
-      <MovieDetailTrailer v-if="isFocus===3" :title="movie.title" />
+      <MovieDetailInfo v-show="isFocus===1" :actors="movie.actors" :overview="movie.overview" />
+      <MovieDetailReviewList v-show="isFocus===2" :moviepk="movie.id"/>
+      <MovieDetailTrailer v-show="isFocus===3" :title="movie.title" />
     </div>
   </div>
 </template>
 
 <script setup>
-
   // 1) Component 구성 및 Focus
   import MovieDetailMain from '@/components/movie/MovieDetailMain.vue'
   import MovieDetailInfo from '@/components/movie/MovieDetailInfo.vue'
