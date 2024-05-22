@@ -12,6 +12,7 @@
     "@splidejs/splide": "^4.1.4",
     "@splidejs/vue-splide": "^0.6.12",
     "axios": "^1.7.1",
+    "bulma": "^1.0.1",
     "cheerio": "^1.0.0-rc.12",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",

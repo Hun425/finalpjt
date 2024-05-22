@@ -13,7 +13,7 @@ urlpatterns = [
     path('<int:movie_pk>/reviews/<int:review_pk>/comments/', views.get_create_comment),
     path('<int:movie_pk>/reviews/<int:review_pk>/comments/<int:comment_pk>/',views.delete_comment),
     path('<int:movie_pk>/reviews/<int:review_pk>/comments/like/', views.like_review),
-    path('gpt/recommend/',views.gpt_movies),
+    path('gpt/search/',views.gpt_movies),
     path('gpt/userbase/',views.user_based_recommend),
     path('reviews/',views.all_review),
 ]

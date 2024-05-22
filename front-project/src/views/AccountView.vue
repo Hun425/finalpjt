@@ -164,12 +164,32 @@ import { useAccountStore } from '@/stores/account';
 
 const store = useAccountStore();
 
-const logIn = function () {
+const logIn = async function () {
   const payload = {
     username: username.value,
     password: password.value
   };
-  store.logIn(payload);
+  try {
+    await store.logIn(payload);
+    Swal.fire({
+      icon: 'success',
+      title: '로그인 성공',
+      text: '로그인이 성공적으로 완료되었습니다.',
+      confirmButtonText: '확인'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        router.push({ name: 'home' });
+      }
+    });
+  } catch (error) {
+    console.log(error);
+    Swal.fire({
+      icon: 'error',
+      title: '오류 발생',
+      text: '로그인 정보를 확인해주세요.',
+      confirmButtonText: '확인'
+    });
+  }
 };
 
 // 페이지 전환 함수
@@ -184,6 +204,7 @@ const switchToSignUp = () => {
 };
 
 </script>
+
 
 <style scoped>
   .body {

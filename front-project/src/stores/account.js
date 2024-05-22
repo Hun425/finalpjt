@@ -69,34 +69,50 @@ export const useAccountStore = defineStore('account', () => {
             return true
         }
     })
-
     const logOut = function () {
+        // 현재 페이지의 URL을 저장합니다.
+        const currentPage = window.location.href;
+    
         axios({
-            method:'post',
-            url:'/accounts/logout/',
+            method: 'post',
+            url: '/accounts/logout/',
             headers: {
                 Authorization: `Token ${token.value}`
-              },
+            },
         })
         .then(res => {
-            token.value = null
+            token.value = null;
             userData.value = {
-                username:''
-            }
-            localStorage.removeItem('chatbot-messages') // 로그아웃 시 로컬 스토리지 초기화
-            messages.value = [] // 메시지 기록 초기화
-            location.reload() // 페이지 새로고침하여 상태 초기화
-            router.push({name:'home'})
+                username: ''
+            };
+            localStorage.removeItem('chatbot-messages'); // 로그아웃 시 로컬 스토리지 초기화
+            Swal.fire({
+                icon: 'success',
+                title: '로그아웃 성공',
+                text: '로그아웃이 성공적으로 완료되었습니다.',
+                confirmButtonText: '확인'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // 이전 페이지로 리다이렉션합니다.
+                    window.location.href = currentPage;
+                }
+            });
         })
         .catch(err => {
-            console.log(err)
-        })
-
-    }
+            console.log(err);
+            Swal.fire({
+                icon: 'error',
+                title: '오류 발생',
+                text: '로그아웃 중 문제가 발생했습니다.',
+                confirmButtonText: '확인'
+            });
+        });
+    };
+    
 
 
     const goToLogin = function () {
-        router.push({name:'login'})
+        router.push({name:'account'})
       }
     
     const isDark = ref(true)
