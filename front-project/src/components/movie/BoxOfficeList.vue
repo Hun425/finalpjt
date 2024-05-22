@@ -1,23 +1,31 @@
 <template>
-  <div>
-    <div class="boxoffice">
-      <div class="contents">
-        <div class="titleTag">
-          <p class="contentNm">일별 박스오피스</p>
-          <p class="line"></p>
-        </div>
-        <div class="container">
-          <BoxOfficeListItem v-for="movie in dailyMovieList" :key="movie.rank" :movie="movie"/>
-        </div>
+  <div class="boxoffice">
+    <div class="contents">
+      <div class="titleTag">
+        <p class="contentNm">일별 박스오피스</p>
+        <p class="line"></p>
       </div>
-      <div class="contents">
-        <div class="titleTag">
-          <p class="contentNm">주간 박스오피스</p>
-          <p class="line"></p>
-        </div>
-        <div class="container">
-          <BoxOfficeListItem v-for="movie in weeklyMovieList" :key="movie.rank" :movie="movie"/>
-        </div>
+      <div class="container">
+        <BoxOfficeListItem 
+          v-for="(movie, index) in dailyMovieList" 
+          :key="movie.rank" 
+          :movie="movie" 
+          @click="emitTopMoviePoster(index)"
+        />
+      </div>
+    </div>
+    <div class="contents">
+      <div class="titleTag">
+        <p class="contentNm">주간 박스오피스</p>
+        <p class="line"></p>
+      </div>
+      <div class="container">
+        <BoxOfficeListItem 
+          v-for="(movie, index) in weeklyMovieList" 
+          :key="movie.rank" 
+          :movie="movie" 
+          @click="emitTopMoviePoster(index)"
+        />
       </div>
     </div>
   </div>
@@ -71,6 +79,13 @@ const fetchBoxOfficeData = async () => {
     }
   } catch (error) {
     console.error('Error fetching box office data:', error);
+  }
+};
+
+const emitTopMoviePoster = (index) => {
+  if (dailyMovieList.value[index]) {
+    // 포스터 이벤트 방출
+    this.$emit('top-movie-poster', dailyMovieList.value[index].movieNm);
   }
 };
 
