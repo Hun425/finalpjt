@@ -166,9 +166,9 @@ const submitForm = () => {
 const username = ref(null);
 const password = ref(null);
 
-import { useAccountStore } from '@/stores/account';
 
-const store = useAccountStore();
+
+
 
 const logIn = async function () {
   const payload = {

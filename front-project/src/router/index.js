@@ -53,6 +53,11 @@ const router = createRouter({
       name: 'MovieRecommendation',
       component: MovieRecommendation,
     },
+    {
+      path: '/movies/:id',
+      name: 'movie-detail',
+      component: MovieDetailView,
+    },
     // {
     //   path: '/',
     //   name: '',
