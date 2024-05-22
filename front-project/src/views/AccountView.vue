@@ -34,11 +34,11 @@
       </div>
       <!-- Sign In ( 로그인 페이지 ) -->
       <div class="form-container sign-in-container">
-        <form @submit.prevent = "logIn">
+        <form @submit.prevent="logIn">
           <h1>Sign in</h1>
           <br>
           <label for="username"></label>
-          <input placeholder="Username" type="text" v-model.trim="username" id="username" @blur="checkusername" >
+          <input placeholder="Username" type="text" v-model.trim="username" id="username" @blur="checkusername">
           <label for="password"></label>
           <input type="password" v-model.trim="password" id="password" placeholder="Password">
           <br>
@@ -50,12 +50,12 @@
         <div class="overlay-panel overlay-left">
           <h1>Welcome Back!</h1>
           <p>To keep connected with us please login with your personal info</p>
-          <button class="ghost" id="signIn">Sign In</button>
+          <button class="ghost" id="signIn" @click="switchToSignIn">Sign In</button>
         </div>
         <div class="overlay-panel overlay-right">
           <h1>Hello, Friend!</h1>
           <p>Enter your personal details and start journey with us</p>
-          <button class="ghost" id="signUp">Sign Up</button>
+          <button class="ghost" id="signUp" @click="switchToSignUp">Sign Up</button>
         </div>
       </div>
     </div>
@@ -64,131 +64,125 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
-  import router from "@/router";
-  import axios from "axios";
-  import Swal from 'sweetalert2';
-  
-  // 회원가입용
-  const signupUsername =  ref("")
-  const signupEmail =  ref("")
-  const age = ref("")
-  const password1 = ref("")
-  const password2 = ref("")
-  const usernameError = ref("")
-  const emailError = ref("")
-  const ageError = ref("")
+import { ref } from 'vue';
+import router from "@/router";
+import axios from "axios";
+import Swal from 'sweetalert2';
 
-  // 필요한 함수들
-  const checkUsername = () => {
-      axios
-        .get("/validate_username/", { params: { username: signupUsername.value } })
-        .then((response) => {
-          if (response.data.is_taken) {
-            usernameError.value = "이 사용자 이름은 이미 사용 중입니다.";
-          } else {
-            usernameError.value = "";
-          }
-        });
-    };
+// 회원가입용
+const signupUsername = ref("");
+const signupEmail = ref("");
+const age = ref("");
+const password1 = ref("");
+const password2 = ref("");
+const usernameError = ref("");
+const emailError = ref("");
+const ageError = ref("");
 
-  const checkEmail = () => {
-    axios
-      .get("/validate_email/", { params: { email: signupEmail.value } })
-      .then((response) => {
-        if (response.data.is_taken) {
-          emailError.value = "이 이메일은 이미 사용 중입니다.";
-        } else {
-          emailError.value = "";
+// 필요한 함수들
+const checkUsername = () => {
+  axios
+    .get("/validate_username/", { params: { username: signupUsername.value } })
+    .then((response) => {
+      if (response.data.is_taken) {
+        usernameError.value = "이 사용자 이름은 이미 사용 중입니다.";
+      } else {
+        usernameError.value = "";
+      }
+    });
+};
+
+const checkEmail = () => {
+  axios
+    .get("/validate_email/", { params: { email: signupEmail.value } })
+    .then((response) => {
+      if (response.data.is_taken) {
+        emailError.value = "이 이메일은 이미 사용 중입니다.";
+      } else {
+        emailError.value = "";
+      }
+    });
+};
+
+const checkAge = () => {
+  if (age.value > 80 || age.value < 1) {
+    ageError.value = "80세 이하만 가입 가능합니다.";
+  } else {
+    ageError.value = "";
+  }
+};
+
+const submitForm = () => {
+  console.log(signupUsername.value, signupEmail.value);
+  if (signupUsername.value.trim() === '' || signupEmail.value.trim() === '') {
+    Swal.fire({
+      icon: 'error',
+      title: '누락된 필드',
+      text: '이메일과 유저네임을 모두 입력해주세요.',
+      confirmButtonText: '확인'
+    });
+    return;
+  }
+
+  const formData = {
+    username: signupUsername.value,
+    email: signupEmail.value,
+    age: age.value,
+    password1: password1.value,
+    password2: password2.value,
+  };
+  axios
+    .post("/accounts/signup/", formData)
+    .then((response) => {
+      Swal.fire({
+        icon: 'success',
+        title: '회원가입 성공',
+        text: '회원가입이 성공적으로 완료되었습니다.',
+        confirmButtonText: '확인'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          router.push({ name: 'home' });
         }
       });
-    };
-  const checkAge = () => {
-    if (age.value > 80 || age.value < 1) {
-      emailError.value = "80세 이하만 가입 가능합니다.";
-    } else {
-      emailError.value = "";
-    }
-  };
-
-  const submitForm = () => {
-    console.log(signupUsername.value, signupEmail.value)
-    if (signupUsername.value.trim() === '' || signupEmail.value.trim() === '') {
+    })
+    .catch((error) => {
+      console.log(error);
       Swal.fire({
         icon: 'error',
-        title: '누락된 필드',
-        text: '이메일과 유저네임을 모두 입력해주세요.',
+        title: '오류 발생',
+        text: '입력을 확인해주세요.',
         confirmButtonText: '확인'
       });
-      return;
-    }
+    });
+};
 
-    const formData = {
-      username: signupUsername.value,
-      email: signupEmail.value,
-      age: age.value,
-      password1: password1.value,
-      password2: password2.value,
-    };
-    axios
-      .post("/accounts/signup/", formData)
-      .then((response) => {
-        Swal.fire({
-          icon: 'success',
-          title: '회원가입 성공',
-          text: '회원가입이 성공적으로 완료되었습니다.',
-          confirmButtonText: '확인'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            router.push({ name: 'home' });
-          }
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-        Swal.fire({
-          icon: 'error',
-          title: '오류 발생',
-          text: '입력을 확인해주세요.',
-          confirmButtonText: '확인'
-        });
-      });
+// 로그인용
+const username = ref(null);
+const password = ref(null);
+
+import { useAccountStore } from '@/stores/account';
+
+const store = useAccountStore();
+
+const logIn = function () {
+  const payload = {
+    username: username.value,
+    password: password.value
   };
+  store.logIn(payload);
+};
 
+// 페이지 전환 함수
+const switchToSignIn = () => {
+  const container = document.getElementById('container');
+  container.classList.remove("right-panel-active");
+};
 
+const switchToSignUp = () => {
+  const container = document.getElementById('container');
+  container.classList.add("right-panel-active");
+};
 
-  // 로그인용
-  const username = ref(null)
-  const password = ref(null)
-
-  import { useAccountStore } from '@/stores/account';
-
-  const store = useAccountStore()
-
-  const logIn = function () {
-    const payload = {
-        username: username.value,
-        password: password.value
-    }
-    store.logIn(payload)
-  }
-
-
-</script>
-<script>
-  // 모든 페이지가 다 구성되고 난 후에 js 코드를 추가하는 것!!
-  window.onload = function () {
-    const signUpButton = document.getElementById('signUp');
-    const signInButton = document.getElementById('signIn');
-    const container = document.getElementById('container');
-    signUpButton.addEventListener('click', () => {
-      container.classList.add("right-panel-active");
-    });
-    
-    signInButton.addEventListener('click', () => {
-      container.classList.remove("right-panel-active");
-    });
-  }
 </script>
 
 <style scoped>
