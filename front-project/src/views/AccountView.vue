@@ -68,6 +68,12 @@ import { ref } from 'vue';
 import router from "@/router";
 import axios from "axios";
 import Swal from 'sweetalert2';
+import { useAccountStore } from '@/stores/account';
+
+
+const store = useAccountStore()
+store.isDark = false
+
 
 // 회원가입용
 const signupUsername = ref("");
@@ -159,10 +165,6 @@ const submitForm = () => {
 // 로그인용
 const username = ref(null);
 const password = ref(null);
-
-import { useAccountStore } from '@/stores/account';
-
-const store = useAccountStore();
 
 const logIn = function () {
   const payload = {
