@@ -9,6 +9,7 @@ import ProfileView from "@/views/ProfileView.vue";
 import MovieRecommendation from '../views/AutoRecommend.vue';
 // import View from '../views/View.vue'
 import {  useAccountStore  } from '@/stores/account'
+import CommmunityView from "@/views/CommmunityView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -53,11 +54,11 @@ const router = createRouter({
       name: 'MovieRecommendation',
       component: MovieRecommendation,
     },
-    // {
-    //   path: '/',
-    //   name: '',
-    //   component: 
-    // },
+    {
+      path: '/community',
+      name: 'community',
+      component: CommmunityView
+    },
   ],
 });
 

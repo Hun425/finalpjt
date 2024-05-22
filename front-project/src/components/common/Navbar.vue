@@ -14,7 +14,7 @@
         <div class="navbar-start">
           <a class="navbar-item" @click="goToMovie">영화</a>
           <a class="navbar-item">추천</a>
-          <a class="navbar-item">커뮤니티</a>
+          <a class="navbar-item" @click="goToCommunity">커뮤니티</a>
         </div>
         <div class="navbar-end">
           <a v-if="!store.isLogin" class="navbar-item" @click="goToLogin">로그인/회원가입</a>
@@ -75,6 +75,11 @@ const goToMypage = () => {
     router.push({ name: 'account' });
   }
 };
+
+const goToCommunity = () => {
+  store.isDark = true
+  router.push({name:'community'})
+}
 </script>
 
 
