@@ -53,7 +53,7 @@ from rest_framework.decorators import api_view, permission_classes
 import json
 import openai
 import logging
-
+import textwrap
 logger = logging.getLogger(__name__)
 
 class GPTChatView(APIView):
@@ -77,9 +77,12 @@ class GPTChatView(APIView):
                         {"role": "system", "content": "You are a helpful assistant."},
                         {"role": "user", "content": user_message}
                     ],
-                    max_tokens=150
+                    max_tokens=300
                 )
-                return Response({'response': response.choices[0].message['content'].strip()})
+
+                formatted_response = textwrap.fill(response.choices[0].message['content'].strip(), width=80)
+                
+                return Response({'response': formatted_response})
             else:
                 return Response({'error': 'No message provided'}, status=400)
         except json.JSONDecodeError as e:
@@ -94,7 +97,6 @@ class GPTChatView(APIView):
 
     def get(self, request):
         return Response({'error': 'Invalid request method'}, status=405)
-
 
 
 
