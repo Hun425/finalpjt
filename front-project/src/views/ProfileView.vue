@@ -37,6 +37,8 @@
   import { useAccountStore } from '@/stores/account';
   
   const store = useAccountStore()
+  store.isDark = false
+
   const route = useRoute()
   const userpk = route.params.userpk
   const userInfo = ref({})

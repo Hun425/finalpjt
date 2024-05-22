@@ -9,6 +9,9 @@
   
 <script setup>
   import MovieList from '@/components/movie/MovieList.vue'
+  import { useAccountStore } from '@/stores/account';
+  const store = useAccountStore()
+  store.isDark = false
   
 </script>
 
