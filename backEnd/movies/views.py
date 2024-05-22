@@ -355,13 +355,19 @@ if openai.api_key is None:
 def get_movies_from_db():
     return Movie.objects.all()
 
+
+
+from .hangul_utils import chosungIncludes
+
+
 def levenshtein_distance(s1, s2):
+    s1 = s1.replace(" ", "")
+    s2 = s2.replace(" ", "")
+    
     if len(s1) < len(s2):
         return levenshtein_distance(s2, s1)
-
     if len(s2) == 0:
         return len(s1)
-
     previous_row = range(len(s2) + 1)
     for i, c1 in enumerate(s1):
         current_row = [i + 1]
@@ -371,39 +377,31 @@ def levenshtein_distance(s1, s2):
             substitutions = previous_row[j] + (c1 != c2)
             current_row.append(min(insertions, deletions, substitutions))
         previous_row = current_row
-
     return previous_row[-1]
 
 def find_similar_movies(movie_name, movies, top_n=10):
+    movie_name = movie_name.replace(" ", "")
     similar_movies = []
     for movie in movies:
-        distance = levenshtein_distance(movie_name.lower(), movie.title.lower())
+        movie_title = movie.title.replace(" ", "")
+        distance = levenshtein_distance(movie_name.lower(), movie_title.lower())
         similarity = 1 / (1 + distance)
-        
-        # 완벽한 일치 가중치 추가
-        if movie_name.lower() == movie.title.lower():
-            similarity += 2  # 완벽한 일치에 높은 가중치 부여
-        
-        # 숫자가 포함된 제목에 대한 추가 가중치
-        if any(char.isdigit() for char in movie.title):
-            similarity += 0.1
-        
-        # 시리즈물 우선 처리
-        if movie_name.lower() in movie.title.lower():
+        if movie_name.lower() == movie_title.lower():
+            similarity += 2
+        # if any(char.isdigit() for char in movie.title):
+        #     similarity += 0.1
+        if movie_name.lower() in movie_title.lower():
             similarity += 1
-        
-        if similarity >= 0.5:
+        if chosungIncludes(movie_title, movie_name):
+            similarity += 1
+        if similarity >= 0.7:
             similar_movies.append((similarity, movie))
-    
     similar_movies.sort(key=lambda x: x[0], reverse=True)
-    
     return [(movie, similarity) for similarity, movie in similar_movies[:top_n]]
 
 def gpt_movies(request):
     movie_name = request.GET.get('movie_name', '')
-
-    movies = get_movies_from_db()
-    logger.debug(f"Received movie_name: {movie_name}")
+    movies = Movie.objects.all()
     if movie_name:
         similar_movies = find_similar_movies(movie_name, movies)
         serialized_movies = []
@@ -412,8 +410,9 @@ def gpt_movies(request):
             serialized_movie['similarity'] = similarity
             serialized_movies.append(serialized_movie)
         return JsonResponse({'similar_movies': serialized_movies})
-
     return JsonResponse({'similar_movies': []})
+
+
 
 
 
