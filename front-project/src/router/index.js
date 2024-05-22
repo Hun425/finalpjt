@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import MovieListView from "../views/MovieListView.vue";
-import LoginView from "../views/LoginView.vue";
-import SignupView from "../views/SignupView.vue";
+// import LoginView from "../views/LoginView.vue";
+// import SignupView from "../views/SignupView.vue";
+import AccountView from "../views/AccountView.vue"
 import MovieDetailView from "../views/MovieDetailView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import MovieRecommendation from '../views/AutoRecommend.vue';
@@ -23,15 +24,20 @@ const router = createRouter({
       component: MovieListView,
     },
     {
-      path: "/login",
-      name: "login",
-      component: LoginView,
+      path: '/account',
+      name: 'account',
+      component: AccountView
     },
-    {
-      path: "/signup",
-      name: "signup",
-      component: SignupView,
-    }, 
+    // {
+    //   path: "/login",
+    //   name: "login",
+    //   component: LoginView,
+    // },
+    // {
+    //   path: "/signup",
+    //   name: "signup",
+    //   component: SignupView,
+    // }, 
     {
       path: "/movies/:moviepk",
       name: "movieDetail",

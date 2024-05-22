@@ -2,8 +2,7 @@
   <div :class="{dark:isDark}">
     <header>
       <div class="userbar" v-if="!store.isLogin">
-        <span @click="goToLogin">Login</span>|
-        <span @click="goToSignup">Signup</span>
+        <span @click="goToAccount">Login / Sign Up</span>|
       </div>
       <div v-else>
         <span @click="store.logOut">Logout</span>
@@ -35,16 +34,20 @@
   const isDark = computed(() => store.isDark);
   // PageList
 
-  // 1) 로그인 페이지 => accounts.js에서 사용
-  const goToLogin = function () {
-    store.isDark = false
-    store.goToLogin()
-  }
+  // // 1) 로그인 페이지 => accounts.js에서 사용
+  // const goToLogin = function () {
+  //   store.isDark = false
+  //   store.goToLogin()
+  // }
 
-  // 2) 회원가입 페이지
-  const goToSignup = function () {
+  // // 2) 회원가입 페이지
+  // const goToSignup = function () {
+  //   store.isDark = false
+  //   router.push({name:'signup'})
+  // }
+  const goToAccount = function () {
     store.isDark = false
-    router.push({name:'signup'})
+    router.push({name:'account'})
   }
 
   // 3) 로그아웃 => accounts Store에서 처리

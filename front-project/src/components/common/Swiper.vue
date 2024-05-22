@@ -1,73 +1,22 @@
 <template>
-  <swiper
-    :slidesPerView="4"
-    :spaceBetween="30"
-    :centeredSlides="true"
+  <div>
+    <swiper
+    :slidesPerView="6"
+    :spaceBetween="10"
+    :centeredSlides="false"
     :pagination="{
       clickable: true,
     }"
-    :modules="[Pagination]"
-    class="mySwiper"
-  > 
-    <swiper-slide><ActorCard /></swiper-slide>
-    <swiper-slide>Slide 1</swiper-slide>
-    <swiper-slide>Slide 2</swiper-slide><swiper-slide>Slide 3</swiper-slide>
-    <swiper-slide>Slide 4</swiper-slide><swiper-slide>Slide 5</swiper-slide>
-    <swiper-slide>Slide 6</swiper-slide><swiper-slide>Slide 7</swiper-slide>
-    <swiper-slide>Slide 8</swiper-slide><swiper-slide>Slide 9</swiper-slide>
-  </swiper>
-  <swiper
-    :slidesPerView="4"
-    :spaceBetween="30"
-    :centeredSlides="true"
-    :pagination="{
-      clickable: true,
-    }"
-    :modules="[Pagination]"
-    class="mySwiper"
-  >
-    <swiper-slide v-for="actor in actors" :key="actor.name">
-      {{ actor.name }}
-    </swiper-slide>
-    <swiper-slide>Slide 2</swiper-slide><swiper-slide>Slide 3</swiper-slide>
-    <swiper-slide>Slide 4</swiper-slide><swiper-slide>Slide 5</swiper-slide>
-    <swiper-slide>Slide 6</swiper-slide><swiper-slide>Slide 7</swiper-slide>
-    <swiper-slide>Slide 8</swiper-slide><swiper-slide>Slide 9</swiper-slide>
-  </swiper>
+      :modules="[Pagination]"
+      class="mySwiper"
+      >
+      <swiper-slide v-for="actor in actors" :key="actor.name">
+        <ActorCard :actor="actor"/>
+      </swiper-slide>
+    </swiper>
+  </div>
 </template>
 
-
-<!-- <script>
-  // Import Swiper Vue.js components
-  import { Swiper, SwiperSlide } from 'swiper/vue';
-  import ActorCard from '../actor/ActorCard.vue';
-  import {defineProps} from 'vue'
-  defineProps({
-    actors:Array,
-  })
-
-
-  // Import Swiper styles
-  import 'swiper/css';
-
-  import 'swiper/css/pagination';
-
-
-  // import required modules
-  import { Pagination } from 'swiper/modules';
-
-  export default {
-    components: {
-      Swiper,
-      SwiperSlide,
-    },
-    setup() {
-      return {
-        modules: [Pagination],
-      };
-    },
-  };
-</script> -->
 <script setup>
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import ActorCard from '../actor/ActorCard.vue';
@@ -82,27 +31,10 @@ defineProps({
 </script>
 
 <style scoped>
-#app {
-  height: 100%;
-}
-html,
-body {
-  position: relative;
-  height: 100%;
-}
-
-body {
-  background: #eee;
-  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  color: #000;
-  margin: 0;
-  padding: 0;
-}
 
 .swiper {
   width: 100%;
-  height: 100%;
+  height: 250px;
 }
 
 .swiper-slide {
@@ -119,7 +51,7 @@ body {
 .swiper-slide img {
   display: block;
   width: 100%;
-  height: 100%;
+  height: 200px;
   object-fit: cover;
 }
 

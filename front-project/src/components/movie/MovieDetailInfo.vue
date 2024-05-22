@@ -7,8 +7,7 @@
         </div>
         <div>
             <p class="intro">출현진</p>
-            <ActorCard v-for="actor in actors" :key='actor.name' :actor='actor'/>
-            <!-- <Swiper :actors="props.actors"/> -->
+            <Swiper :actors="props.actors"/>
         </div>
     </div>
 </template>
@@ -16,7 +15,7 @@
 <script setup>
 import ActorCard from '../actor/ActorCard.vue';
 import {ref} from 'vue'
-//  import Swiper from '@/components/common/Swiper.vue'
+ import Swiper from '@/components/common/Swiper.vue'
  const overview = ref('')
  const actors = ref([])
 
@@ -39,7 +38,7 @@ import {ref} from 'vue'
     .intro {
         margin: 0 0 15px 0;
         font-weight: bold;
-        font-size: 18px;
+        font-size: 24px;
     }
     .overview {
         font-size: 16px;

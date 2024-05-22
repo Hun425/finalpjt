@@ -1,26 +1,27 @@
 <!-- https://encrypted-tbn0.gstatic.com/images?q=tbn:AN…wwaP9UbKjHzbqMzXEHSPXNyIa6BudJBXpz0WMo&usqp=CAE&s -->
 
 <script setup>
+  import { usePosterStore } from '@/stores/poster';
+  const store = usePosterStore()
   const props = defineProps({
     movie:Object,
   })
-    
+  props.movie
+  
 </script>
 
 <template>
   <div class="movieCard">
     <div class="image-container">
-      <img class="poster" src='@/assets/common.jpg' alt="movie_poster">
-      <span class="rank">{{ movie.rank }}</span>
-      <span class="change" v-if="movie.rankInten != 0">{{ movie.rankInten }} | UP</span>
+      <img class="poster" :src="store.poster[`${movie.movieNm}`]" alt="movie_poster">
+      <!-- <span class="rank">{{ movie.rank }}</span> -->
       <div class="overlay">
-        <div>
-            <a :href="`https://m.search.naver.com/search.naver?query=영화+${movie.movieNm}+예매`"><button class="info-btn" type="submit">예매하기</button></a>
-        </div>
+        <a class="link" :href="`https://m.search.naver.com/search.naver?query=영화+${movie.movieNm}+예매`">
+          <button class="info-btn" type="submit">예매하기</button>
+        </a>
       </div>
     </div>
   </div>
-
 </template>
 
 <!-- 개봉일자까지 고려해서 D-N까지 표현해도 좋을 듯! -->
@@ -51,7 +52,7 @@
   padding: 0;
  }
 
- .change {
+ /* .change {
   position:absolute;
   top:190px;
   right: 10px;
@@ -59,7 +60,7 @@
   font-size: 30px;
   font-weight: 500;
   padding: 0;
- }
+ } */
 
   .image-container {
     position: relative;
@@ -70,6 +71,7 @@
   .image-container img {
     width: 100%;
     height: 100%;
+    box-shadow: inset 0px 0px 15px 15px #62b0cb;
     transition: filter 0.3s ease;
   }
 
@@ -88,6 +90,11 @@
     /* justify-content: center;
     align-items: center; */
   }
+  .overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
   .image-container:hover img {
     filter: brightness(70%);
@@ -103,15 +110,18 @@
   .info-btn {
     padding: 10px 20px;
     background-color: #fff;
-    color: #333;
+    color: #000000;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   .info-btn:hover {
-    background-color: #333;
+    background-color: #2a0072;
     color: #fff;
   }
+
+
 </style>

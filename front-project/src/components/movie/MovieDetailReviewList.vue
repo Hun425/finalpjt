@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div class="review-container">
     <div v-if="reviews && reviews.length">
+      <h4>{{ mvtitle }}에 대한 {{ reviews.length }}개의 리뷰가 있어요!</h4>
       <!-- null 이 아니면 다 값이 있다고 판단!! / 이부분 처리 필요!! / 받아오는 데이터가 비어있으면 []로 받아와서 인식 X-->
         <MovieReviewItem v-for="(review,index) in reviews"  :review="review" :moviepk="moviepk" :index="index" @deleteReview = "deleteReview"/>
     </div>
@@ -47,6 +48,7 @@
 
   const props = defineProps({
     moviepk:Number,
+    mvtitle:String,
   })
 
   const router = useRouter()
@@ -130,7 +132,12 @@
 </script>
   
   <style scoped>
-    .create-area {
+    .review-container {
+      width: 900px;
+      margin: 30px auto;
+    }
+
+    textarea {
       width: 400px;
       height:300px;
       resize: none;  /* 크기 제한하기 */
@@ -139,4 +146,5 @@
     .review {
       margin: 20px;
     }
+
   </style>
