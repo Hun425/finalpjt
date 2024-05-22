@@ -47,7 +47,7 @@ onMounted(() => {
 .movieCard:hover {
   transform: scale(1.1);
 }
-
+a
 .poster {
   border-radius: 10px;
   height: 260px;
