@@ -26,6 +26,8 @@
   import { useRoute } from 'vue-router'
   import { useAccountStore } from '@/stores/account';
   const store = useAccountStore()
+  store.isDark = false
+  
   const isFocus = ref(1)
   // 클릭시에 보이는 화면이 바뀌도록 설정하기
   const category = function (event) {
