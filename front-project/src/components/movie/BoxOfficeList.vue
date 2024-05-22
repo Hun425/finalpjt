@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-  import {ref} from 'vue'
+  import {ref, onMounted} from 'vue'
   import BoxOfficeListItem from './BoxOfficeListItem.vue';
   import axios from 'axios'
   
