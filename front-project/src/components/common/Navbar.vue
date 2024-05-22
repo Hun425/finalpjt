@@ -1,123 +1,139 @@
 <template>
-  <div :class="{dark:isDark}">
-    <header>
-      <div class="userbar" v-if="!store.isLogin">
-        <span @click="goToAccount">Login / Sign Up</span>|
-      </div>
-      <div v-else>
-        <span @click="store.logOut">Logout</span>
+  <div :class="{ 'has-background-black has-text-white': isDark, 'has-background-white has-text-black': !isDark }">
+    <nav class="navbar is-dark custom-navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item logotext" @click="goToHome">MOVIE CINEMA</a>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" @click="toggleBurger">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
       </div>
 
-      <div class="navbar">
-        <div class="nav">
-          <div  @click="goToMovie">영화</div>
-          <div >이벤트</div>
+      <div :class="{'navbar-menu': true, 'is-active': burgerActive}" style="padding:15px">
+        <div class="navbar-start">
+          <a class="navbar-item" @click="goToMovie">영화</a>
+          <a class="navbar-item">추천</a>
+          <a class="navbar-item">커뮤니티</a>
         </div>
-        <div class="logotext" @click="goToHome">MOVIE CINEMA</div>
-        <div class="nav">
-          <div >커뮤니티</div>
-          <div @click="goToMypage">마이페이지</div>
+        <div class="navbar-end">
+          <a v-if="!store.isLogin" class="navbar-item" @click="goToLogin">로그인/회원가입</a>
+          <a v-else class="navbar-item" @click="goToLogout">로그아웃</a>
+          <a class="navbar-item" @click="goToMypage">마이페이지</a>
         </div>
       </div>
-    </header>
+    </nav>
   </div>
 </template>
 
 <script setup>
-  import { RouterLink, RouterView, useRouter, useRoute} from 'vue-router'
-  import { useAccountStore } from '@/stores/account';
-  import { ref, computed} from 'vue'
+import { ref, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { useAccountStore } from '@/stores/account';
 
-  const store = useAccountStore()
-  const router = useRouter()
-  const route = useRoute()
-  const isDark = computed(() => store.isDark);
-  // PageList
+const store = useAccountStore();
+const router = useRouter();
+const route = useRoute();
+const isDark = computed(() => store.isDark);
 
-  // // 1) 로그인 페이지 => accounts.js에서 사용
-  // const goToLogin = function () {
-  //   store.isDark = false
-  //   store.goToLogin()
-  // }
+const burgerActive = ref(false);
+const toggleBurger = () => {
+  burgerActive.value = !burgerActive.value;
+};
 
-  // // 2) 회원가입 페이지
-  // const goToSignup = function () {
-  //   store.isDark = false
-  //   router.push({name:'signup'})
-  // }
-  const goToAccount = function () {
-    store.isDark = false
-    router.push({name:'account'})
+// 페이지 이동 함수들 
+const goToLogin = () => {
+  store.isDark = false;
+  store.goToLogin();
+};
+
+const goToSignup = () => {
+  store.isDark = false;
+  router.push({ name: 'account' });
+};
+
+const goToLogout = () => {
+  store.isDark = false;
+  store.logOut();
+};
+
+const goToHome = () => {
+  store.isDark = true;
+  router.push({ name: 'home' });
+};
+
+const goToMovie = () => {
+  store.isDark = false;
+  router.push({ name: 'movies' });
+};
+
+const goToMypage = () => {
+  if (store.isLogin) {
+    store.isDark = false;
+    router.push({ name: 'profile', params: { userpk: store.userData.pk } });
+  } else {
+    router.push({ name: 'account' });
   }
-
-  // 3) 로그아웃 => accounts Store에서 처리
-  const goTologOut = function () {
-    store.isDark = false
-    store.logOut()
-  }
-
-  /// ----------------------------------- ///
-
-  // 4) home 페이지 (Logo)
-  const goToHome = function () {
-    store.isDark = true
-    router.push({name:'home'})
-  }
-
-  // 5) 영화 페이지
-  const goToMovie = function () {
-    store.isDark = false
-    router.push({name:'movies'})
-  }
-
-  // 6) 커뮤니티 페이지
-
-  // 7) 마이페이지 (수정필요!)
-  const goToMypage = function () {
-    if (store.isLogin ) {
-      store.isDark
-      router.push({name:'profile',params:{userpk:store.userData.pk}})
-    } else {
-      router.push({name:'login'})
-    }
-  }
-
+};
 </script>
 
+
 <style scoped>
-  .dark {
-    background-color: black;
-    color:white;
-  }
-  header {
-    width: 1440px;
-    height:100px;
-    margin: 0 auto;
-   
+
+.navbar-item {
+  font-size: 1.2rem;
+}
+.logotext {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+.custom-navbar {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.custom-navbar .navbar-item {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.navbar-item:hover {
+  background-color: #444; /* 배경 색 변경 */
+  color: #fff; /* 글자 색 변경 */
+  transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 전환 효과 */
+}
+.navbar {
+  background-color: #222;
+}
+
+.navbar-burger {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .navbar-burger {
+    display: block;
   }
 
-  .userbar {
-    padding:10px 30px;
-    /* text-align: end; */
+  .navbar-menu.is-active {
+    display: block;
   }
-  .navbar {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    width: 1440px;
-    height : 50px;
-    margin: 0px auto ;
-    font-size: 20px;
-    font-weight:bold;
-    text-align: center;
-  }
+}
 
-  .nav {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    margin-top: auto;
-  }
+.navbar-end .navbar-item {
+  display: flex;
+  align-items: center;
+}
 
-  .logotext {
-    font-size: 30px;
-  }
+.section.is-fullwidth {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.container.is-fluid {
+  width: 100%;
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
 </style>

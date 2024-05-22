@@ -334,7 +334,8 @@ class RecommendedMoviesView(APIView):
 
 
 
-
+import logging
+logger = logging.getLogger(__name__)
 import os
 import openai
 from dotenv import load_dotenv
@@ -354,23 +355,6 @@ if openai.api_key is None:
 def get_movies_from_db():
     return Movie.objects.all()
 
-def find_similar_movies(movie_name, movies, top_n=10):
-    similar_movies = []
-    for movie in movies:
-        distance = levenshtein_distance(movie_name.lower(), movie.title.lower())
-        similarity = 1 / (1 + distance)
-        
-        # 시리즈물 우선 처리
-        if movie_name.lower() in movie.title.lower():
-            similarity += 1
-        
-        if similarity >= 1.0:
-            similar_movies.append((similarity, movie))
-    
-    similar_movies.sort(key=lambda x: x[0], reverse=True)
-    
-    return [(movie, similarity) for similarity, movie in similar_movies[:top_n]]
-
 def levenshtein_distance(s1, s2):
     if len(s1) < len(s2):
         return levenshtein_distance(s2, s1)
@@ -387,14 +371,39 @@ def levenshtein_distance(s1, s2):
             substitutions = previous_row[j] + (c1 != c2)
             current_row.append(min(insertions, deletions, substitutions))
         previous_row = current_row
-    
+
     return previous_row[-1]
+
+def find_similar_movies(movie_name, movies, top_n=10):
+    similar_movies = []
+    for movie in movies:
+        distance = levenshtein_distance(movie_name.lower(), movie.title.lower())
+        similarity = 1 / (1 + distance)
+        
+        # 완벽한 일치 가중치 추가
+        if movie_name.lower() == movie.title.lower():
+            similarity += 2  # 완벽한 일치에 높은 가중치 부여
+        
+        # 숫자가 포함된 제목에 대한 추가 가중치
+        if any(char.isdigit() for char in movie.title):
+            similarity += 0.1
+        
+        # 시리즈물 우선 처리
+        if movie_name.lower() in movie.title.lower():
+            similarity += 1
+        
+        if similarity >= 0.5:
+            similar_movies.append((similarity, movie))
+    
+    similar_movies.sort(key=lambda x: x[0], reverse=True)
+    
+    return [(movie, similarity) for similarity, movie in similar_movies[:top_n]]
 
 def gpt_movies(request):
     movie_name = request.GET.get('movie_name', '')
 
     movies = get_movies_from_db()
-
+    logger.debug(f"Received movie_name: {movie_name}")
     if movie_name:
         similar_movies = find_similar_movies(movie_name, movies)
         serialized_movies = []
