@@ -47,10 +47,10 @@ const truncatedOverview = computed(() => {
     </div>
     <div class="movieInfo">
       <div class="title">{{ movie.title.length > maxLength ? movie.title.slice(0, maxLength) + '...' : movie.title }}</div>
-      <span v-if="getImageSource() == 'A'" class="day soon">New</span>
-      <span v-else-if="getImageSource() == 'B'" class="day hot">Hot</span>
-      <span v-else class="day old">R</span>
-      <div>개봉일 : {{ movie.release_date }}</div>
+        <span v-if="getImageSource() == 'A'" class="day soon">New</span>
+        <span v-else-if="getImageSource() == 'B'" class="day hot">Hot</span>
+        <span v-else class="day old">R</span>
+      <p class="release-date">개봉일 : {{ movie.release_date }}</p>
     </div>
   </div>
 </template>
@@ -131,13 +131,19 @@ const truncatedOverview = computed(() => {
   position: relative;
   padding: 22px 0px 11px 30px;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-around;
+  /* align-items: flex-start; */
+  /* justify-content: space-around; */
 }
 
 .title {
+  margin: 0px;
   font-size: 16px;
   font-weight: 600;
+}
+.release-date {
+  position: absolute;
+  top:50px;
+  left:0px;
 }
 
 .day {
