@@ -9,7 +9,7 @@
       </div>
       <MovieDetailInfo v-show="isFocus === 1" :actors="movie.actors" :overview="movie.overview" />
       <MovieDetailReviewList v-show="isFocus === 2" :moviepk="movie.id" :mvtitle="movie.title"/>
-      <!-- <MovieDetailTrailer v-show="isFocus === 3" :title="movie.title" /> -->
+      <MovieDetailTrailer v-show="isFocus === 3" :title="movie.title" />
     </div>
   </div>
 </template>
@@ -45,6 +45,7 @@ const fetchMovie = async (movieId) => {
 
 const setFocus = (focus) => {
   isFocus.value = focus;
+  console.log(isFocus.value)
 };
 
 onMounted(() => {

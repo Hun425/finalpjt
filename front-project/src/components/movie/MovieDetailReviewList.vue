@@ -12,6 +12,8 @@
           </div>
           <div class="form-group">
             <label for="content"></label>
+            <div>
+            </div>
             <textarea v-if="store.isLogin" class="create-area" v-model.trim="content" id="content" placeholder="내용을 입력해주세요."></textarea>
             <textarea v-else @click="store.goToLogin" class="create-area" placeholder="로그인 후 이용해주세요"></textarea>
           </div>
@@ -38,7 +40,7 @@
 
     <div class="review-list" v-if="reviews && reviews.length">
       <h3>{{ mvtitle }}에 대한 {{ reviews.length }}개의 리뷰가 있어요!</h3>
-      <MovieReviewItem v-for="(review, index) in reviews" :key="index" :review="review" :moviepk="moviepk" :index="index" @deleteReview="deleteReview" />
+      <MovieReviewItem v-for="review in reviews" :key="review.id" :review="review" :moviepk="moviepk"  @deleteReview="deleteReview" />
     </div>
     <div v-else class="no-review">
       <h2>아직 리뷰가 없습니다. 첫번째 리뷰를 작성해주세요!</h2>
@@ -130,7 +132,10 @@ const deleteReview = function (reviewpk) {
     },
   })
     .then(res => {
-      reviews.value = reviews.value.filter(review => review.id !== reviewpk)
+      console.log(reviewpk)
+      reviews.value = res.data
+      console.log(reviews)
+      console.log(res.data)
     })
     .catch(err => console.log(err))
 }
