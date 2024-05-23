@@ -1,10 +1,14 @@
 <template>
-  <div class="carousel-container">
+  <div v-if="props.movies.length === 0" class="no-movie">
+    <p>선택한 영화가 없습니다. 관심있는 영화를 선택해주세요!</p>
+    <button @click="goToMovies" class="move-btn">Select Movie</button>
+  </div>
+  <div v-else class="carousel-container">
     <button @click="prevSlide" class="carousel-button left-button">&lt;</button>
     <div class="carousel-wrapper">
       <div class="carousel" :style="carouselStyle">
-        <div class="carousel-item" v-for="(movie, index) in movies" :key="index">
-          <div class="movie-card">
+        <div class="carousel-item" v-for="(movie, index) in props.movies" :key="index">
+          <div class="movie-card" @click="goToMovieDetail(movie.id)">
             <img :src="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" :alt="movie.title" class="movie-poster">
           </div>
         </div>
@@ -15,10 +19,14 @@
 </template>
 
 <script setup>
+import router from '@/router';
 import { ref, computed } from 'vue';
 
 const props = defineProps({
-  movies: Array,
+  movies: {
+    type: Array,
+    required: true,
+  },
 });
 
 const currentSlide = ref(0);
@@ -44,24 +52,50 @@ const nextSlide = () => {
     currentSlide.value += 1;
   }
 };
+
+const goToMovies = () => {
+  router.push({ name: 'movies' });
+};
+
+const goToMovieDetail = (moviepk) => {
+  router.push({ name: 'movieDetail', params: { moviepk: moviepk } });
+};
 </script>
 
-
 <style scoped>
+.no-movie {
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content:space-around;
+  align-items: center;
+  font-size: 24px;  
+}
+.move-btn {
+  all: unset;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: 0.5s;
+}
+.move-btn:hover {
+  background-color: blueviolet;
+  color: white;
+}
 .carousel-container {
   display: flex;
   align-items: center;
   position: relative;
-  width: 1200px; /* 고정된 너비 설정 */
-  height: 286px; /* 260px (포스터 높이) + 16px (제목 높이) + 10px */
-  margin: 0 auto; /* 좌우 마진 자동으로 가운데 정렬 */
+  width: 1200px;
+  height: 286px;
+  margin: 0 auto;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .carousel-wrapper {
   overflow: hidden;
-  width: calc(100% - 60px); /* To account for the buttons */
+  width: calc(100% - 60px);
 }
 
 .carousel {
@@ -113,6 +147,6 @@ const nextSlide = () => {
 .right-button {
   right: 0;
 }
+
+
 </style>
-
-

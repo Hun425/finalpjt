@@ -15,6 +15,44 @@ export const useAccountStore = defineStore('account', () => {
         username: "",
       });
 
+ 
+      
+    // 로그인을 위한 함수 작성
+    const logIn = function (payload) {
+        const username = payload.username
+        const password = payload.password
+        axios({
+            method: 'post',
+            url: '/accounts/login/',
+            data: {
+                username, password
+            }
+        })
+        .then(res => {
+            // console.log(res) // Token 발행 확인하기
+            token.value = res.data.key // pinia에서 확인하자!!
+            getuserData()
+            Swal.fire({
+                icon: 'success',
+                title: '로그인 성공',
+                text: '로그인이 성공적으로 완료되었습니다.',
+                confirmButtonText: '확인'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                router.push({ name: 'home' });
+                }
+            router.push({name:'home'})
+        })
+        })
+        .catch(err => {
+            console.log(err)
+            Swal.fire({
+                icon: 'error',
+                title: 'ERROR',
+                text: '닉네임과 비밀번호를 확인해주세요.',
+                confirmButtonText: '확인'
+                })
+        })}
 
     const getuserData = function () {
         axios({
@@ -30,37 +68,7 @@ export const useAccountStore = defineStore('account', () => {
         .catch(err => {
             console.log(err)
         })
-    }   
-      
-    // 로그인을 위한 함수 작성
-    const logIn = function (payload) {
-        const username = payload.username
-        const password = payload.password
-
-        axios({
-            method: 'post',
-            url: '/accounts/login/',
-            data: {
-                username, password
-            }
-        })
-            .then(res => {
-                console.log('로그인이 완료되었습니다.')
-                // console.log(res) // Token 발행 확인하기
-                token.value = res.data.key // pinia에서 확인하자!!
-                getuserData()
-                router.push({name:'home'})
-            })
-            .catch(err => {
-                console.log(err)
-                Swal.fire({
-                    icon: 'error',
-                    title: 'ERROR',
-                    text: '닉네임과 비밀번호를 확인해주세요.',
-                    confirmButtonText: '확인'
-                  });
-
-            })}
+    }  
 
     const isLogin = computed(() => {
         if (token.value === null) {

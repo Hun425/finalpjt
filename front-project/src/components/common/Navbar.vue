@@ -15,7 +15,7 @@
       <div :class="{'navbar-menu': true, 'is-active': burgerActive}" style="padding:15px">
         <div class="navbar-start">
           <a class="navbar-item" @click="goToMovie">영화</a>
-          <a class="navbar-item">추천</a>
+          <a class="navbar-item" @click="goToRecommend">추천</a>
           <a class="navbar-item" @click="goToCommunity">커뮤니티</a>
         </div>
         <div class="navbar-end">
@@ -170,8 +170,13 @@ const goToMypage = () => {
 };
 
 const goToCommunity = () => {
-  store.isDark = true
+  store.isDark = false
   router.push({name:'community'})
+}
+
+const goToRecommend = () => {
+  store.isDark = false
+  router.push({name:'basicRecommend'})
 }
 
 // 클릭 이벤트 리스너 추가 및 제거
