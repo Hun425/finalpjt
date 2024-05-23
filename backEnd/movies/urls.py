@@ -6,7 +6,7 @@ app_name = 'movies'
 urlpatterns = [
     path('', views.movie_list),
     path('<int:movie_pk>/', views.movie_detail),
-    path('recommended/', views.RecommendedMoviesView.as_view()),
+    path('recommended/', views.recommended_movies_view),
     path('<int:movie_pk>/likemovie/', views.like_movie),
     path('<int:movie_pk>/reviews/', views.review_list_create),
     path('<int:movie_pk>/reviews/<int:review_pk>/',views.reviews_get_update_delete),

@@ -2,10 +2,10 @@
   <div>
     <MovieDetailMain v-if="movie" :movie="movie"/>
     <div class="movieDetailInfo" v-if="movie">
-      <div class="movieNav" @click="category">
-        <div :class="{navItem: true, focus: isFocus === 1, rest: isFocus !== 1 }">주요내용</div>
-        <div :class="{navItem: true, focus: isFocus === 2, rest: isFocus !== 2 }">관람평</div>
-        <div :class="{navItem: true, focus: isFocus === 3, rest: isFocus !== 3 }">예고편</div>
+      <div class="movieNav">
+        <div :class="{navItem: true, focus: isFocus === 1, rest: isFocus !== 1 }" @click="setFocus(1)">주요내용</div>
+        <div :class="{navItem: true, focus: isFocus === 2, rest: isFocus !== 2 }" @click="setFocus(2)">관람평</div>
+        <div :class="{navItem: true, focus: isFocus === 3, rest: isFocus !== 3 }" @click="setFocus(3)">예고편</div>
       </div>
       <MovieDetailInfo v-show="isFocus === 1" :actors="movie.actors" :overview="movie.overview" />
       <MovieDetailReviewList v-show="isFocus === 2" :moviepk="movie.id" :mvtitle="movie.title"/>
@@ -43,16 +43,13 @@ const fetchMovie = async (movieId) => {
   }
 };
 
-const category = (event) => {
-  const categories = {
-    '주요내용': 1,
-    '관람평': 2,
-    '예고편': 3
-  };
-  isFocus.value = categories[event.target.innerText] || 1;
+const setFocus = (focus) => {
+  isFocus.value = focus;
 };
 
 onMounted(() => {
+  const defaultTab = route.query.tab ? parseInt(route.query.tab, 10) : 1;
+  isFocus.value = defaultTab;
   fetchMovie(route.params.moviepk);
 });
 
@@ -67,10 +64,12 @@ watch(() => route.params.moviepk, (newMoviePk) => {
   width: 1100px;
   margin: 10px auto;
 }
+
 .movieNav {
   display: flex;
   height: 40px;
 }
+
 .navItem {
   height: 40px;
   padding: 12px 0 0 0;
@@ -78,11 +77,20 @@ watch(() => route.params.moviepk, (newMoviePk) => {
   border-style: solid;
   font-weight: bold;
   text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease; /* 애니메이션 효과 */
 }
+
+.navItem:hover {
+  background-color: #3b006e;
+  color: white;
+}
+
 .focus {
   width: 370px;
   border-width: 2px 2px 0px 2px;
 }
+
 .rest {
   width: 365px;
   border-width: 0 0 2px 0;
