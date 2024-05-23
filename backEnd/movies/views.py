@@ -265,7 +265,7 @@ def like_review(request, movie_pk, review_pk):
 
 
 
-
+# 레거시 영화 추천
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def recommended_movies_view(request):
@@ -432,5 +432,22 @@ def user_based_recommend(user_id):
 @api_view(['GET'])
 def all_review(request):
     reviews = Review.objects.all()
-    serializers = ReviewListSerializer(reviews,many=True)
+
+    if request.user.is_authenticated:
+        user_age = request.user.age
+        age_ratings = get_age_rating(user_age)
+
+        # 필터링된 리뷰 리스트
+        filtered_reviews = []
+
+        # 각 리뷰에 대해 영화의 나이 제한을 확인하고 필터링
+        for review in reviews:
+            movie = review.movie  # 리뷰에 연결된 영화 객체를 가져옴
+            if movie.certification in age_ratings:
+                filtered_reviews.append(review)
+
+        reviews = filtered_reviews
+
+    # 시리얼라이즈된 리뷰 반환
+    serializers = ReviewListSerializer(reviews, many=True)
     return Response(serializers.data)

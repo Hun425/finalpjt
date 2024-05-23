@@ -18,12 +18,12 @@ import { ref, computed } from 'vue'
 import axios from 'axios'
 import MovieListItem from './MovieListItem.vue'
 import { useAccountStore } from '@/stores/account';
-
-const store = useAccountStore()
+// import { useUserStore } from '@/stores/userStore';
 
 const movieList = ref([])
 const currentPage = ref(1)
 const totalPages = ref(1)
+const store = useAccountStore()
 
 const fetchMovies = (page = 1) => {
   if (store.isLogin) {
