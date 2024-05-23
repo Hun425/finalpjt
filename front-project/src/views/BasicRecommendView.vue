@@ -1,8 +1,9 @@
 <template>
   <div class="recommend-container">
     <div class="intro">
-      <p>매일매일 새로운 영화!</p>
-      <p>{{ store.userData.username }} 님, 총 <span>{{ movies.length }}</span> 개의 영화를 추천해드려요.</p>
+      <p v-if="store.userData.age > 19"> {{ store.userData.username }} 님을 위한 추억의 영화!</p>
+      <p v-else> {{ store.userData.username }} 님을 위한 새로운 영화!</p>
+      <p> 총 <span>{{ movies.length }}</span> 개의 영화를 추천해드려요.</p>
     </div>
     <div class="carousel-container">
       <button @click="prevSlide" class="carousel-button left-button">&lt;</button>
@@ -21,7 +22,7 @@
                 <div class="title">{{ movie.title.length > maxLength ? movie.title.slice(0, maxLength) + '...' : movie.title }}</div>
                 <span v-if="getImageSource(movie.release_date) == 'A'" class="day soon">New</span>
                 <span v-else-if="getImageSource(movie.release_date) == 'B'" class="day hot">Hot</span>
-                <span v-else class="day old">R</span>
+                <span v-else class="day">✅</span>
                 <p class="release-date">개봉일 : {{ movie.release_date }}</p>
               </div>
             </div>
@@ -31,7 +32,7 @@
       <button @click="nextSlide" class="carousel-button right-button">&gt;</button>
     </div>
     <div class="rest">
-      <p>더 많은 리뷰를 보고싶다면?</p>
+      <p>더 많은 영화를 보고싶다면?</p>
       <button @click="goToMain">CLICK</button>
     </div>
   </div>
@@ -254,27 +255,8 @@ const truncatedOverview = (overview) => {
   height: 20px;
   border-radius: 10%;
   text-align: center;
-  font-weight: bold;
-  color: white;
 }
 
-.soon {
-  font-size: 15px;
-  padding-top: 1px;
-  background-color: rgb(35, 148, 0);
-}
-
-.hot {
-  padding-top: 3px;
-  background-color: rgb(255, 68, 0);
-  font-size: 11px;
-}
-
-.old {
-  padding-top: 3px;
-  background-color: rgb(40, 40, 40);
-  font-size: 11px;
-}
 
 .carousel-button {
   position: absolute;
