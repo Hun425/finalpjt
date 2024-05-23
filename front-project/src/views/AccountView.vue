@@ -48,13 +48,13 @@
       <div class="overlay-container">
       <div class="overlay">
         <div class="overlay-panel overlay-left">
-          <h1>Welcome Back!</h1>
-          <p>To keep connected with us please login with your personal info</p>
+          <h1>환영합니다!</h1>
+          <p>로그인정보를 입력해주세요.</p>
           <button class="ghost" id="signIn" @click="switchToSignIn">Sign In</button>
         </div>
         <div class="overlay-panel overlay-right">
-          <h1>Hello, Friend!</h1>
-          <p>Enter your personal details and start journey with us</p>
+          <h1>만나서 반가워요!</h1>
+          <p>저희의 서비스를 이용하기위해 정보를 입력해주세요.</p>
           <button class="ghost" id="signUp" @click="switchToSignUp">Sign Up</button>
         </div>
       </div>

@@ -4,7 +4,7 @@
   >
     <nav class="navbar is-dark custom-navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item logotext" @click="goToHome">MOVIE CINEMA</a>
+        <img src="@/assets/Logo.png" alt="Logo" class="logo" @click="goToHome">
         <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" @click="toggleBurger">
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
@@ -229,6 +229,15 @@ const handleClickOutside = (event) => {
 <style scoped>
 .navbar-item {
   font-size: 1.2rem;
+}
+.logo {
+  height:100px;
+  width:320px;
+  transition: box-shadow 0.3s ease; /* 부드러운 전환 효과 */
+}
+.logo:hover {
+  /* box-shadow: 0 4px 8px rgba(62, 62, 62, 0.8); 이미지 내부에 그림자 적용 */
+  filter: brightness(150%)
 }
 .logotext {
   font-size: 2.5rem;

@@ -129,7 +129,7 @@ const deleteComment = function (moviepk, reviewpk, commentpk) {
     all:unset;
     position:absolute;
     top:20px;
-    right:0px;
+    right:30px;
     width:10px;
     height:10px;
     font-size: 20px;
@@ -141,7 +141,7 @@ const deleteComment = function (moviepk, reviewpk, commentpk) {
 
   input {
     all:unset;
-    width:650px;
+    width:600px;
     border-bottom:1px solid rgb(172, 172, 172);
     transition: border-bottom 0.3s;
   }

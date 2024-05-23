@@ -95,6 +95,7 @@ const useUpdate = function () {
 const canceled = function () {
   isUpdate.value = false
   isOpen.value = true
+  showMenu.value = false
 }
 
 const updateReview = function (moviepk, reviewpk) {
@@ -264,7 +265,7 @@ const toggleMenu = () => {
     margin: auto;
   }
   textarea {
-    width: 100%;
+    width: 90%;
     height: 100px;
     resize: none; /* 크기 제한하기 */
   }
@@ -274,7 +275,7 @@ const toggleMenu = () => {
   }
   input {
     all: unset;
-    width: 100%;
+    width: 90%;
     margin-bottom: 15px;
     border-bottom: 1px solid rgb(172, 172, 172);
     transition: border-bottom 0.3s;
@@ -283,7 +284,7 @@ const toggleMenu = () => {
     border-bottom: 2px solid rgb(90, 0, 173);
   }
   .rate {
-    width: 95%;
+    width: 90%;
   }
   .submit-btn {
     all: unset;
