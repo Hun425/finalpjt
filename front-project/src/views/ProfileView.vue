@@ -1,13 +1,12 @@
 <template>
   <div class="profile-container">
-    <div v-if="userInfo.username == store.userData.username" class="welcome-text">
+    <div v-if="userInfo.username === store.userData.username" class="welcome-text">
       <p>저희와 함께한지 <span class="highlight">{{ daysSinceJoined }}</span>일이 되었어요!</p>
     </div>
     <div class="profile">
       <div class="profile-image">
-        <!-- <img :src="profilePic" alt="프로필 이미지"> -->
-        <img src="@/assets/profile.jpg" alt="프로필 이미지">
-        <button @click="changeProfilePic">프로필 변경</button>
+        <img :src="profilePic" alt="프로필 이미지">
+        <button v-if="userInfo.username === store.userData.username" @click="changeProfilePic">프로필 변경</button>
       </div>
       <div class="user-info">
         <p>Name: {{ userInfo.username }}</p>
@@ -17,117 +16,123 @@
       </div>
     </div>
     <div class="user-pick">
-      <p>관심있는 영화</p>
-      <MovieCarousel :movies="userInfo.like_movies"/>
+      <p><span>{{ userInfo.like_movies.length }} </span>개의 관심있는 영화가 있습니다.</p>
+      <MovieCarousel :movies="userInfo.like_movies" />
     </div>
     <div class="user-pick">
-      <p>작성한 리뷰</p>
-      <ReviewCarousel :reviews="userInfo.reviews"/>
+      <p><span>{{ userInfo.reviews.length }} </span>개의 작성한 리뷰가 있습니다.</p>
+      <ReviewCarousel :reviews="userInfo.reviews" />
+    </div>
+    <div class="user-pick">
+      <p><span>{{ userInfo.liked_reviews.length }} </span>개의 관심있는 리뷰가 있습니다.</p>
+      <LikeReviewList :likeReviews="userInfo.liked_reviews" />
     </div>
   </div>
 </template>
 
+
+
   <!-- <ProfileImage :userpk="userInfo.id" :userPic="userInfo.profile_pic"/>  -->
   <!-- <img :src="`http://localhost:8000${userPic}`" alt=""> -->
 
-<script setup>
-  import axios from 'axios'
-  import { ref, computed, toRefs } from 'vue'
-  import { useRouter, useRoute } from 'vue-router'
-  import { useAccountStore } from '@/stores/account';
-  import MovieCarousel from '@/components/Profile/MovieCarousel.vue';
-  import ReviewCarousel from '@/components/Profile/ReviewCarousel.vue';
-  
-  const store = useAccountStore()
-  store.isDark = false
-  const movies = ref([])
-  const route = useRoute()
-  const userpk = route.params.userpk
-  const userInfo = ref({})
-
-  // 유저 데이터 가져오기
-  const getUserProfile = function () {
-    axios({
-      method:'get',
-      url:`/profile/${userpk}/`,
-      headers:{
-        Authorization: `Token ${store.token}` // get이더라도 로그인이 필요하므로!!
+  <script setup>
+    import axios from 'axios'
+    import { ref, computed, onMounted } from 'vue'
+    import { useRouter, useRoute } from 'vue-router'
+    import { useAccountStore } from '@/stores/account';
+    import MovieCarousel from '@/components/Profile/MovieCarousel.vue';
+    import ReviewCarousel from '@/components/Profile/ReviewCarousel.vue';
+    import LikeReviewList from '@/components/Profile/LikeReviewList.vue';
+    import defaultProfilePic from '@/assets/profile.jpg' // Default profile picture import
+    import Swal from 'sweetalert2'
+    
+    const store = useAccountStore()
+    const route = useRoute()
+    const userpk = route.params.userpk
+    const userInfo = ref({})
+    
+    const getUserProfile = async () => {
+      try {
+        const res = await axios.get(`/profile/${userpk}/`, {
+          headers: {
+            Authorization: `Token ${store.token}`
+          }
+        })
+        userInfo.value = res.data
+        console.log(userInfo.value)
+      } catch (err) {
+        console.error(err)
       }
-    })
-    .then(res => {
-      userInfo.value = res.data
-      movies.value = res.data.like_movies
-      console.log('profilelink',res.data.profile_pic)
-      console.log(userInfo)
-    })
-    .catch(err => {
-      console.log(err)
-    })
-  }
-  getUserProfile()
-  
-  const userProfilePic = ref(userInfo.profile_pic)
-  const selectedFile = ref(null)
-  
-  const changeProfilePic = () => {
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = 'image/*'
-    input.onchange = (e) => {
-      selectedFile.value = e.target.files[0]
-      uploadProfilePic()
     }
-    input.click()
-  }
-  
-  const uploadProfilePic = async () => {
-    const formData = new FormData()
-    formData.append('profile_pic', selectedFile.value)
-  
-    try {
-      const response = await profilePicEdit(props.userpk, formData)
-      if (response && response.data) {
-        userProfilePic.value = response.data.profile_pic
-      } else {
-        userProfilePic.value = URL.createObjectURL(selectedFile.value)
+    getUserProfile()
+    // onMounted(getUserProfile)
+    
+    const selectedFile = ref(null)
+    
+    const changeProfilePic = () => {
+      const input = document.createElement('input')
+      input.type = 'file'
+      input.accept = 'image/*'
+      input.onchange = (e) => {
+        if (e.target.files.length === 0) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: '이미지를 다시 업로드 해주세요!',
+          })
+        } else {
+          selectedFile.value = e.target.files[0]
+          uploadProfilePic()
+        }
       }
-    } catch (error) {
-      console.error('Error uploading profile picture:', error)
+      input.click()
     }
-  }
+    
+    const uploadProfilePic = async () => {
+      const formData = new FormData()
+      formData.append('profile_pic', selectedFile.value)
+    
+      try {
+        const response = await axios.put(`/profile/${userpk}/update/`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Token ${store.token}`,
+          },
+        })
+        if (response && response.data) {
+          userInfo.value.profile_pic = response.data.profile_pic
+        } else {
+          userInfo.value.profile_pic = URL.createObjectURL(selectedFile.value)
+        }
+      } catch (error) {
+        console.error('Error uploading profile picture:', error)
+      }
+    }
+    
+    const daysSinceJoined = computed(() => {
+      if (!userInfo.value.date_joined) return 0
+      const joinDate = new Date(userInfo.value.date_joined)
+      const currentDate = new Date()
+      const timeDiff = currentDate - joinDate
+      return Math.floor(timeDiff / (1000 * 60 * 60 * 24))
+    })
+    
+    const formattedDate = computed(() => {
+      if (!userInfo.value.date_joined) return ''
+      const joinDate = new Date(userInfo.value.date_joined)
+      const year = joinDate.getFullYear()
+      const month = String(joinDate.getMonth() + 1).padStart(2, '0')
+      const day = String(joinDate.getDate()).padStart(2, '0')
+      return `${year}년 ${month}월 ${day}일`
+    })
+    
+    const profilePic = computed(() => {
+      return userInfo.value.profile_pic ? `http://localhost:8000${userInfo.value.profile_pic}` : defaultProfilePic
+    })
+  </script>
   
-  const profilePicEdit = (userpk, payload) => {
-    console.log('token',store.token)
-    return axios.put(`/profile/${userpk}/update/`, payload, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: `Token ${store.token}`,
-      },
-    })
-    .then(res => {
-    })
-  }
-  const daysSinceJoined = computed(() => {
-  const joinDate = new Date(userInfo.value.date_joined)
-  const currentDate = new Date()
-  const timeDiff = currentDate - joinDate
-  return Math.floor(timeDiff / (1000 * 60 * 60 * 24))
-})
 
-  const formattedDate = computed(() => {
-    const joinDate = new Date(userInfo.value.date_joined)
-    const year = joinDate.getFullYear()
-    const month = String(joinDate.getMonth() + 1).padStart(2, '0')
-    const day = String(joinDate.getDate()).padStart(2, '0')
-    return `${year}년 ${month}월 ${day}일`
-  })
-
-  const profilePic = computed(() => {
-    return `http://localhost:8000${userInfo.value.profile_pic}`
-  })
-
-
-</script>
+  
 
 <style scoped>
 .profile-container {
@@ -142,13 +147,15 @@
   font-size: 24px;
   font-weight: bold;
 }
+
 .welcome-text {
   text-align: center;
   font-size: 24px;
   font-weight: bold;
 }
+
 .welcome-text span {
-  color:blueviolet;
+  color: blueviolet;
 }
 
 .profile {
@@ -199,8 +206,7 @@
 .user-info {
   display: flex;
   flex-direction: column;
-  /* justify-content:left;  가운데 정렬*/
-  align-items: flex-start; /* 이건 좌측 정렬 */
+  align-items: flex-start;
   padding: 20px;
 }
 
@@ -209,16 +215,19 @@
   margin: 5px 0;
 }
 
-
-.user-pick{
+.user-pick {
   margin: 100px 0;
 }
-
 
 .user-pick p {
   margin: 20px 0;
   text-align: center;
 }
 
-
+.user-pick span {
+  color: blueviolet;
+  padding-right: 2px;
+}
 </style>
+
+  

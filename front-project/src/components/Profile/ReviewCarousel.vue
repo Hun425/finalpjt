@@ -1,10 +1,13 @@
 <template>
-  <div class="carousel-container">
+  <div v-if="props.reviews.length === 0" class="no-review">
+    <p>작성한 리뷰가 없습니다. 리뷰를 작성해주세요!</p>
+  </div>
+  <div v-else class="carousel-container">
     <button @click="prevSlide" class="carousel-button left-button">&lt;</button>
     <div class="carousel-wrapper">
       <div class="carousel" :style="carouselStyle">
-        <div class="carousel-item" v-for="(review, index) in reviews" :key="index">
-          <div class="review-card">
+        <div class="carousel-item" v-for="(review, index) in props.reviews" :key="index">
+          <div @click="goToMovieDetail(review.movie.pk)" class="review-card">
             <img :src="'https://image.tmdb.org/t/p/w500/' + review.movie.poster_path" :alt="review.movie.title" class="movie-poster">
             <p class="movie-title">{{ review.title }}</p>
           </div>
@@ -15,12 +18,17 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const props = defineProps({
-  reviews: Array,
+  reviews: {
+    type: Array,
+    required: true,
+  },
 });
 
 const currentSlide = ref(0);
@@ -46,10 +54,22 @@ const nextSlide = () => {
     currentSlide.value += 1;
   }
 };
+
+const goToMovieDetail = (moviepk) => {
+  router.push({ name: 'movieDetail', params: { moviepk: moviepk } });
+};
 </script>
 
-
 <style scoped>
+.no-review {
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content:space-around;
+  align-items: center;
+  font-size: 24px;  
+}
+
 .carousel-container {
   display: flex;
   align-items: center;
@@ -124,5 +144,3 @@ const nextSlide = () => {
   right: 0;
 }
 </style>
-
-

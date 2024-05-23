@@ -67,11 +67,11 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class LikedReviewSerializer(serializers.ModelSerializer):
         movie_pk = serializers.IntegerField(source='movie.pk', read_only=True)
-        backdrop_path = serializers.CharField(source='movie.backdrop_path', read_only=True)
+        poster_path = serializers.CharField(source='movie.poster_path', read_only=True)
 
         class Meta:
             model = Review
-            fields = ('title', 'content', 'movie_pk', 'backdrop_path')
+            fields = ('title', 'content', 'movie_pk', 'poster_path')
 
     followers = FollowFollowingSerializer(many=True, read_only=True)
     followings = FollowFollowingSerializer(many=True, read_only=True)
