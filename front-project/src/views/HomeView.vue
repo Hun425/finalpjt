@@ -123,7 +123,7 @@ onMounted(() => {
   z-index: 4; /* z-index를 높여서 BoxOfficeList가 보이게 함 */
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7); /* 어두운 오버레이 */
+  background: rgba(0, 0, 0, 0.6); /* 어두운 오버레이 */
   display: flex;
   align-items: center;
   justify-content: center;
