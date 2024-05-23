@@ -1,11 +1,11 @@
 <template>
-    <div class="profile-pic-container mb-4 text-center">
-    </div>
-    <div>
-        <img :src="`http://localhost:8000${userPic}`" alt="">
-      <button @click="changeProfilePic">프로필 사진 변경</button>
-    </div>
-  </template>
+  <div>
+    <!-- <img :src="`http://localhost:8000${userPic}`" alt=""> -->
+    <img src="@/assets/profile.jpg" alt="">
+    <br>
+    <button @click="changeProfilePic">프로필 사진 변경</button>
+  </div>
+</template>
   
   <script setup>
   import { ref } from 'vue'
@@ -59,11 +59,12 @@
   }
   </script>
   
-  <style scoped>
-  .profile-pic-container img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 50%;
+<style scoped>
+  img {
+    width:100px;
+    height:100px;
+    border-radius: 70%;
+    border: 1px solid black;
   }
-  </style>
+</style>
   
