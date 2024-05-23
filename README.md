@@ -33,13 +33,21 @@
 
 <br>
 
-## 1. 개발 환경
+## 1. 개발 환경 및 요구사항 명세
 
 - Front :  js,  Vue
 - Back-end : Django
 - 버전 및 이슈관리 : Github
 - 협업 툴 : Jira, Discord, Notion
 - 디자인 : [Figma](https://www.figma.com/file/fAisC2pEKzxTOzet9CfqML/README(oh-my-code)?node-id=39%3A1814)
+
+<br>
+
+| 요구사항 명세 |
+|----------|
+|![image](https://github.com/Hun425/finalpjt/assets/147483675/8381d071-80e7-4ccc-9101-95cd1438537c)|
+
+
 
 <br>
 
@@ -65,7 +73,7 @@
 
 <br>
 
-## 3. 프로젝트 구조
+## 3. 프로젝트 구조 및 ERD
 
 ```
 ├─backEnd
@@ -97,6 +105,13 @@
 │      └─views
 
 ```
+
+
+
+| ERD |
+|----------|
+|![image](https://github.com/Hun425/finalpjt/assets/147483675/f42de4f4-4859-43ca-ac8b-bb477af1a3c2)|
+
 
 <br>
 
