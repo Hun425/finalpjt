@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="props.likeReviews.length === 0">
-      <p>작성한 리뷰가 없습니다. 리뷰를 작성해주세요!</p>
+      <p style="text-align: center; font-size: 22px;">좋아요 누른 리뷰가 없습니다!</p>
     </div>
     <div v-else class="carousel-container">
       <button @click="prevSlide" class="carousel-button left-button">&lt;</button>

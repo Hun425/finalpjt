@@ -195,7 +195,8 @@ const goToRecommend = () => {
         icon: 'error',
         title: 'ERROR',
         text:`오류 : ${err.response.data.message}`,
-        confirmButtonText: '확인'
+        confirmButtonText: '확인',
+        scrollbarPadding: false ,
       }).then((result) => {
         if (result.isConfirmed) {
         router.push({ name: 'movies' });
@@ -206,7 +207,8 @@ const goToRecommend = () => {
           icon: 'error',
           title: 'ERROR',
           text: '추천 서비스는 로그인이 필요합니다.',
-          confirmButtonText: '확인'
+          confirmButtonText: '확인',
+          scrollbarPadding: false ,
       }).then((result) => {
           if (result.isConfirmed) {
           router.push({ name: 'account' });

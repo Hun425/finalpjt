@@ -49,6 +49,7 @@ const fetchTopMovieBackdrop = async () => {
       if (movieResponse.data.similar_movies && movieResponse.data.similar_movies.length > 0) {
         const topMovieData = movieResponse.data.similar_movies[0];
         topMoviePoster.value = `https://image.tmdb.org/t/p/w1280${topMovieData.backdrop_path}`;
+       
       }
     }
   } catch (error) {
