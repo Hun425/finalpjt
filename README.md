@@ -1,4 +1,4 @@
-# 📖 영화 추천 웹 서비스  CENEMA SPRINT
+# 📖 영화 추천 웹 서비스  CINEMA SPRINT
 
 
 
