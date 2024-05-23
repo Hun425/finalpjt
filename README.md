@@ -90,8 +90,8 @@
 │      │  ├─actor
 │      │  ├─common
 │      │  ├─movie
-│      │  ├─Profile
-│      │  └─rest
+│      │  └─Profile
+│      │  
 │      ├─router
 │      ├─stores
 │      └─views
