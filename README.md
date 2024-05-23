@@ -307,12 +307,13 @@
 
 | 리뷰 생성 & 조회 |
 |----------|
-|![영화 리뷰 수정 삭제](https://github.com/Hun425/finalpjt/assets/147483675/97a9cc5f-ca45-43c6-ae34-65611d595e87)|
+|![영화 리뷰 생성 조회](https://github.com/Hun425/finalpjt/assets/147483675/6bf0e866-ca3c-4040-8f6e-8a6ff94ccefa)|
+
 
 
 | 리뷰 수정 & 삭제 |
 |----------|
-|![영화 리뷰 생성 조회](https://github.com/Hun425/finalpjt/assets/147483675/6bf0e866-ca3c-4040-8f6e-8a6ff94ccefa)|
+|![영화 리뷰 수정 삭제](https://github.com/Hun425/finalpjt/assets/147483675/97a9cc5f-ca45-43c6-ae34-65611d595e87)|
 
 - 영화 리뷰를 수정, 삭제 또는 생성 할 수 있습니다.
 - 별 아이콘을 클릭해서 개당 2점의 평점으로 최대 10점까지 줄 수 있습니다.
