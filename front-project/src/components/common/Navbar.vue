@@ -16,7 +16,7 @@
         <div class="navbar-start">
           <a class="navbar-item" @click="goToMovie">영화</a>
           <a class="navbar-item">추천</a>
-          <a class="navbar-item">커뮤니티</a>
+          <a class="navbar-item" @click="goToCommunity">커뮤니티</a>
         </div>
         <div class="navbar-end">
           <a class="navbar-item" @click="toggleSearchBar" id="search-bar">
@@ -168,6 +168,11 @@ const goToMypage = () => {
     router.push({ name: 'account' });
   }
 };
+
+const goToCommunity = () => {
+  store.isDark = true
+  router.push({name:'community'})
+}
 
 // 클릭 이벤트 리스너 추가 및 제거
 const handleClickOutside = (event) => {

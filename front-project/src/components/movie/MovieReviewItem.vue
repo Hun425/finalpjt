@@ -21,7 +21,7 @@
                   <label for="content">Content</label>
                   <div>
                     <textarea class="create-area" v-model.trim="content" id="content" placeholder="내용을 입력해주세요."></textarea>
-                  </div>
+                  </div> 
                 </div>
                 <div>
                   <label for="rate">Rate</label><br>

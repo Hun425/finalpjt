@@ -1,11 +1,15 @@
 <template>
-  <div class="movieList">
+  <div>
+    <div class="movieList">
     <MovieListItem v-for="movie in movieList" :key="movie.title" :movie="movie" />
-  </div>
-  <div class="pagination">
-    <button @click="changePage(currentPage - 5)" :disabled="currentPage <= 5"> < </button>
-    <button v-for="page in pagesToShow" :key="page" @click="changePage(page)" :disabled="page === currentPage">{{ page }}</button>
-    <button @click="changePage(currentPage + 5)" :disabled="currentPage > totalPages - 5"> > </button>
+    </div>
+    <div class="pagination">
+      <div>
+        <button @click="changePage(currentPage - 5)" :disabled="currentPage <= 5"> < </button>
+        <button button v-for="page in pagesToShow" :key="page" @click="changePage(page)" :disabled="page === currentPage">{{ page }}</button>
+        <button @click="changePage(currentPage + 5)" :disabled="currentPage > totalPages - 5"> > </button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -47,20 +51,23 @@ fetchMovies()
 <style>
 .movieList {
   width: 1100px;
-  margin: 0 auto;
+  margin: 30px auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 }
 
-.pagination {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
+  .pagination {
+    position:inline;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    align-items:flex-end;
+  }
 
-.pagination button {
-  all:unset;
-  margin: 0 5px;
-  padding: 10px;
-}
+  .pagination button {
+    all:unset;
+    margin: 0 5px;
+    padding: 10px;
+  }
 </style>
