@@ -79,11 +79,11 @@ def movie_list(request):
         age_ratings = get_age_rating(user.age) if user.is_authenticated else []
 
         # 현재 상영 중인 영화 필터링 여부 확인
-        showing_now = request.POST.get('showing_now','0')=='1'
+        showing_now = request.GET.get('showing_now','0')=='1'
 
         # 현재 날짜와 한 달 전 날짜 계산
         today = timezone.now().date()
-        one_month_ago = today - timedelta(days=45)
+        one_month_ago = today - timedelta(days=30)
 
         # 영화 쿼리셋 생성
         if showing_now:
@@ -157,6 +157,7 @@ def review_list_create(request, movie_pk):
         return create_review()
     elif request.method == 'GET':
         return review_list()
+
 
 # HTTP method에 따른 리뷰 조회, 리뷰 생성, 리뷰 수정, 리뷰 삭제 기능
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
@@ -265,72 +266,51 @@ def like_review(request, movie_pk, review_pk):
 
 
 
-# 영화 레거시 로직 추천 방법
-# 
-class RecommendedMoviesView(APIView):
-    permission_classes = [IsAuthenticated]
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def recommended_movies_view(request):
+    user = request.user
+    current_year = datetime.date.today().year
+    birth_year = current_year - user.age
+    teenage_years_start = birth_year + 10
+    teenage_years_end = teenage_years_start + 9
 
-    def get(self, request):
-        user = request.user
-        current_year = datetime.date.today().year
-        birth_year = current_year - user.age
-        teenage_years_start = birth_year + 10
-        teenage_years_end = teenage_years_start + 9
+    liked_movies = Movie.objects.filter(
+        like_users=user,
+        release_date__year__gte=teenage_years_start,
+        release_date__year__lte=teenage_years_end
+    )
+    print(f"Liked movies count: {liked_movies.count()}")  # 디버깅 출력
 
-        # 10대에 나온 영화 중 사용자가 좋아요를 누른 영화 쿼리
-        liked_movies = Movie.objects.filter(
-            like_users=user,
-            release_date__year__gte=teenage_years_start,
-            release_date__year__lte=teenage_years_end
-        )
+    if liked_movies.count() < 5:
+        return Response({"message": "좋아하는 영화를 5개 이상 선택해주세요."}, status=status.HTTP_403_FORBIDDEN)
 
-        # 사용자 나이가 10살 이하인 경우 최근 1년 동안 개봉한 영화 추천
-        if user.age <= 10:
-            one_year_ago = datetime.date.today() - datetime.timedelta(days=365)
-            recent_movies = Movie.objects.filter(
-                release_date__gte=one_year_ago,
-                release_date__lte=datetime.date.today()
-            ).order_by('-release_date')
+    favorite_genre = liked_movies.values('genres').annotate(
+        genre_count=Count('genres')
+    ).order_by('-genre_count').first()
+    print(f"Favorite genre: {favorite_genre}")  # 디버깅 출력
 
-            # 랜덤으로 10개 선택
-            recent_movies = random.sample(list(recent_movies), min(10, recent_movies.count()))
-            
-            serializer = MovieSerializer(recent_movies, many=True)
-            return Response(serializer.data)
-        if liked_movies.count() < 5:
-            return Response({"message": "좋아하는 영화를 5개 이상 선택해주세요."},status=status.HTTP_403_FORBIDDEN)
-        
-        # 사용자가 좋아요를 누른 영화 중 가장 많이 선택된 장르
-        favorite_genre = liked_movies.values('genres').annotate(
-            genre_count=Count('genres')
-        ).order_by('-genre_count').first()
+    if not favorite_genre:
+        return Response({"message": "가장 많이 선택된 장르를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
 
-        if favorite_genre:
-            genre_id = favorite_genre['genres']
-            genre = Genre.objects.get(id=genre_id)
-            recommended_movies = Movie.objects.filter(
-                genres=genre,
-                vote_average__gte=8.0
-            ).distinct()
-            if user.age <= 19:
-                recommended_movies = recommended_movies.filter(adult=False)
-            
-            # 랜덤으로 20개 선택
-                recommended_movies = random.sample(list(recommended_movies), min(20, recommended_movies.count()))
+    genre_id = favorite_genre['genres']
+    genre = Genre.objects.get(id=genre_id)
+    recommended_movies = Movie.objects.filter(
+        genres=genre,
+        vote_average__gte=8.0
+    ).distinct()
+    if user.age <= 19:
+        recommended_movies = recommended_movies.filter(adult=False)
 
-                serializer = MovieSerializer(recommended_movies, many=True)
-                return Response(serializer.data)
-            # 랜덤으로 20개 선택
-            recommended_movies = random.sample(list(recommended_movies), min(10, recommended_movies.count()))
+    recommended_movies = random.sample(list(recommended_movies), min(20, recommended_movies.count()))
+    paginator = MoviePagination()
+    page = paginator.paginate_queryset(recommended_movies, request)
+    if page is not None:
+        serializer = MovieSerializer(page, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
-            serializer = MovieSerializer(recommended_movies, many=True)
-            return Response(serializer.data)
-        else:
-            return Response({"message": "좋아하는 영화를 5개 이상 선택해주세요."},status=status.HTTP_403_FORBIDDEN)
-
-
-
-
+    serializer = MovieSerializer(recommended_movies, many=True)
+    return Response(serializer.data)
 
 
 
@@ -368,6 +348,7 @@ def levenshtein_distance(s1, s2):
         return levenshtein_distance(s2, s1)
     if len(s2) == 0:
         return len(s1)
+    
     previous_row = range(len(s2) + 1)
     for i, c1 in enumerate(s1):
         current_row = [i + 1]
@@ -378,6 +359,7 @@ def levenshtein_distance(s1, s2):
             current_row.append(min(insertions, deletions, substitutions))
         previous_row = current_row
     return previous_row[-1]
+
 
 def find_similar_movies(movie_name, movies, top_n=10):
     movie_name = movie_name.replace(" ", "")
@@ -398,6 +380,7 @@ def find_similar_movies(movie_name, movies, top_n=10):
             similar_movies.append((similarity, movie))
     similar_movies.sort(key=lambda x: x[0], reverse=True)
     return [(movie, similarity) for similarity, movie in similar_movies[:top_n]]
+
 
 def gpt_movies(request):
     movie_name = request.GET.get('movie_name', '')
