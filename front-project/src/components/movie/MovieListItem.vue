@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router'
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 
 const props = defineProps({
   movie: Object,
@@ -12,22 +12,23 @@ const router = useRouter()
 const goToDetail = (movie_pk) => {
   router.push({ name: 'movieDetail', params: { moviepk: movie_pk } })
 }
-
-const getImageSource = () => {
-  const currentDate = new Date() // 현재 날짜와 시간
-  const releaseDate = new Date(props.movie.release_date) // movie의 release_date
-  const nextMonthDate = new Date() // 현재 날짜를 복사하여 사용
-  nextMonthDate.setMonth(nextMonthDate.getMonth() - 3) // 현재 날짜에 한 달을 더함
-
-  // 현재 날짜와 release_date 비교
-  if (releaseDate > currentDate) {
-    return 'A' // 현재 날짜 이후인 경우 'A' 이미지의 경로
-  } else if (nextMonthDate < releaseDate) {
-    return 'B' // 현재 날짜 이전인 경우 'B' 이미지의 경로
-  } else {
-    return 0
-  }
-}
+const age = ref(0)
+const getSource = () => {
+  const certification = props.movie.certification; // movie의 certification
+    if (certification == null) {
+      age.value = "N" 
+    } else if  (certification.includes('12')) {
+      age.value = '12'
+    } else if (certification.includes('15')) {
+      age.value = '15'
+    } else if (certification.includes('18') || certification.includes('청소년')) {
+      age.value = '18'
+    } else if (certification.includes('A') || certification.includes('전체')) {
+      age.value = 'All'
+    } else {
+      age.value = 'N'
+    }}
+getSource()
 
 const truncatedOverview = computed(() => {
   const overview = props.movie.overview
@@ -47,9 +48,8 @@ const truncatedOverview = computed(() => {
     </div>
     <div class="movieInfo">
       <div class="title">{{ movie.title.length > maxLength ? movie.title.slice(0, maxLength) + '...' : movie.title }}</div>
-        <span v-if="getImageSource() == 'A'" class="day soon">New</span>
-        <span v-else-if="getImageSource() == 'B'" class="day hot">Hot</span>
-        <span v-else class="day old">R</span>
+      <span class="day" :class="{ 'soon': age < 12, 'two': age == 12, 'eight': age == 18, 'all': age == 'all', 'five': age !== '12' && age !== '18' && age !== 'all' }">{{ age }}</span>
+
       <p class="release-date">개봉일 : {{ movie.release_date }}</p>
     </div>
   </div>
@@ -158,21 +158,26 @@ const truncatedOverview = computed(() => {
   color: white;
 }
 
-.soon {
+.five {
   font-size: 15px;
   padding-top: 1px;
-  background-color: rgb(35, 148, 0);
+  background-color: rgb(250, 137, 0);
 }
 
-.hot {
+.eight {
   padding-top: 3px;
   background-color: rgb(255, 68, 0);
   font-size: 11px;
 }
 
-.old {
+.two {
   padding-top: 3px;
-  background-color: rgb(40, 40, 40);
+  background-color: rgb(253, 218, 75);
+  font-size: 11px;
+}
+.all{
+  padding-top: 3px;
+  background-color: rgb(68, 123, 0);
   font-size: 11px;
 }
 </style>

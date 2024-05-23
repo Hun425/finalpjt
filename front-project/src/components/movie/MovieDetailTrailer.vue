@@ -16,8 +16,8 @@
         allowfullscreen
       ></iframe>
     </div>
-    <div v-else-if="searched && !videoId">
-      <p>영상이 없습니다</p>
+    <div v-else-if="searched && !videoId" class="noLink">
+      <p> 예고편 영상이 없습니다</p>
     </div>
   </div>
 </template>
@@ -88,5 +88,14 @@
   .movie-trailer {
     width: 100%;
     height: 100%;
+  }
+
+  .noLink {
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    font-weight: bold;
   }
 </style>
