@@ -14,7 +14,7 @@ export const useUserStore = defineStore('user', {
     },
     logout() {
       this.isLoggedIn = false
-      this.user = null
+      this.user = null  
       this.token = null
     },
     async checkAuthStatus() {

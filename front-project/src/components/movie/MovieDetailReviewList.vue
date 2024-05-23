@@ -5,31 +5,40 @@
       <h3>리뷰 작성하기</h3>
       <br>
       <div>
-        <form @submit.prevent = "createReview">
-          <div>
-            <label for="title">Title</label><br>
+        <form @submit.prevent="createReview">
+          <div class="form-group">
+            <label for="title"></label>
             <input type="text" v-model.trim="title" id="title" placeholder="제목을 입력해주세요.">
           </div>
-          <div>
-            <label for="content">Content</label>
-            <div>
-              <textarea v-if="store.isLogin" class="create-area" v-model.trim="content" id="content" placeholder="내용을 입력해주세요."></textarea>
-              <!-- 로그인시에만 사용 -->
-              <textarea v-else @click="store.goToLogin" class="create-area" value="로그인 후 이용해주세요"></textarea>
-            </div>
+          <div class="form-group">
+            <label for="content"></label>
+            <textarea v-if="store.isLogin" class="create-area" v-model.trim="content" id="content" placeholder="내용을 입력해주세요."></textarea>
+            <textarea v-else @click="store.goToLogin" class="create-area" placeholder="로그인 후 이용해주세요"></textarea>
           </div>
-          <div >
-            <label for="rate">Rate</label><br>
-            <input class="rate" type="number" v-model="rate" id="rate" min="0" max="10" required placeholder="점수를 입력해주세요."/>
+          <div class="form-group">
+            <label></label>
+            <div class="star-rating">
+              <div class="rating-text">평점</div>
+              <div class="stars">
+                <font-awesome-icon
+                  v-for="n in 5"
+                  :key="n"
+                  :icon="[ rate >= n * 2 ? 'fas' : rate >= (n * 2) - 1 ? 'fas' : 'far', rate >= n * 2 ? 'star' : rate >= (n * 2) - 1 ? 'star-half-alt' : 'star']"
+                  @click="setRate(n * 2)"
+                  @mouseover="hoverRate(n * 2)"
+                  @mouseleave="hoverRate(rate)"
+                />
+              </div>
+            </div>
             <button class="submit-btn" type="submit">➤</button>
           </div>
         </form>
       </div>
     </div>
-    <div v-if="reviews && reviews.length">
+
+    <div class="review-list" v-if="reviews && reviews.length">
       <h3>{{ mvtitle }}에 대한 {{ reviews.length }}개의 리뷰가 있어요!</h3>
-      <!-- null 이 아니면 다 값이 있다고 판단!! / 이부분 처리 필요!! / 받아오는 데이터가 비어있으면 []로 받아와서 인식 X-->
-        <MovieReviewItem v-for="(review,index) in reviews"  :review="review" :moviepk="moviepk" :index="index" @deleteReview = "deleteReview"/>
+      <MovieReviewItem v-for="(review, index) in reviews" :key="index" :review="review" :moviepk="moviepk" :index="index" @deleteReview="deleteReview" />
     </div>
     <div v-else class="no-review">
       <h2>아직 리뷰가 없습니다. 첫번째 리뷰를 작성해주세요!</h2>
@@ -37,39 +46,40 @@
     <br>
   </div>
 </template>
-  
+
 <script setup>
 import MovieReviewItem from '@/components/movie/MovieReviewItem.vue'
 import { ref } from 'vue'
 import { useAccountStore } from '@/stores/account';
-import { useRouter } from 'vue-router'
 import axios from 'axios'
 import Swal from 'sweetalert2';
+
+// Import FontAwesomeIcon and the icons you want to use
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faStar as fasStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
+import { faStar as farStar } from '@fortawesome/free-regular-svg-icons';
 
 const props = defineProps({
   moviepk: Number,
   mvtitle: String,
 })
 
-const router = useRouter()
 const store = useAccountStore()
 
-const title = ref(null)
-const content = ref(null)
-const rate = ref(null)
+const title = ref('')
+const content = ref('')
+const rate = ref(0)
+
 
 // 리뷰목록확인하기
-const reviews = ref(null)
+const reviews = ref([])
 const getReviews = function () {
   axios({
     method: 'get',
     url: `/movies/${props.moviepk}/reviews/`,
   })
     .then(res => {
-      console.log(res.data)
       reviews.value = res.data
-      console.log('리뷰데이터', reviews.value)
-      return 0
     })
     .catch(err => console.log(err))
 }
@@ -103,7 +113,7 @@ const createReview = function () {
       reviews.value.push(res.data)
       title.value = ''
       content.value = ''
-      rate.value = null
+      rate.value = 0
     })
     .catch(err => {
       console.log(err)
@@ -124,52 +134,127 @@ const deleteReview = function (reviewpk) {
     })
     .catch(err => console.log(err))
 }
+
+// Set the rate
+const setRate = (newRate) => {
+  rate.value = newRate;
+};
+
+// Hover effect for rate
+const hoverRate = (newRate) => {
+  hoverRate.value = newRate;
+};
 </script>
-  
+
 <style scoped>
-  .review-container {
-    width: 900px;
-    margin: 30px auto;
-  }
-  .reviewCreateform {
-    margin:  auto;
-  }
-  textarea {
-    width: 100%;
-    height:100px;
-    resize: none;  /* 크기 제한하기 */
-  }
+.review-container {
+  width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-  .review {
-    margin: 20px;
-  }
-  label {
-    font-size: 14px;
-    color: rgb(77, 77, 77);
-  }
-  input {
-    all:unset;
-    width: 100%;
-    margin-bottom: 15px;
-    border-bottom:1px solid rgb(172, 172, 172);
-    transition: border-bottom 0.3s;
-  }
-  input:focus {
-    border-bottom: 2px solid rgb(90, 0, 173);
-  }
-  .rate {
-    width:95%
-  }
+.reviewCreateform {
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 
-  .submit-btn {
-    all:unset;
-    width:5%;
-    text-align: center;
-  }
+.reviewCreateform h3 {
+  margin-bottom: 10px;
+  font-size: 24px;
+  color: #333;
+}
 
-  .no-review {
-    border-top: 1px solid rgb(97, 97, 97);
-    padding: 40px;
-    text-align: center;
-  }
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-group label {
+  font-size: 14px;
+  color: rgb(77, 77, 77);
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: calc(100% - 20px); /* 간격을 위한 여유 */
+  padding: 8px;
+  border: 1px solid rgb(172, 172, 172);
+  border-radius: 5px;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: rgb(90, 0, 173);
+  outline: none;
+}
+
+textarea {
+  height: 100px;
+  resize: none;
+}
+
+.star-rating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.rating-text {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.stars {
+  display: flex;
+  gap: 5px;
+}
+
+.submit-btn {
+  padding: 10px 15px;
+  background: rgb(90, 0, 173);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background: rgb(120, 0, 200);
+}
+
+.review-list {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.review-list h3 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  color: #333;
+}
+
+.no-review {
+  border-top: 1px solid rgb(97, 97, 97);
+  padding: 40px;
+  text-align: center;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
 </style>

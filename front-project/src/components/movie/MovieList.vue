@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div id="item">
     <div class="movieList">
-    <MovieListItem v-for="movie in movieList" :key="movie.title" :movie="movie" />
+      <MovieListItem v-for="movie in movieList" :key="movie.title" :movie="movie" />
     </div>
     <div class="pagination">
       <div>
         <button @click="changePage(currentPage - 5)" :disabled="currentPage <= 5"> < </button>
-        <button button v-for="page in pagesToShow" :key="page" @click="changePage(page)" :disabled="page === currentPage">{{ page }}</button>
+        <button v-for="page in pagesToShow" :key="page" @click="changePage(page)" :disabled="page === currentPage">{{ page }}</button>
         <button @click="changePage(currentPage + 5)" :disabled="currentPage > totalPages - 5"> > </button>
       </div>
     </div>
@@ -40,7 +40,7 @@ const pagesToShow = computed(() => {
 const changePage = (page) => {
   if (page > 0 && page <= totalPages.value) {
     fetchMovies(page)
-    window.scrollTo({ top: 0 })  // 이 부분에서 부드럽게 이동하고싶다면 hehavior:'smooth'
+    window.scrollTo({ top: 0, behavior: 'smooth' })  // 부드럽게 스크롤 이동
   }
 }
 
@@ -49,6 +49,9 @@ fetchMovies()
 </script>
 
 <style>
+
+
+
 .movieList {
   width: 1100px;
   margin: 30px auto;
@@ -56,18 +59,18 @@ fetchMovies()
   grid-template-columns: repeat(4, 1fr);
 }
 
-  .pagination {
-    position:inline;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: row;
-    justify-content:space-between;
-    align-items:flex-end;
-  }
+.pagination {
+  position: inline;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+}
 
-  .pagination button {
-    all:unset;
-    margin: 0 5px;
-    padding: 10px;
-  }
+.pagination button {
+  all: unset;
+  margin: 0 5px;
+  padding: 10px;
+}
 </style>

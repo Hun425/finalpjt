@@ -55,7 +55,7 @@ const truncatedContent = (content) => {
 };
 
 const goToMovieDetail = (movieId) => {
-  router.push({ name: 'movieDetail', params: { moviepk: movieId } });
+  router.push({ name: 'movieDetail', params: { moviepk: movieId },query:{tab:2} });
 };
 
 const timeAgo = (time) => {

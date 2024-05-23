@@ -38,7 +38,7 @@
         @input="handleInput"
         placeholder="영화 제목을 입력하세요."
         class="input"
-     
+        
       />
       <div id="search-results" class="search-results">
         <div v-for="movie in searchResults" :key="movie.pk" @click="goToMovieDetail(movie.pk)" class="search-result-item">
