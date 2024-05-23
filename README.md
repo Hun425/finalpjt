@@ -38,7 +38,7 @@
 - Front :  js,  Vue
 - Back-end : Django
 - 버전 및 이슈관리 : Github
-- 협업 툴 : Jira, Discord
+- 협업 툴 : Jira, Discord, Notion
 - 디자인 : [Figma](https://www.figma.com/file/fAisC2pEKzxTOzet9CfqML/README(oh-my-code)?node-id=39%3A1814)
 
 <br>
