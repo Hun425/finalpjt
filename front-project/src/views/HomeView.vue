@@ -1,3 +1,5 @@
+
+
 <template>
   <div class="main-container">
     <div :style="backgroundStyle" class="background-image"></div>

@@ -1,9 +1,9 @@
 <template>
   <div v-show="movie" class="background">
     <div class="contents">
-      <img v-if="movie && movie.backdrop_path" class="backdrop" :src="'https://image.tmdb.org/t/p/w500/'+ movie.backdrop_path" alt="backdrop">
+      <img v-if="movie && movie.backdrop_path" class="backdrop" :src="'https://image.tmdb.org/t/p/w500/' + movie.backdrop_path" alt="backdrop">
       <img v-else class="backdrop" src="@/assets/backdrop.webp" alt="backdrop">
-      <img v-if="movie && movie.poster_path" class="poster" :src="'https://image.tmdb.org/t/p/w500/'+ movie.poster_path" alt="@/assets/backdrop.webp">
+      <img v-if="movie && movie.poster_path" class="poster" :src="'https://image.tmdb.org/t/p/w500/' + movie.poster_path" alt="poster">
       <p v-if="movie && movie.title" class="title">{{ movie.title }}</p>
       <p class="releaseDate">개봉일 : {{ movie.release_date }}</p>
       <p class="score">{{ roundedScore }}</p>
@@ -36,7 +36,7 @@
 
 <script setup>
   import axios from 'axios';
-  import { ref, computed } from 'vue';
+  import { ref, computed, watch } from 'vue';
   import { useAccountStore } from '@/stores/account';
   import Swal from 'sweetalert2';
   import { useRouter } from 'vue-router';
@@ -85,6 +85,18 @@
       console.log(err);
     });
   };
+
+
+
+
+// const movie = ref(props.movie);
+
+// Watch for changes in props.movie and update the local movie ref
+watch(() => props.movie, (newMovie) => {
+  movie.value = newMovie;
+}, { immediate: true });
+
+
 </script>
 
 <style scoped>
@@ -208,3 +220,4 @@
     font-size: 15;
   }
 </style>
+
