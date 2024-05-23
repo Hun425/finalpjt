@@ -70,6 +70,7 @@ a
   height: 260px;
   width: 200px;
   overflow: hidden;
+  border-radius: 10px;
 }
 
 .image-container img {
