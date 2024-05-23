@@ -1,4 +1,4 @@
-# 📖 영화 추천 웹 서비스 개발 README
+# 📖 영화 추천 웹 서비스  CENEMA SPRINT
 
 
 
