@@ -76,6 +76,7 @@ store.isDark = false
 
 
 // 회원가입용
+
 const signupUsername = ref("");
 const signupEmail = ref("");
 const age = ref("");
@@ -86,6 +87,7 @@ const emailError = ref("");
 const ageError = ref("");
 
 // 필요한 함수들
+
 const checkUsername = () => {
   axios
     .get("/validate_username/", { params: { username: signupUsername.value } })
@@ -167,36 +169,13 @@ const username = ref(null);
 const password = ref(null);
 
 
-
-
-
-const logIn = async function () {
+const logIn = () => {
   const payload = {
     username: username.value,
     password: password.value
-  };
-  try {
-    await store.logIn(payload);
-    Swal.fire({
-      icon: 'success',
-      title: '로그인 성공',
-      text: '로그인이 성공적으로 완료되었습니다.',
-      confirmButtonText: '확인'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        router.push({ name: 'home' });
-      }
-    });
-  } catch (error) {
-    console.log(error);
-    Swal.fire({
-      icon: 'error',
-      title: '오류 발생',
-      text: '로그인 정보를 확인해주세요.',
-      confirmButtonText: '확인'
-    });
   }
-};
+  store.logIn(payload)
+}
 
 // 페이지 전환 함수
 const switchToSignIn = () => {

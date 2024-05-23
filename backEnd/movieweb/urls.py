@@ -40,3 +40,8 @@ urlpatterns = [
    path('gpt/chat/',GPTChatView.as_view(), name='gpt_chat'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+# 이부분 추가
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
