@@ -29,33 +29,33 @@
             <label for="password2"></label>
             <input type="password" v-model.trim="password2" placeholder="Confirm password"/>
           </div>
-          <button type="submit">Sign Up</button>
+          <button type="submit">회원가입</button>
         </form>
       </div>
       <!-- Sign In ( 로그인 페이지 ) -->
       <div class="form-container sign-in-container">
         <form @submit.prevent="logIn">
-          <h1>Sign in</h1>
+          <h1>로그인</h1>
           <br>
           <label for="username"></label>
           <input placeholder="Username" type="text" v-model.trim="username" id="username" @blur="checkusername">
           <label for="password"></label>
           <input type="password" v-model.trim="password" id="password" placeholder="Password">
           <br>
-          <button>Sign In</button>
+          <button>로그인</button>
         </form>
       </div>
       <div class="overlay-container">
       <div class="overlay">
         <div class="overlay-panel overlay-left">
           <h1>환영합니다!</h1>
-          <p>로그인정보를 입력해주세요.</p>
-          <button class="ghost" id="signIn" @click="switchToSignIn">Sign In</button>
+          <p>로그인 정보를 입력해주세요.</p>
+          <button class="ghost" id="signIn" @click="switchToSignIn">로그인</button>
         </div>
         <div class="overlay-panel overlay-right">
           <h1>만나서 반가워요!</h1>
           <p>저희의 서비스를 이용하기위해 정보를 입력해주세요.</p>
-          <button class="ghost" id="signUp" @click="switchToSignUp">Sign Up</button>
+          <button class="ghost" id="signUp" @click="switchToSignUp">회원가입</button>
         </div>
       </div>
     </div>
