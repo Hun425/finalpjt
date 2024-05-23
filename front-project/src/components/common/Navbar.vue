@@ -54,6 +54,8 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAccountStore } from '@/stores/account';
 import * as Hangul from 'es-hangul';
+import axios from 'axios'
+import Swal from 'sweetalert2';
 
 const store = useAccountStore();
 const router = useRouter();
@@ -120,11 +122,11 @@ const onCompositionEnd = () => {
 
 const goToMovieDetail = (moviepk) => {
   console.log('Navigating to movie detail with id:', moviepk);
+  store
     // 검색창 닫기
   goToMovie();
   closeSearchBar();
   router.push({ name: 'movieDetail', params: { moviepk } });
-  
 };
 
 // 페이지 이동 함수들 
@@ -135,11 +137,12 @@ const goToLogin = () => {
   
 };
 
-const goToSignup = () => {
-  store.isDark = false;
-  closeSearchBar();
-  router.push({ name: 'account' });
-};
+// 삭제 필요
+// const goToSignup = () => {
+//   store.isDark = false;
+//   closeSearchBar();
+//   router.push({ name: 'account' });
+// };
 
 const goToLogout = () => {
   store.isDark = false;
@@ -175,9 +178,43 @@ const goToCommunity = () => {
 }
 
 const goToRecommend = () => {
-  store.isDark = false
-  router.push({name:'basicRecommend'})
-}
+  if (store.isLogin) {
+    axios({
+      method:'get',
+      url:"/movies/recommended/",
+      headers: {
+        Authorization: `Token ${store.token}`
+      }
+    })
+    .then((res)=>{
+      store.isDark = false
+      router.push({name:'basicRecommend'})
+    })
+    .catch((err)=>{
+      Swal.fire({
+        icon: 'error',
+        title: 'ERROR',
+        text:`오류 : ${err.response.data.message}`,
+        confirmButtonText: '확인',
+        scrollbarPadding: false ,
+      }).then((result) => {
+        if (result.isConfirmed) {
+        router.push({ name: 'movies' });
+        }
+      })
+    })} else {
+      Swal.fire({
+          icon: 'error',
+          title: 'ERROR',
+          text: '추천 서비스는 로그인이 필요합니다.',
+          confirmButtonText: '확인',
+          scrollbarPadding: false ,
+      }).then((result) => {
+          if (result.isConfirmed) {
+          router.push({ name: 'account' });
+        }
+      })
+    }}
 
 // 클릭 이벤트 리스너 추가 및 제거
 const handleClickOutside = (event) => {

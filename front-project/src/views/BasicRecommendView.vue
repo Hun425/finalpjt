@@ -2,7 +2,7 @@
   <div class="recommend-container">
     <div class="intro">
       <p>매일매일 새로운 영화!</p>
-      <p>{{store.userData.username}} 님, 총 <span>{{ movies.length }}</span> 개의 영화를 추천해드려요.</p>
+      <p>{{ store.userData.username }} 님, 총 <span>{{ movies.length }}</span> 개의 영화를 추천해드려요.</p>
     </div>
     <div class="carousel-container">
       <button @click="prevSlide" class="carousel-button left-button">&lt;</button>
@@ -46,6 +46,8 @@ import { useAccountStore } from '@/stores/account'
 const store = useAccountStore()
 const movies = ref([])
 const selectedCard = ref(0)
+const slidesToShow = 6 // 한 번에 보여줄 슬라이드 수
+const slideWidth = 250 // 각 슬라이드의 너비
 const maxLength = 11
 
 const getMovieData = () => {
@@ -65,20 +67,29 @@ const getMovieData = () => {
 
 getMovieData()
 
+
 const nextSlide = () => {
-  selectedCard.value = (selectedCard.value + 1) % movies.value.length
+  if (selectedCard.value + slidesToShow < movies.value.length) {
+    selectedCard.value += slidesToShow;
+  } else {
+    selectedCard.value = 0; // 마지막 슬라이드가 넘칠 경우 처음으로 돌아갑니다.
+  }
 }
 
 const prevSlide = () => {
-  selectedCard.value = (selectedCard.value - 1 + movies.value.length) % movies.value.length
+  if (selectedCard.value - slidesToShow >= 0) {
+    selectedCard.value -= slidesToShow;
+  } else {
+    selectedCard.value = Math.floor((movies.value.length - 1) / slidesToShow) * slidesToShow; // 마지막 슬라이드가 넘칠 경우 끝으로 돌아갑니다.
+  }
 }
-
 const carouselStyle = computed(() => {
-  const offset = selectedCard.value * -100 + 250
+  const offset = selectedCard.value * -slideWidth;
+  console.log('Carousel Style:', offset); // 디버깅 로그
   return {
     transform: `translateX(${offset}px)`,
-  }
-})
+  };
+});
 
 const router = useRouter()
 const goToMovie = (movie_pk) => {
@@ -103,12 +114,12 @@ const getImageSource = (release_date) => {
   }
 }
 
-
 const truncatedOverview = (overview) => {
   const maxLength = 100
   return overview.length > maxLength ? overview.slice(0,maxLength) + '...' : overview
 }
 </script>
+
 
 <style scoped>
 .recommend-container {
@@ -161,10 +172,6 @@ const truncatedOverview = (overview) => {
   margin: 0 auto;
   transition: transform 0.3s ease;
 }
-
-/* .movieCard:hover {
-  transform: scale(1.1);
-} */
 
 .image-container {
   position: relative;

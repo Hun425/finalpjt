@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="review">
     <div :class="['review', { commentOpen: isCommentOpen }]" :id="`review-${review.id}`">
       <div class='review-content'>
         <div class="profile-box">
@@ -34,7 +34,7 @@
           </div>
           <div v-else>
             <p><strong>{{ review.title }}</strong></p>
-            <p>{{ review.content }}</p>
+            <p>{{ review.content }} {{ review.id }}</p>
           </div>
         </div>
         <div class="button-box">
@@ -45,7 +45,7 @@
           <button @click="toggleMenu">{{ showMenu ? '닫기' : '메뉴' }}</button>
           <div v-if="showMenu" class="menu">
             <button @click="useUpdate">수정하기</button>
-            <button @click="handleDeleteReview">삭제하기</button>
+            <button @click="handleDeleteReview(review.id)">삭제하기</button>
           </div>
         </div>
       </div>
@@ -66,7 +66,6 @@ const store = useAccountStore()
 const props = defineProps({
   review: Object,
   moviepk: Number,
-  index: Number,
 })
 const emit = defineEmits(["deleteReview"])
 
@@ -108,7 +107,6 @@ const updateReview = function (moviepk, reviewpk) {
     });
     return;
   }
-  
   axios({
     method: 'put',
     url: `/movies/${props.moviepk}/reviews/${reviewpk}/`,
@@ -138,8 +136,10 @@ const updateReview = function (moviepk, reviewpk) {
     })
 }
 
-const handleDeleteReview = function () {
-  emit("deleteReview", review.value.id)
+const handleDeleteReview = function (reviewpk) {
+  showMenu.value = false
+  console.log(reviewpk)
+  emit("deleteReview", reviewpk)
 }
 
 const handleLikeBtn = function () {
