@@ -69,30 +69,33 @@
 
 ```
 ├─backEnd
-│─accounts
-   │  ├─migrations
-   │  
-   ├─movies
-   │  ├─management
-   │  │  └─commands
-   │  ├─migrations
-   │    
-   ├─movieweb
-   │  
-   └─static
-      └─images
-└─front-project
-    ├─.vscode
-    ├─public
-    └─src
-        ├─assets
-        ├─components
-        │  ├─actor
-        │  ├─common
-        │  └─movie
-        ├─router
-        ├─stores
-        └─views
+│  ├─accounts
+│  │  ├─migrations
+│  ├─media
+│  │  ├─images
+│  │  └─profile
+│  │      └─images
+│  ├─movies
+│  │  ├─management
+│  │  │  └─commands
+│  │  ├─migrations
+│  ├─movieweb
+│  ├─static
+│      └─images
+├─front-project
+│  ├─public
+│  └─src
+│      ├─assets
+│      ├─components
+│      │  ├─actor
+│      │  ├─common
+│      │  ├─movie
+│      │  ├─Profile
+│      │  └─rest
+│      ├─router
+│      ├─stores
+│      └─views
+
 ```
 
 <br>
@@ -129,10 +132,11 @@
 
 ### 작업 관리
 
-- 
-- 
+- Jira를 사용하여 업무 분담 및 세분화를 진행했습니다.
+- Notion을 사용하여 API 명세서를 작성했습니다.
+- Github branch를 사용하여 협업을 진행했습니다.
 
-<br>
+
 
 
 <br>
@@ -270,7 +274,8 @@
 
 | 챗봇 |
 |----------|
-|![search]()|
+|![image](https://github.com/Hun425/finalpjt/assets/147483675/1b8339c5-0cb6-459d-83aa-68ba0434bb53)
+|
 
 - 사용자가 인공지능과 소통이 가능한 채팅방입니다.
 - 비로그인 사용자가 메세지를 보낼시, 로그인 요청 메세지로 응답합니다.
@@ -330,7 +335,60 @@
 
 ## 8. 트러블 슈팅
 
+### 문제 정의
 
+**제목**: 웹 애플리케이션 Swal 여백
+
+**설명**: 웹 애플리케이션에서 팝업 알림창이 뜰 때, 오른쪽에 여백이 생기던 문제.
+
+**증상**: 
+- 모든 사용자가 동일한 오류를 경험함.
+- swal 창이 나올때, 스크롤 창이 활성화 되어 있는 경우에만 발생
+- 
+**환경**:
+- Django:4.2.8
+- sweetalert2: 11.11.0
+
+### 원인 분석
+
+**가능성 있는 원인**:
+1. swal 기본 기능 오류
+2. 기본 페이지 css 구성 오류
+3. 스크롤창과 swal 기능 충돌
+
+**원인 확인**:
+- 기본페이지 상태 확인 : 정상
+- swal 기본 기능 확인 : default 설정이 스크롤창 여부와 충돌하는 것을 발견
+
+
+### 해결 방법
+
+**해결 단계**:
+1. swal을 정의 할때 default 값 false로 설정
+2. 모든 스크롤창 조건에 대해 테스트 수행
+
+**코드 수정**:
+
+```javascript
+// 기존 코드
+Swal.fire({
+        icon: 'success',
+        title: '로그인 성공',
+        text: '로그인이 성공적으로 완료되었습니다.',
+        confirmButtonText: '확인',
+
+      })
+
+// 수정된 코드
+Swal.fire({
+        icon: 'success',
+        title: '로그인 성공',
+        text: '로그인이 성공적으로 완료되었습니다.',
+        confirmButtonText: '확인',
+        scrollbarPadding: false ,
+      })
+
+```
 
 <br>
 
