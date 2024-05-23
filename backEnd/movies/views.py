@@ -265,7 +265,7 @@ def like_review(request, movie_pk, review_pk):
 
 
 
-
+# 레거시 영화 추천
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def recommended_movies_view(request):
@@ -274,11 +274,10 @@ def recommended_movies_view(request):
     birth_year = current_year - user.age
     teenage_years_start = birth_year + 10
     teenage_years_end = teenage_years_start + 9
-
+    age_ratings = get_age_rating(user.age) if user.is_authenticated else []
     liked_movies = Movie.objects.filter(
         like_users=user,
-        release_date__year__gte=teenage_years_start,
-        release_date__year__lte=teenage_years_end
+
     )
     print(f"Liked movies count: {liked_movies.count()}")  # 디버깅 출력
 
@@ -297,12 +296,17 @@ def recommended_movies_view(request):
     genre = Genre.objects.get(id=genre_id)
     recommended_movies = Movie.objects.filter(
         genres=genre,
-        vote_average__gte=8.0
+        vote_average__gte=8.0,
+        release_date__year__gte=teenage_years_start,
+        release_date__year__lte=teenage_years_end
     ).distinct()
+            # 나이에 따른 관람등급 필터링
+    if age_ratings:
+        recommended_movies = recommended_movies.filter(certification__in=age_ratings)
     if user.age <= 19:
         recommended_movies = recommended_movies.filter(adult=False)
 
-    recommended_movies = random.sample(list(recommended_movies), min(20, recommended_movies.count()))
+    recommended_movies = random.sample(list(recommended_movies), min(10, recommended_movies.count()))
     paginator = MoviePagination()
     page = paginator.paginate_queryset(recommended_movies, request)
     if page is not None:
@@ -428,5 +432,22 @@ def user_based_recommend(user_id):
 @api_view(['GET'])
 def all_review(request):
     reviews = Review.objects.all()
-    serializers = ReviewListSerializer(reviews,many=True)
+
+    if request.user.is_authenticated:
+        user_age = request.user.age
+        age_ratings = get_age_rating(user_age)
+
+        # 필터링된 리뷰 리스트
+        filtered_reviews = []
+
+        # 각 리뷰에 대해 영화의 나이 제한을 확인하고 필터링
+        for review in reviews:
+            movie = review.movie  # 리뷰에 연결된 영화 객체를 가져옴
+            if movie.certification in age_ratings:
+                filtered_reviews.append(review)
+
+        reviews = filtered_reviews
+
+    # 시리얼라이즈된 리뷰 반환
+    serializers = ReviewListSerializer(reviews, many=True)
     return Response(serializers.data)

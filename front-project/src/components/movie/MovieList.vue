@@ -17,13 +17,19 @@
 import { ref, computed } from 'vue'
 import axios from 'axios'
 import MovieListItem from './MovieListItem.vue'
-
+import { useUserStore } from '@/stores/userStore';
 const movieList = ref([])
 const currentPage = ref(1)
 const totalPages = ref(1)
+const store = useUserStore()
 
 const fetchMovies = (page = 1) => {
-  axios.get('/movies/', { params: { page } })
+  axios.get('/movies/', { 
+    params: { page },
+    headers:{
+                Authorization:`Token ${token.value}`
+            }
+  })
     .then(res => {
       movieList.value = res.data.results
       totalPages.value = Math.ceil(res.data.count / 20)
