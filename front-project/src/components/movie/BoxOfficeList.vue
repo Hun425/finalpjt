@@ -36,16 +36,16 @@
   import BoxOfficeListItem from './BoxOfficeListItem.vue';
   import axios from 'axios'
   
-  // daily는 하루전 / weekDate는 이틀 전
-  const dailyDate = new Date(Date.now() - 86400000).toISOString().slice(0, 10).replace(/-/g, ''); // 하루 전 날짜
-  const weekDate = new Date(Date.now() - 86400000 * 3).toISOString().slice(0, 10).replace(/-/g, ''); // 이틀 전 날짜
+  // // daily는 하루전 / weekDate는 이틀 전
+  // const dailyDate = new Date(Date.now() - 86400000).toISOString().slice(0, 10).replace(/-/g, ''); // 하루 전 날짜
+  // const weekDate = new Date(Date.now() - 86400000 * 3).toISOString().slice(0, 10).replace(/-/g, ''); // 이틀 전 날짜
 
 const dailyMovieList = ref([]);
 const weeklyMovieList = ref([]);
 
 const fetchBoxOfficeData = async () => {
   const dailyDate = new Date(Date.now() - 86400000).toISOString().slice(0, 10).replace(/-/g, '');
-  const weekDate = new Date(Date.now() - 86400000 * 3).toISOString().slice(0, 10).replace(/-/g, '');
+  const weekDate = new Date(Date.now() - 86400000 * 7).toISOString().slice(0, 10).replace(/-/g, '');
 
   try {
     const dailyResponse = await axios.get('https://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json', {

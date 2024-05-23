@@ -30,40 +30,42 @@
    })
   //  const videoId = ref(null);  테스트 끝나고 실제로 돌릴때는 수정하기!!
   // const searched = ref(false);
-  const videoId = ref("Fyo6plo4WdY");
+  // const videoId = ref("Fyo6plo4WdY");
+  const videoId = ref("");
+
   const searched = ref(true);
   const youtubeKey = import.meta.env.VITE_YOUTUBE_API_KEY
 
-  // const searchVideo = () => {
-  //   // console.log(import.meta.env.VITE_YOUTUBE_API_KEY)
-  //   axios({
-  //     method:'get',
-  //     url:'https://www.googleapis.com/youtube/v3/search',
-  //     params: {
-  //       key: youtubeKey,
-  //       part: 'snippet',
-  //       type: 'video',
-  //       q: `영화 ${props.title} 공식 예고편`,
-  //       maxResults:1
-  //     }
-  //   })
-  //   .then(response => {
-  //     const videos = response.data.items;
-  //     if (videos.length > 0) {
-  //       videoId.value = videos[0].id.videoId;
-  //       console.log(videoId.value)
-  //     } else {
-  //       videoId.value = null;
-  //     }
-  //     searched.value = true;
-  //   })
-  //   .catch(error => {
-  //     console.error('Error fetching videos:', error);
-  //     videoId.value = null;
-  //     searched.value = true;
-  //   });
-  // };
-  // searchVideo()
+  const searchVideo = () => {
+    // console.log(import.meta.env.VITE_YOUTUBE_API_KEY)
+    axios({
+      method:'get',
+      url:'https://www.googleapis.com/youtube/v3/search',
+      params: {
+        key: youtubeKey,
+        part: 'snippet',
+        type: 'video',
+        q: `영화 ${props.title} 공식 예고편`,
+        maxResults:1
+      }
+    })
+    .then(response => {
+      const videos = response.data.items;
+      if (videos.length > 0) {
+        videoId.value = videos[0].id.videoId;
+        console.log(videoId.value)
+      } else {
+        videoId.value = null;
+      }
+      searched.value = true;
+    })
+    .catch(error => {
+      console.error('Error fetching videos:', error);
+      videoId.value = null;
+      searched.value = true;
+    });
+  };
+  searchVideo()
 
 
 
@@ -74,6 +76,7 @@
     margin: 0 auto;
     width:800px;
     height:450px;
+    margin-bottom: 100px;
   }
 
   .trailer-text {
