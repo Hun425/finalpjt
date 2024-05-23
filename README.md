@@ -1,9 +1,8 @@
 # 📖 영화 추천 웹 서비스 개발 README
 
-<div style="text-align:center;">
+<div style="float:left; margin-right:10px;">
   <img src="https://github.com/Hun425/finalpjt/assets/147483675/db05ea92-d341-424d-b2c7-416245dfdf36" alt="Logo">
 </div>
-
 
 
 
